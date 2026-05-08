@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Lista de Proveedores</title>
+</head>
+
+<body>
+	<h1>Proveedores de la Botica</h1>
+	<a th:href="@{/proveedores/nuevo}">Crear Nuevo Proveedor</a>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nombre</th>
+				<th>RUC</th>
+				<th>Teléfono</th>
+				<th>Dirección</th>
+				<th>Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="prov : ${lista}">
+				<td th:text="${prov.idProveedor}"></td>
+				<td th:text="${prov.nombre}"></td>
+				<td th:text="${prov.ruc}"></td>
+				<td th:text="${prov.telefono}"></td>
+				<td th:text="${prov.direccion}"></td>
+				<td>
+					<a th:href="@{/proveedores/editar/{id}(id=${prov.idProveedor})}">Editar</a>
+					<a th:href="@{/proveedores/eliminar/{id}(id=${prov.idProveedor})}"
+						onclick="return confirm('¿Estás seguro de que deseas retirar a este proveedor del sistema?');">Eliminar</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+</html>

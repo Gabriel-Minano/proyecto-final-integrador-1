@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Lista de Productos</title>
+</head>
+
+<body>
+	<h1>Inventario de Productos</h1>
+
+	<div style="margin-bottom: 20px;">
+		<form th:action="@{/productos}" method="get">
+			<input type="text" name="palabraClave" th:value="${palabraClave}" placeholder="Buscar por nombre..." />
+			<button type="submit">Buscar</button>
+			<a th:href="@{/productos}">Limpiar</a>
+		</form>
+	</div>
+	<a th:href="@{/productos/nuevo}">Registrar Nuevo Producto</a>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>Código</th>
+				<th>Nombre</th>
+				<th>Categoría</th>
+				<th>Proveedor</th>
+				<th>Precio Venta</th>
+				<th>Stock</th>
+				<th>Vencimiento</th>
+				<th>Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="prod : ${lista}">
+				<td th:text="${prod.codigo}"></td>
+				<td th:text="${prod.nombre}"></td>
+				<td th:text="${prod.categoria.nombre}"></td>
+				<td th:text="${prod.proveedor.nombre}"></td>
+				<td th:text="${prod.precioVenta}"></td>
+				<td th:text="${prod.stockActual}"
+					th:style="${prod.stockActual <= prod.stockMinimo} ? 'color: red; font-weight: bold;' : ''">
+				</td>
+				<td th:text="${prod.fechaVencimiento}"></td>
+				<td>
+					<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}">Editar</a>
+					<a th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
+						onclick="return confirm('¿Estás seguro de que deseas retirar este producto del catálogo?');"
+						style="color: red;">Eliminar</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+</html>

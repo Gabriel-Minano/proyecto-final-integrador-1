@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Formulario de Proveedor</title>
+</head>
+
+<body>
+	<h1 th:text="${proveedor.idProveedor != null} ? 'Editar Proveedor' : 'Nuevo Proveedor'"></h1>
+
+	<form th:action="@{/proveedores/guardar}" th:object="${proveedor}" method="post">
+		<input type="hidden" th:field="*{idProveedor}" />
+
+		<div>
+			<label>Nombre:</label>
+			<input type="text" th:field="*{nombre}" />
+			<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
+		</div>
+
+		<div>
+			<label>RUC:</label>
+			<input type="text" th:field="*{ruc}" />
+			<span th:if="${#fields.hasErrors('ruc')}" th:errors="*{ruc}" style="color:red"></span>
+		</div>
+
+		<div>
+			<label>Teléfono:</label>
+			<input type="text" th:field="*{telefono}" />
+			<span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red"></span>
+		</div>
+
+		<div>
+			<label>Dirección:</label>
+			<input type="text" th:field="*{direccion}" />
+			<span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" style="color:red"></span>
+		</div>
+
+		<button type="submit">Guardar</button>
+		<a th:href="@{/proveedores}">Cancelar</a>
+	</form>
+</body>
+
+</html>
