@@ -6,7 +6,8 @@
     
     <form th:action="@{/categorias/guardar}" th:object="${categoria}" method="post">
         <input type="hidden" th:field="*{idCategoria}" />
-        
+		<input type="hidden" th:field="*{estado}" />
+
         <div>
             <label>Nombre:</label>
             <input type="text" th:field="*{nombre}" />

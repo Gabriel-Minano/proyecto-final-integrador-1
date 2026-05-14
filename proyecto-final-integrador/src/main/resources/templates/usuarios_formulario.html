@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Formulario Cliente</title>
+</head>
+
+<body>
+	<h1 th:text="${usuario.idUsuario != null} ? 'Editar Usuario' : 'Registrar Usuario'"></h1>
+	<form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+		<input type="hidden" th:field="*{idUsuario}">
+		<input type="hidden" th:field="*{estado}">
+		<div>
+			<label>Nombre</label>
+			<input type="text" th:field="*{nombre}">
+			<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Username</label>
+			<input type="text" th:field="*{username}">
+			<span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Contraseña</label>
+			<input type="password" th:field="*{password}">
+			<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Rol</label>
+			<select th:field="*{rol}">
+				<option value="ADMINISTRADOR">Administrador</option>
+				<option value="VENDEDOR">Vendedor</option>
+			</select>
+			<span th:if="${#fields.hasErrors('rol')}" th:errors="*{rol}" style="color:red"></span>
+		</div>
+
+		<button type="submit">Guardar</button>
+		<a th:href="@{/usuarios}">Cancelar</a>
+	</form>
+</body>
+
+</html>

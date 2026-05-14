@@ -1,0 +1,64 @@
+package com.sistema.botica.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.sistema.botica.entity.Usuario;
+import com.sistema.botica.service.UsuarioService;
+
+@Controller
+@RequestMapping("/usuarios")
+public class UsuarioController {
+	@Autowired
+	private UsuarioService usuarioService;
+
+	@GetMapping
+	public String listar(Model modelo) {
+		modelo.addAttribute("lista", usuarioService.listarActivos());
+		return "usuarios";
+	}
+
+	@GetMapping("/nuevo")
+	public String nuevo(Model modelo) {
+		modelo.addAttribute("usuario", new Usuario());
+		return "usuarios_formulario";
+	}
+
+	@GetMapping("/editar/{id}")
+	public String editar(@PathVariable("id") Integer id, Model modelo) {
+		Usuario usuario = usuarioService.buscarPorId(id);
+		if (usuario == null) {
+			return "redirect:/usuarios";
+		}
+		modelo.addAttribute("usuario", usuario);
+		return "usuarios_formulario";
+	}
+
+	@PostMapping("/guardar")
+	public String guardar(@Validated @ModelAttribute("usuario") Usuario usuario, BindingResult result) {
+		if (result.hasErrors()) {
+			return "usuarios_formulario";
+		}
+		usuarioService.guardar(usuario);
+		return "redirect:/usuarios";
+	}
+
+	@GetMapping("/eliminar/{id}")
+	public String eliminar(@PathVariable("id") Integer id) {
+		Usuario usuario = usuarioService.buscarPorId(id);
+		if (usuario == null) {
+			return "redirect:/usuarios";
+		}
+		usuarioService.eliminarLogico(id);
+		return "redirect:/usuarios";
+
+	}
+}

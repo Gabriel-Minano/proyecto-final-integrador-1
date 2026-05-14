@@ -10,7 +10,7 @@
 
 	<form th:action="@{/proveedores/guardar}" th:object="${proveedor}" method="post">
 		<input type="hidden" th:field="*{idProveedor}" />
-
+		<input type="hidden" th:field="*{estado}">
 		<div>
 			<label>Nombre:</label>
 			<input type="text" th:field="*{nombre}" />

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Formulario Cliente</title>
+</head>
+
+<body>
+	<h1 th:text="${cliente.idCliente != null} ? 'Editar Cliente' : 'Registrar cliente'"></h1>
+	<form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
+		<input type="hidden" th:field="*{idCliente}">
+		<input type="hidden" th:field="*{estado}">
+		<div>
+			<label>Nombre</label>
+			<input type="text" th:field="*{nombre}">
+			<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Apellido</label>
+			<input type="text" th:field="*{apellido}">
+			<span th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Documento</label>
+			<input type="text" th:field="*{documento}">
+			<span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Teléfono</label>
+			<input type="text" th:field="*{telefono}">
+			<span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Correo</label>
+			<input type="email" th:field="*{correo}">
+			<span th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" style="color:red"></span>
+		</div>
+		<div>
+			<label>Dirección</label>
+			<input type="text" th:field="*{direccion}">
+			<span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" style="color:red"></span>
+		</div>
+		<button type="submit">Guardar</button>
+		<a th:href="@{/clientes}">Cancelar</a>
+	</form>
+</body>
+
+</html>
