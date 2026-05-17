@@ -2,6 +2,8 @@ package com.sistema.botica.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 @Entity
 @Table(name = "detalle_venta")
 public class DetalleVenta {
@@ -18,21 +23,29 @@ public class DetalleVenta {
     @Column(name = "id_detalle")
     private Integer idDetalle;
 
+	@NotNull(message = "La cantidad es obligatoria")
+	@Min(value = 1, message = "La cantidad mínima a vender es 1")
     @Column(name = "cantidad")
     private Integer cantidad;
 
-    @Column(name = "precio_unitario", precision = 10, scale = 2)
+	@NotNull(message = "El precio unitario es obligatorio")
+	@Positive(message = "El precio debe ser mayor a cero")
+	@Column(name = "precio_unitario", precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
+	@NotNull(message = "El subtotal es obligatorio")
+	@Min(value = 0)
     @Column(name = "subtotal", precision = 12, scale = 2)
     private BigDecimal subtotal;
 
     // Muchos detalles pertenecen a una venta
+	@JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_venta")
     private Venta venta;
 
     // Muchos detalles corresponden a un producto
+	@NotNull(message = "El producto es obligatorio")
     @ManyToOne
     @JoinColumn(name = "id_producto")
     private Producto producto;

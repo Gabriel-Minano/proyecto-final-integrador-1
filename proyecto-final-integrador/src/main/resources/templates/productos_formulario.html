@@ -69,6 +69,12 @@
 		</div>
 
 		<div>
+			<label>Stock Máximo:</label>
+			<input type="number" th:field="*{stockMaximo}" />
+			<span th:if="${#fields.hasErrors('stockMaximo')}" th:errors="*{stockMaximo}" style="color:red"></span>
+		</div>
+
+		<div>
 			<label>Fecha Vencimiento:</label>
 			<input type="date" th:field="*{fechaVencimiento}" />
 			<span th:if="${#fields.hasErrors('fechaVencimiento')}" th:errors="*{fechaVencimiento}"

@@ -29,7 +29,7 @@
 			<label>Rol</label>
 			<select th:field="*{rol}">
 				<option value="ADMINISTRADOR">Administrador</option>
-				<option value="VENDEDOR">Vendedor</option>
+				<option value="CAJERO">Cajero</option>
 			</select>
 			<span th:if="${#fields.hasErrors('rol')}" th:errors="*{rol}" style="color:red"></span>
 		</div>

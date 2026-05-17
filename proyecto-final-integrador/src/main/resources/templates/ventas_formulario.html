@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Nueva Venta</title>
+</head>
+
+<body>
+	<h1>Módulo de Caja - Nueva Venta</h1>
+	<div th:if="${error}" th:text="${error}" style="color: red; font-weight: bold;"></div>
+
+	<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post">
+
+		<div>
+			<label>Cliente:</label>
+			<select th:field="*{cliente.idCliente}" required>
+				<option value="">-- Seleccione Cliente --</option>
+				<option th:each="c : ${listaClientes}" th:value="${c.idCliente}"
+					th:text="${c.documento} + ' - ' + ${c.nombre}"></option>
+			</select>
+		</div>
+
+		<div>
+			<label>Vendedor / Cajero:</label>
+			<select th:field="*{usuario.idUsuario}" required>
+				<option value="">-- Seleccione Vendedor --</option>
+				<option th:each="u : ${listaUsuarios}" th:value="${u.idUsuario}"
+					th:text="${u.nombre} + ' ('+ ${u.rol} +')'"></option>
+			</select>
+		</div>
+
+		<br />
+		<h3>Detalle de los Medicamentos</h3>
+
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Medicamento / Producto</th>
+					<th>Cantidad</th>
+					<th>Precio Unitario (S/.)</th>
+					<th>Subtotal (S/.)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="detalle, stat : *{listaDetallesVenta}">
+					<td>
+						<select th:field="*{listaDetallesVenta[__${stat.index}__].producto.idProducto}" required>
+							<option value="">-- Seleccione --</option>
+							<option th:each="p : ${listaProductos}" th:value="${p.idProducto}"
+								th:text="${p.nombre} + ' (Stock: ' + ${p.stockActual} + ')'"></option>
+						</select>
+					</td>
+					<td>
+						<input type="number" min="1" th:field="*{listaDetallesVenta[__${stat.index}__].cantidad}"
+							required />
+					</td>
+					<td>
+						<input type="number" step="0.01"
+							th:field="*{listaDetallesVenta[__${stat.index}__].precioUnitario} " required />
+					</td>
+					<td>
+						<input type="number" step="0.01" th:field="*{listaDetallesVenta[__${stat.index}__].subtotal}"
+							required />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br />
+		<div>
+			<label style="font-size: 1.2em; font-weight: bold;">Importe Total Total (S/.):</label>
+			<input type="number" step="0.01" th:field="*{total}" required />
+		</div>
+
+		<br />
+		<button type="submit">Registrar Venta</button>
+		<a th:href="@{/ventas}">Cancelar</a>
+	</form>
+</body>
+
+</html>

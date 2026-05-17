@@ -2,7 +2,10 @@ package com.sistema.botica.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +17,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 @Entity
 @Table(name = "venta")
 public class Venta {
@@ -22,25 +27,31 @@ public class Venta {
     @Column(name = "id_venta")
     private Integer idVenta;
 
+	@NotNull(message = "La fecha no puede ser nula")
     @Column(name = "fecha")
     private LocalDateTime fecha;
 
+	@NotNull(message = "El total es obligatorio")
+	@PositiveOrZero(message = "El total no puede ser negativo")
     @Column(name = "total", precision = 12, scale = 2)
     private BigDecimal total;
 
     // Muchas ventas son realizadas por un usuario
+	@NotNull(message = "Se debe especificar el usuario que realiza la venta")
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     // Muchas ventas pertenecen a un cliente
+	@NotNull(message = "Debe asignar un cliente")
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
     // Una venta tiene muchos detalles (Cascade para guardar la venta y sus detalles juntos)
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
-    private List<DetalleVenta> listaDetallesVenta;
+    @JsonManagedReference
+	@OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleVenta> listaDetallesVenta = new ArrayList<>();
 
 	public Integer getIdVenta() {
 		return idVenta;

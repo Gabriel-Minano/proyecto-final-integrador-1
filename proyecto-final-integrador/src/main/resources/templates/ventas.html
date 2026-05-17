@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Historial de Ventas</title>
+</head>
+
+<body>
+	<h1>Registro de ventas realizadas</h1>
+	<div th:if="${success}" th:text="${success}" style="color: green; font-weight: bold;"></div>
+	<a th:href="@{/ventas/nuevo}">Registrar Nueva Venta</a>
+	<br /><br />
+	<table border="1">
+		<thead>
+			<tr>
+				<th>ID Venta</th>
+				<th>Fecha / Hora</th>
+				<th>Cliente</th>
+				<th>Atendido por</th>
+				<th>Total (S/.)</th>
+				<th>Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="v : ${listaVentas}">
+				<td th:text="${v.idVenta}"></td>
+				<td th:text="${#temporals.format(v.fecha, 'dd-MM-yyyy HH:mm:ss')}"></td>
+				<td th:text="${v.cliente.nombre} + ' ' + ${v.cliente.apellido}"></td>
+				<td th:text="${v.usuario.nombre}"></td>
+				<td th:text="${v.total}" style="font-weight: bold;"></td>
+			</tr>
+			<tr th:if="${listaVentas.isEmpty()}">
+				<td colspan="6" style="text-align: center;">No se han registrado ventas aún.</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+</html>

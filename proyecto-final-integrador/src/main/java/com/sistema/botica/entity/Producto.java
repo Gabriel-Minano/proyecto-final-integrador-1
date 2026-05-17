@@ -58,6 +58,11 @@ public class Producto {
     @Column(name = "stock_minimo")
     private Integer stockMinimo;
 
+	@NotNull(message = "El stock máximo es obligatorio")
+    @Min(value = 1, message = "El stock máximo debe ser mayor a cero")
+    @Column(name = "stock_maximo")
+    private Integer stockMaximo;
+	
 	@NotNull(message = "La fecha de vencimiento es obligatoria")
     @Future(message = "La fecha de vencimiento debe ser en el futuro")
     @Column(name = "fecha_vencimiento")
@@ -177,6 +182,14 @@ public class Producto {
 
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
+	}
+
+	public Integer getStockMaximo() {
+		return stockMaximo;
+	}
+
+	public void setStockMaximo(Integer stockMaximo) {
+		this.stockMaximo = stockMaximo;
 	}
     
 }
