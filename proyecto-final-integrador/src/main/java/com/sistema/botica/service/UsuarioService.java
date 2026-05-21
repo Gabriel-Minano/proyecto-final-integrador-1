@@ -30,4 +30,8 @@ public class UsuarioService {
 			usuarioRepository.save(usuario);
 		}
 	}
+	public Usuario buscarPorUsername(String username) {
+        return usuarioRepository.findByUsernameAndEstadoTrue(username)
+                .orElseThrow(() -> new RuntimeException("Usuario logueado no válido"));
+    }
 }

@@ -1,0 +1,109 @@
+/* Reseteo básico para que el layout ocupe toda la pantalla */
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			font-family: Arial, sans-serif;
+		}
+
+		/* Contenedor principal que divide la pantalla en 2 columnas */
+		.layout-wrapper {
+			display: flex;
+			height: 100vh;
+		}
+
+		/* =========================================
+           ESTILOS DE LA BARRA LATERAL (SIDEBAR)
+           ========================================= */
+		.sidebar {
+			width: 250px;
+			background-color: #dcdcdc;
+			/* Gris claro del prototipo */
+			display: flex;
+			flex-direction: column;
+			border-right: 1px solid #777;
+		}
+
+		/* Contenedor del Logo */
+		.logo-container {
+			padding: 30px 0;
+			display: flex;
+			justify-content: center;
+		}
+
+		.logo-mockup {
+			width: 80px;
+			height: 80px;
+			background-color: #0ea5e9;
+			border-radius: 15px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #ef4444;
+			font-weight: bold;
+			font-size: 35px;
+			text-shadow: 1px 1px 0px yellow, -1px -1px 0 yellow, 1px -1px 0 yellow, -1px 1px 0 yellow;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+		}
+
+		/* Menú de Navegación */
+		.nav-menu {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			width: 100%;
+		}
+
+		.nav-menu li {
+			text-align: center;
+		}
+
+		.nav-menu li a {
+			display: block;
+			padding: 18px 20px;
+			text-decoration: none;
+			color: #111;
+			font-size: 1.1em;
+		}
+
+		.nav-menu li a:hover {
+			background-color: #c0c0c0;
+		}
+
+		/* Pestaña Activa (Dashboard) */
+		.nav-menu li.active {
+			background-color: #3b4cca;
+		}
+
+		/* Azul oscuro */
+		.nav-menu li.active a {
+			color: white;
+			font-weight: bold;
+		}
+
+		/* Separador y Menú Inferior */
+		.sidebar-divider {
+			border-top: 1px solid #777;
+			margin-top: auto;
+		}
+
+		.bottom-menu {
+			margin-bottom: 20px;
+			margin-top: 10px;
+		}
+
+		.logout-btn {
+			background: none;
+			border: none;
+			width: 100%;
+			padding: 10px 20px;
+			color: #111;
+			cursor: pointer;
+			font-size: 1.1em;
+			font-family: Arial, sans-serif;
+		}
+
+		.logout-btn:hover {
+			color: red;
+		}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de Sesión - Conquistadores Farma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+
+    <div class="card shadow border-0" style="width: 420px; border-radius: 12px;">
+        <div class="card-body p-5 text-center">
+            
+            <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 70px; height: 70px;">
+                <span class="fw-bold text-white fs-3">CF</span>
+            </div>
+            
+            <h3 class="mb-1 fw-bold text-dark">Conquistadores Farma</h3>
+            <p class="text-muted mb-4">Sistema de Inventario y Ventas</p>
+
+            <div th:if="${param.error}" class="alert alert-danger py-2 small" role="alert">
+                Usuario o contraseña incorrectos.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success py-2 small" role="alert">
+                Ha cerrado sesión correctamente.
+            </div>
+
+            <form th:action="@{/login}" method="post" class="text-start">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-secondary">Usuario / Username</label>
+                    <input type="text" name="username" class="form-control py-2" placeholder="Ingrese su usuario" required />
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small text-secondary">Contraseña</label>
+                    <input type="password" name="password" class="form-control py-2" placeholder="••••••••" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Ingresar al Sistema</button>
+            </form>
+            
+        </div>
+    </div>
+
+</body>
+</html>

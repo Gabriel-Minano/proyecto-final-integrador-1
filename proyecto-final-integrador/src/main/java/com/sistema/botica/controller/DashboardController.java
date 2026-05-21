@@ -15,7 +15,7 @@ public class DashboardController {
 	@Autowired
 	private DashboardService dashboardService;
 	
-	@GetMapping({"/", "/dashboard"})
+	@GetMapping({"/dashboard"})
     public String verDashboard(
             @RequestParam(name = "mes", required = false) Integer mes,
             @RequestParam(name = "anio", required = false) Integer anio,

@@ -2,38 +2,138 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Historial de Ventas</title>
+	<meta charset="UTF-8">
+	<title>Historial de Ventas - Conquistadores Farma</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel='stylesheet' th:href='@{navbar.css}'>
+	<style>
+
+		/* =========================================
+           ESTILOS DEL CONTENIDO PRINCIPAL
+           ========================================= */
+		.main-content {
+			flex: 1;
+			padding: 30px;
+			background-color: #ffffff;
+			overflow-y: auto;
+		}
+
+		.top-header {
+			display: flex;
+			justify-content: flex-end;
+			margin-bottom: 30px;
+		}
+
+		.user-profile {
+			font-size: 1.3em;
+			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+	</style>
 </head>
 
 <body>
-	<h1>Registro de ventas realizadas</h1>
-	<div th:if="${success}" th:text="${success}" style="color: green; font-weight: bold;"></div>
-	<a th:href="@{/ventas/nuevo}">Registrar Nueva Venta</a>
-	<br /><br />
-	<table border="1">
-		<thead>
-			<tr>
-				<th>ID Venta</th>
-				<th>Fecha / Hora</th>
-				<th>Cliente</th>
-				<th>Atendido por</th>
-				<th>Total (S/.)</th>
-				<th>Acciones</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="v : ${listaVentas}">
-				<td th:text="${v.idVenta}"></td>
-				<td th:text="${#temporals.format(v.fecha, 'dd-MM-yyyy HH:mm:ss')}"></td>
-				<td th:text="${v.cliente.nombre} + ' ' + ${v.cliente.apellido}"></td>
-				<td th:text="${v.usuario.nombre}"></td>
-				<td th:text="${v.total}" style="font-weight: bold;"></td>
-			</tr>
-			<tr th:if="${listaVentas.isEmpty()}">
-				<td colspan="6" style="text-align: center;">No se han registrado ventas aún.</td>
-			</tr>
-		</tbody>
-	</table>
+
+	<div class="layout-wrapper">
+
+		<div class="sidebar">
+			<div class="logo-container">
+				<div class="logo-mockup">CF</div>
+			</div>
+
+			<ul class="nav-menu">
+				<li><a th:href="@{/dashboard}">Dashboard</a></li>
+				<li class="active"><a th:href="@{/ventas}">Ventas</a></li>
+				<li><a th:href="@{/productos}">Productos</a></li>
+				<li><a th:href="@{/clientes}">Clientes</a></li>
+				<li><a th:href="@{/proveedores}">Proveedores</a></li>
+				<li><a th:href="@{/categorias}">Categorías</a></li>
+				<li><a th:href="@{/usuarios}">Usuarios</a></li>
+			</ul>
+
+			<div class="sidebar-divider"></div>
+
+			<ul class="nav-menu bottom-menu">
+				<li>
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-btn">
+							Cerrar sesión<br><br>Salir
+						</button>
+					</form>
+				</li>
+			</ul>
+		</div>
+
+		<div class="main-content">
+
+			<div class="top-header">
+				<div class="user-profile">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+						viewBox="0 0 16 16">
+						<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+						<path fill-rule="evenodd"
+							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+					</svg>
+					Admin
+				</div>
+			</div>
+
+			<h2 class="text-secondary fw-bold mb-3">Registro de Ventas Realizadas</h2>
+			<p class="text-muted mb-4">Historial general de transacciones y operaciones internas de la botica.</p>
+
+			<div th:if="${success}" th:text="${success}" class="alert alert-success py-2 small fw-bold mb-4 shadow-sm"
+				role="alert"></div>
+
+			<div class="mb-4">
+				<a th:href="@{/ventas/nuevo}" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
+					➕ Registrar Nueva Venta
+				</a>
+			</div>
+
+			<div class="card card-body border-0 shadow-sm p-0">
+				<div class="table-responsive rounded border">
+					<table class="table table-striped table-hover align-middle text-center mb-0">
+						<thead class="table-secondary text-uppercase small fw-bold border-bottom">
+							<tr>
+								<th style="padding: 15px;">ID Venta</th>
+								<th>Fecha / Hora</th>
+								<th class="text-start ps-4">Cliente</th>
+								<th>Atendido por</th>
+								<th>Total (S/.)</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="v : ${listaVentas}">
+								<td class="fw-bold text-secondary" th:text="${v.idVenta}"></td>
+								<td th:text="${#temporals.format(v.fecha, 'dd-MM-yyyy HH:mm:ss')}"></td>
+								<td class="text-start ps-4" th:text="${v.cliente.nombre} + ' ' + ${v.cliente.apellido}">
+								</td>
+								<td th:text="${v.usuario.nombre}"></td>
+								<td class="fw-bold text-success"
+									th:text="'S/. ' + ${#numbers.formatDecimal(v.total, 1, 2)}"></td>
+								<td>
+									<button type="button" class="btn btn-outline-secondary btn-sm fw-bold px-3">
+										Ver Detalle
+									</button>
+								</td>
+							</tr>
+							<tr th:if="${listaVentas.isEmpty()}">
+								<td colspan="6" class="text-center text-muted py-5 fst-italic fs-5">
+									No se han registrado ventas en el sistema aún.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

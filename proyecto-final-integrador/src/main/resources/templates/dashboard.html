@@ -1,110 +1,249 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Botica</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .filtro-container { margin-bottom: 20px; }
-        
-        /* Contenedor de las cajas de colores */
-        .cards-container { display: flex; gap: 20px; margin-bottom: 30px; }
-        .card { 
-            flex: 1; padding: 20px; border-radius: 8px; color: white; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; 
-        }
-        .card h3 { margin: 0; font-size: 1.2em; font-weight: normal; }
-        .card .valor { font-size: 2em; font-weight: bold; margin-top: 10px; }
-        
-        /* Colores basados en tu prototipo */
-        .bg-ingresos { background-color: #22c55e; } /* Verde */
-        .bg-ventas { background-color: #3b82f6; }   /* Azul */
-        .bg-clientes { background-color: #8b5cf6; } /* Morado */
-        .bg-critico { background-color: #ef4444; }  /* Rojo */
 
-        /* Layout inferior: Grafico y Alertas */
-        .bottom-layout { display: flex; gap: 20px; }
-        .chart-placeholder { flex: 2; background: #e5e5e5; padding: 20px; border-radius: 8px; height: 300px; display: flex; align-items: center; justify-content: center; color: #666; font-style: italic;}
-        
-        .alertas-panel { flex: 1; background: #e5e5e5; padding: 20px; border-radius: 8px; }
-        .alerta-item { 
-            background-color: #fca5a5; /* Rojo claro */
-            padding: 10px; margin-bottom: 10px; border-radius: 5px; 
-            border: 1px solid #f87171; color: #991b1b;
-        }
-    </style>
+<head>
+	<meta charset="UTF-8">
+	<title>Dashboard - Botica</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel='stylesheet' th:href='@{navbar.css}'>
+	<style>
+		/* =========================================
+           ESTILOS DEL CONTENIDO PRINCIPAL
+           ========================================= */
+		.main-content {
+			flex: 1;
+			padding: 30px;
+			background-color: #ffffff;
+			overflow-y: auto;
+		}
+
+		/* Cabecera Admin (Arriba a la derecha) */
+		.top-header {
+			display: flex;
+			justify-content: flex-end;
+			margin-bottom: 30px;
+		}
+
+		.user-profile {
+			font-size: 1.3em;
+			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		/* Estilos Originales de tu Dashboard */
+		.filtro-container {
+			margin-bottom: 30px;
+		}
+
+		.cards-container {
+			display: flex;
+			gap: 20px;
+			margin-bottom: 40px;
+		}
+
+		.card {
+			flex: 1;
+			padding: 25px 20px;
+			border-radius: 8px;
+			color: white;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			text-align: left;
+		}
+
+		.card h3 {
+			margin: 0;
+			font-size: 1.5em;
+			font-weight: normal;
+		}
+
+		.card .valor {
+			font-size: 2.2em;
+			font-weight: bold;
+			margin-top: 15px;
+		}
+
+		.bg-ingresos {
+			background-color: #22c55e;
+		}
+
+		.bg-ventas {
+			background-color: #3b82f6;
+		}
+
+		.bg-clientes {
+			background-color: #8b5cf6;
+		}
+
+		.bg-critico {
+			background-color: #ef4444;
+		}
+
+		.bottom-layout {
+			display: flex;
+			gap: 20px;
+		}
+
+		.chart-placeholder {
+			flex: 2;
+			background: #e5e5e5;
+			padding: 20px;
+			border-radius: 8px;
+			height: 350px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #666;
+			font-style: italic;
+			font-size: 1.2em;
+		}
+
+		.alertas-panel {
+			flex: 1;
+			background: #e5e5e5;
+			padding: 20px;
+			border-radius: 8px;
+		}
+
+		.alertas-panel h3 {
+			text-align: center;
+			margin-top: 0;
+			margin-bottom: 20px;
+		}
+
+		.alerta-item {
+			background-color: #e5989b;
+			padding: 15px;
+			margin-bottom: 12px;
+			border-radius: 5px;
+			border: 1px solid #b56576;
+			color: #540b0e;
+			font-size: 1.1em;
+		}
+	</style>
 </head>
+
 <body>
 
-    <div class="filtro-container">
-        <form th:action="@{/dashboard}" method="get">
-            <label>Mes:</label>
-            <select name="mes">
-                <option value="1" th:selected="${mesSeleccionado == 1}">Enero</option>
-                <option value="2" th:selected="${mesSeleccionado == 2}">Febrero</option>
-                <option value="3" th:selected="${mesSeleccionado == 3}">Marzo</option>
-                <option value="4" th:selected="${mesSeleccionado == 4}">Abril</option>
-                <option value="5" th:selected="${mesSeleccionado == 5}">Mayo</option>
-                <option value="6" th:selected="${mesSeleccionado == 6}">Junio</option>
-                <option value="7" th:selected="${mesSeleccionado == 7}">Julio</option>
-                <option value="8" th:selected="${mesSeleccionado == 8}">Agosto</option>
-                <option value="9" th:selected="${mesSeleccionado == 9}">Septiembre</option>
-                <option value="10" th:selected="${mesSeleccionado == 10}">Octubre</option>
-                <option value="11" th:selected="${mesSeleccionado == 11}">Noviembre</option>
-                <option value="12" th:selected="${mesSeleccionado == 12}">Diciembre</option>
-            </select>
-            
-            <label>Año:</label>
-            <select name="anio">
-                <option value="2025" th:selected="${anioSeleccionado == 2025}">2025</option>
-                <option value="2026" th:selected="${anioSeleccionado == 2026}">2026</option>
-            </select>
-            
-            <button type="submit">Filtrar Datos</button>
-        </form>
-    </div>
+	<div class="layout-wrapper">
 
-    <div class="cards-container">
-        <div class="card bg-ingresos">
-            <h3>Ingresos</h3>
-            <div class="valor">S/. <span th:text="${#numbers.formatDecimal(indicadores.ingresosMes, 1, 2)}">0.00</span></div>
-        </div>
-        <div class="card bg-ventas">
-            <h3>Ventas</h3>
-            <div class="valor" th:text="${indicadores.ventasMes}">0</div>
-        </div>
-        <div class="card bg-clientes">
-            <h3>Clientes</h3>
-            <div class="valor" th:text="${indicadores.clientesMes}">0</div>
-        </div>
-        <div class="card bg-critico">
-            <h3>Stock Crítico</h3>
-            <div class="valor" th:text="${indicadores.cantCriticos}">0</div>
-        </div>
-    </div>
+		<div class="sidebar">
+			<div class="logo-container">
+				<div class="logo-mockup">CF</div>
+			</div>
 
-    <div class="bottom-layout">
-        <div class="chart-placeholder">
-            [ Espacio reservado para el Gráfico de Barras ]
-        </div>
+			<ul class="nav-menu">
+				<li class="active"><a th:href="@{/dashboard}">Dashboard</a></li>
+				<li><a th:href="@{/ventas}">Ventas</a></li>
+				<li><a th:href="@{/productos}">Productos</a></li>
+				<li><a th:href="@{/clientes}">Clientes</a></li>
+				<li><a th:href="@{/proveedores}">Proveedores</a></li>
+				<li><a th:href="@{/categorias}">Categorías</a></li>
+				<li><a th:href="@{/usuarios}">Usuarios</a></li>
+			</ul>
 
-        <div class="alertas-panel">
-            <h3 style="text-align: center; margin-top: 0;">Alertas</h3>
-            
-            <div th:each="prod : ${indicadores.alertasAgotados}" class="alerta-item">
-                <strong>Sin stock:</strong> <span th:text="${prod.nombre}"></span>
-            </div>
-            
-            <div th:each="prod : ${indicadores.alertasVencidos}" class="alerta-item">
-                <strong>Vencido:</strong> <span th:text="${prod.nombre}"></span>
-            </div>
+			<div class="sidebar-divider"></div>
 
-            <div th:if="${indicadores.alertasAgotados.isEmpty() and indicadores.alertasVencidos.isEmpty()}" 
-                 style="text-align: center; color: green; font-weight: bold;">
-                Todo en orden. No hay alertas activas.
-            </div>
-        </div>
-    </div>
+			<ul class="nav-menu bottom-menu">
+				<li>
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-btn">
+							Cerrar sesión<br><br>Salir
+						</button>
+					</form>
+				</li>
+			</ul>
+		</div>
+
+		<div class="main-content">
+
+			<div class="top-header">
+				<div class="user-profile">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+						viewBox="0 0 16 16">
+						<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+						<path fill-rule="evenodd"
+							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+					</svg>
+					Admin
+				</div>
+			</div>
+
+			<div class="filtro-container">
+				<form th:action="@{/dashboard}" method="get">
+					<label style="font-size: 1.1em; margin-right: 5px;">Mes:</label>
+					<select name="mes" style="font-size: 1.1em; padding: 5px; margin-right: 15px;">
+						<option value="1" th:selected="${mesSeleccionado == 1}">Enero</option>
+						<option value="2" th:selected="${mesSeleccionado == 2}">Febrero</option>
+						<option value="3" th:selected="${mesSeleccionado == 3}">Marzo</option>
+						<option value="4" th:selected="${mesSeleccionado == 4}">Abril</option>
+						<option value="5" th:selected="${mesSeleccionado == 5}">Mayo</option>
+						<option value="6" th:selected="${mesSeleccionado == 6}">Junio</option>
+						<option value="7" th:selected="${mesSeleccionado == 7}">Julio</option>
+						<option value="8" th:selected="${mesSeleccionado == 8}">Agosto</option>
+						<option value="9" th:selected="${mesSeleccionado == 9}">Septiembre</option>
+						<option value="10" th:selected="${mesSeleccionado == 10}">Octubre</option>
+						<option value="11" th:selected="${mesSeleccionado == 11}">Noviembre</option>
+						<option value="12" th:selected="${mesSeleccionado == 12}">Diciembre</option>
+					</select>
+
+					<label style="font-size: 1.1em; margin-right: 5px;">Año:</label>
+					<select name="anio" style="font-size: 1.1em; padding: 5px; margin-right: 15px;">
+						<option value="2025" th:selected="${anioSeleccionado == 2025}">2025</option>
+						<option value="2026" th:selected="${anioSeleccionado == 2026}">2026</option>
+					</select>
+
+					<button type="submit" style="font-size: 1.1em; padding: 5px 15px;">Filtrar</button>
+				</form>
+			</div>
+
+			<div class="cards-container">
+				<div class="card bg-ingresos">
+					<h3>Ingresos</h3>
+					<div class="valor">S/. <span
+							th:text="${#numbers.formatDecimal(indicadores.ingresosMes, 1, 2)}">0.00</span></div>
+				</div>
+				<div class="card bg-ventas">
+					<h3>Ventas</h3>
+					<div class="valor" th:text="${indicadores.ventasMes}">0</div>
+				</div>
+				<div class="card bg-clientes">
+					<h3>Clientes</h3>
+					<div class="valor" th:text="${indicadores.clientesMes}">0</div>
+				</div>
+				<div class="card bg-critico">
+					<h3>Stock Critico</h3>
+					<div class="valor" th:text="${indicadores.cantCriticos}">0</div>
+				</div>
+			</div>
+
+			<div class="bottom-layout">
+				<div class="chart-placeholder">
+					[ Ventas - productos: mes ]
+				</div>
+
+				<div class="alertas-panel">
+					<h3>Alertas</h3>
+
+					<div th:each="prod : ${indicadores.alertasAgotados}" class="alerta-item">
+						Sin stock: <span th:text="${prod.nombre}"></span>
+					</div>
+
+					<div th:each="prod : ${indicadores.alertasVencidos}" class="alerta-item">
+						Vencido: <span th:text="${prod.nombre}"></span>
+					</div>
+
+					<div th:if="${indicadores.alertasAgotados.isEmpty() and indicadores.alertasVencidos.isEmpty()}"
+						style="text-align: center; color: #2d6a4f; font-weight: bold; font-size: 1.1em; padding: 20px 0;">
+						No hay alertas activas.
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 </body>
+
 </html>

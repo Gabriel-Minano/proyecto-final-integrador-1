@@ -2,80 +2,307 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Nueva Venta</title>
+	<meta charset="UTF-8">
+	<title>Módulo de Caja - Conquistadores Farma</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-	<h1>Módulo de Caja - Nueva Venta</h1>
-	<div th:if="${error}" th:text="${error}" style="color: red; font-weight: bold;"></div>
+<body class="bg-light p-4">
 
-	<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post">
+	<div class="container bg-white p-4 rounded shadow-sm" style="max-width: 1100px;">
+		<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold"></div>
 
-		<div>
-			<label>Cliente:</label>
-			<select th:field="*{cliente.idCliente}" required>
-				<option value="">-- Seleccione Cliente --</option>
-				<option th:each="c : ${listaClientes}" th:value="${c.idCliente}"
-					th:text="${c.documento} + ' - ' + ${c.nombre}"></option>
-			</select>
+		<div th:if="${success}"
+			class="alert alert-success alert-dismissible fade show py-2 small fw-bold d-flex align-items-center shadow-sm"
+			role="alert">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+				class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
+				<path
+					d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L7.42 11.475a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+			</svg>
+			<span th:text="${success}">¡Operación completada con éxito!</span>
+			<button type="button" class="btn-close py-2.5" data-bs-submit="alert" data-bs-dismiss="alert"
+				aria-label="Close"></button>
 		</div>
 
-		<div>
-			<label>Vendedor / Cajero:</label>
-			<select th:field="*{usuario.idUsuario}" required>
-				<option value="">-- Seleccione Vendedor --</option>
-				<option th:each="u : ${listaUsuarios}" th:value="${u.idUsuario}"
-					th:text="${u.nombre} + ' ('+ ${u.rol} +')'"></option>
-			</select>
+		<h2 class="text-primary mb-3 border-bottom pb-2 fw-bold">Módulo de Caja - Nueva Venta</h2>
+
+		<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold"></div>
+
+		<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post" id="ventaForm">
+
+			<div class="row g-3 mb-4 p-3 bg-light rounded border">
+				<div class="col-md-6">
+					<label class="form-label fw-semibold text-secondary small">Cliente Beneficiario:</label>
+					<div class="input-group shadow-sm">
+						<input type="text" id="visualCliente" class="form-control bg-white fw-bold text-secondary"
+							placeholder="Haga clic en buscar..." readonly required>
+						<input type="hidden" th:field="*{cliente.idCliente}" id="idClienteOculto">
+						<button class="btn btn-primary fw-bold" type="button" data-bs-toggle="modal"
+							data-bs-target="#modalCliente">
+							🔍 Buscar Cliente
+						</button>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<label class="form-label fw-semibold text-secondary small">Cajero / Operador:</label>
+					<div class="form-control bg-light text-muted fw-bold border-secondary-subtle">
+						👤 <span th:text="${usernameLogueado}">Usuario</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<h5 class="fw-bold text-secondary mb-0">Detalle de Medicamentos</h5>
+				<button type="button" class="btn btn-primary btn-sm fw-bold shadow-sm" data-bs-toggle="modal"
+					data-bs-target="#modalProducto">
+					➕ Buscar y Agregar Producto
+				</button>
+			</div>
+
+			<div class="table-responsive border rounded mb-4" style="min-height: 200px; background-color: #fafafa;">
+				<table class="table table-bordered align-middle text-center mb-0" id="tablaDetalle">
+					<thead class="table-secondary small text-uppercase fw-bold">
+						<tr>
+							<th style="width: 40%;">Producto / Medicamento</th>
+							<th style="width: 15%;">Precio (S/.)</th>
+							<th style="width: 15%;">Cantidad</th>
+							<th style="width: 20%;">Subtotal (S/.)</th>
+							<th style="width: 10%;">Remover</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyDetalle">
+					</tbody>
+				</table>
+			</div>
+
+			<div class="d-flex justify-content-end align-items-center gap-3 border-top pt-3 mb-4">
+				<span class="fs-4 fw-bold text-dark">TOTAL NETO A COBRAR: S/.</span>
+				<input type="number" step="0.01" th:field="*{total}" id="totalVenta"
+					class="form-control text-end fw-bold text-success fs-4 bg-white border-0" style="width: 180px;"
+					readonly required />
+			</div>
+
+			<div class="d-flex gap-2">
+				<button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">Procesar Venta</button>
+			</div>
+		</form>
+		<form th:action="@{/logout}" method="post">
+			<div class="d-flex gap-2 mt-1">
+				<button type="submit" class="btn btn-danger">
+					Cerrar Sesión (Salir)
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content border-0 shadow-lg">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title fw-bold">Buscador de Clientes</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body p-4">
+					<div class="mb-3">
+						<input type="text" id="inputBuscarCliente"
+							class="form-control form-control-lg border-primary shadow-sm"
+							placeholder="Filtre por DNI o Apellidos..."
+							onkeyup="filtrarModal('inputBuscarCliente', 'tablaClientesModal', 'fila-cliente', ['.busqueda-doc', '.busqueda-nombre'])">
+					</div>
+					<div class="table-responsive border rounded" style="max-height: 300px;">
+						<table class="table table-hover table-striped text-center align-middle mb-0"
+							id="tablaClientesModal">
+							<thead class="table-light sticky-top">
+								<tr>
+									<th>Documento (DNI/RUC)</th>
+									<th>Nombres y Apellidos</th>
+									<th>Acción</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="c : ${listaClientes}" class="fila-cliente">
+									<td class="busqueda-doc fw-semibold text-secondary" th:text="${c.documento}"></td>
+									<td class="busqueda-nombre text-start ps-4"
+										th:text="${c.nombre} + ' ' + ${c.apellido}"></td>
+									<td>
+										<button type="button" class="btn btn-success btn-sm fw-bold px-3 shadow-sm"
+											th:onclick="seleccionarCliente([[${c.idCliente}]], [[${c.documento}]], [[${c.nombre} + ' ' + ${c.apellido}]])">
+											Asignar
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
 
-		<br />
-		<h3>Detalle de los Medicamentos</h3>
-
-		<table border="1">
-			<thead>
-				<tr>
-					<th>Medicamento / Producto</th>
-					<th>Cantidad</th>
-					<th>Precio Unitario (S/.)</th>
-					<th>Subtotal (S/.)</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="detalle, stat : *{listaDetallesVenta}">
-					<td>
-						<select th:field="*{listaDetallesVenta[__${stat.index}__].producto.idProducto}" required>
-							<option value="">-- Seleccione --</option>
-							<option th:each="p : ${listaProductos}" th:value="${p.idProducto}"
-								th:text="${p.nombre} + ' (Stock: ' + ${p.stockActual} + ')'"></option>
-						</select>
-					</td>
-					<td>
-						<input type="number" min="1" th:field="*{listaDetallesVenta[__${stat.index}__].cantidad}"
-							required />
-					</td>
-					<td>
-						<input type="number" step="0.01"
-							th:field="*{listaDetallesVenta[__${stat.index}__].precioUnitario} " required />
-					</td>
-					<td>
-						<input type="number" step="0.01" th:field="*{listaDetallesVenta[__${stat.index}__].subtotal}"
-							required />
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<br />
-		<div>
-			<label style="font-size: 1.2em; font-weight: bold;">Importe Total Total (S/.):</label>
-			<input type="number" step="0.01" th:field="*{total}" required />
+	<div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content border-0 shadow-lg">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title fw-bold">Catálogo de Medicamentos y Productos</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body p-4">
+					<div class="mb-3">
+						<input type="text" id="inputBuscarProducto"
+							class="form-control form-control-lg border-success shadow-sm"
+							placeholder="Filtre por Código, Nombre o Categoría..."
+							onkeyup="filtrarModal('inputBuscarProducto', 'tablaProductosModal', 'fila-producto', ['.busqueda-codigo', '.busqueda-nombre', '.busqueda-categoria'])">
+					</div>
+					<div class="table-responsive border rounded" style="max-height: 350px;">
+						<table class="table table-hover table-striped text-center align-middle mb-0"
+							id="tablaProductosModal">
+							<thead class="table-light sticky-top">
+								<tr>
+									<th>Código</th>
+									<th>Categoría</th>
+									<th>Nombre del Producto</th>
+									<th>Stock</th>
+									<th>Precio Venta</th>
+									<th>Acción</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="p : ${listaProductos}" class="fila-producto">
+									<td class="busqueda-codigo text-muted small" th:text="${p.codigo}"></td>
+									<td class="busqueda-categoria small" th:text="${p.categoria.nombre}"></td>
+									<td class="busqueda-nombre text-start fw-semibold" th:text="${p.nombre}"></td>
+									<td th:classappend="${p.stockActual <= p.stockMinimo} ? 'text-danger fw-bold' : 'text-success fw-bold'"
+										th:text="${p.stockActual}"></td>
+									<td class="fw-bold text-primary" th:text="'S/. ' + ${p.precioVenta}"></td>
+									<td>
+										<button type="button" class="btn btn-primary btn-sm fw-bold px-3 shadow-sm"
+											th:disabled="${p.stockActual == 0}"
+											th:classappend="${p.stockActual == 0} ? 'btn-secondary' : 'btn-primary'"
+											th:onclick="agregarFilaProducto([[${p.idProducto}]], [[${p.nombre}]], [[${p.precioVenta}]], [[${p.stockActual}]])">
+											<span th:text="${p.stockActual == 0} ? 'Agotado' : 'Agregar'"></span>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
 
-		<br />
-		<button type="submit">Registrar Venta</button>
-		<a th:href="@{/ventas}">Cancelar</a>
-	</form>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		let contadorFilas = 0;
+
+		// --- LÓGICA DE DETALLE DE VENTA ---
+
+		// Inyecta una fila con campos de solo lectura basados en el producto seleccionado
+		function agregarFilaProducto(idProducto, nombreProducto, precio, stockDisponible) {
+			const tbody = document.getElementById('tbodyDetalle');
+			const row = document.createElement('tr');
+			row.id = 'fila-' + contadorFilas;
+
+			row.innerHTML = `
+                <td class="text-start">
+                    <input type="hidden" name="listaDetallesVenta[${contadorFilas}].producto.idProducto" value="${idProducto}">
+                    <span class="fw-semibold text-secondary ps-2">${nombreProducto}</span>
+                    <br><small class="text-muted ps-2">Max disponible: ${stockDisponible}</small>
+                </td>
+                <td>
+                    <input type="number" name="listaDetallesVenta[${contadorFilas}].precioUnitario" id="precio-${contadorFilas}" class="form-control form-control-sm text-end bg-light border-0 fw-bold" readonly step="0.01" value="${parseFloat(precio).toFixed(2)}" />
+                </td>
+                <td>
+                    <input type="number" name="listaDetallesVenta[${contadorFilas}].cantidad" id="cant-${contadorFilas}" class="form-control form-control-sm text-center" min="1" max="${stockDisponible}" value="1" required oninput="calcularFilaSubtotal(${contadorFilas}, ${stockDisponible})" />
+                </td>
+                <td>
+                    <input type="number" name="listaDetallesVenta[${contadorFilas}].subtotal" id="sub-${contadorFilas}" class="form-control form-control-sm text-end bg-light border-0 subtotal-item text-primary fw-bold" readonly step="0.01" value="${parseFloat(precio).toFixed(2)}" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm fw-bold" onclick="eliminarFila(${contadorFilas})">✕</button>
+                </td>
+            `;
+
+			tbody.appendChild(row);
+			contadorFilas++;
+			recalcularTotalGeneral();
+
+			// Cierra el modal de productos automáticamente
+			const modalEl = document.getElementById('modalProducto');
+			const modal = bootstrap.Modal.getInstance(modalEl);
+			modal.hide();
+		}
+
+		function calcularFilaSubtotal(index, stockDisponible) {
+			const inputCantidad = document.getElementById('cant-' + index);
+			let cantidad = parseInt(inputCantidad.value) || 0;
+
+			// Validación de Frontend: Impide vender más del stock
+			if (cantidad > stockDisponible) {
+				alert('¡Stock insuficiente! Solo quedan ' + stockDisponible + ' unidades de este producto.');
+				cantidad = stockDisponible;
+				inputCantidad.value = cantidad;
+			}
+
+			const precio = parseFloat(document.getElementById('precio-' + index).value) || 0;
+			const subtotal = (precio * cantidad).toFixed(2);
+			document.getElementById('sub-' + index).value = subtotal;
+			recalcularTotalGeneral();
+		}
+
+		function recalcularTotalGeneral() {
+			let acumulado = 0;
+			document.querySelectorAll('.subtotal-item').forEach(input => {
+				acumulado += parseFloat(input.value) || 0;
+			});
+			document.getElementById('totalVenta').value = acumulado.toFixed(2);
+		}
+
+		function eliminarFila(index) {
+			const fila = document.getElementById('fila-' + index);
+			if (fila) {
+				fila.remove();
+				recalcularTotalGeneral();
+			}
+		}
+
+		// --- LÓGICA DE LOS MODALES (Búsqueda Universal) ---
+
+		// Función genérica para filtrar tablas de cualquier modal
+		function filtrarModal(inputId, tablaId, claseFila, selectoresTexto) {
+			const filtro = document.getElementById(inputId).value.toLowerCase();
+			const filas = document.querySelectorAll(`#${tablaId} .${claseFila}`);
+
+			filas.forEach(fila => {
+				let coincide = false;
+				// Busca en todas las columnas indicadas en los selectores
+				selectoresTexto.forEach(selector => {
+					const elemento = fila.querySelector(selector);
+					if (elemento && elemento.innerText.toLowerCase().includes(filtro)) {
+						coincide = true;
+					}
+				});
+				fila.style.display = coincide ? "" : "none";
+			});
+		}
+
+		// Asignación de Cliente desde el Modal
+		function seleccionarCliente(id, documento, nombreCompleto) {
+			document.getElementById("idClienteOculto").value = id;
+			document.getElementById("visualCliente").value = documento + " - " + nombreCompleto;
+
+			const modalEl = document.getElementById('modalCliente');
+			const modal = bootstrap.Modal.getInstance(modalEl);
+			modal.hide();
+
+			document.getElementById("inputBuscarCliente").value = "";
+			filtrarModal('inputBuscarCliente', 'tablaClientesModal', 'fila-cliente', ['.busqueda-doc', '.busqueda-nombre']);
+		}
+	</script>
 </body>
 
 </html>

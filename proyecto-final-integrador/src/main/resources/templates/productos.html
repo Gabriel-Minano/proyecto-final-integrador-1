@@ -2,53 +2,166 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Lista de Productos</title>
+	<meta charset="UTF-8">
+	<title>Inventario de Productos - Conquistadores Farma</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" th:href="@{navBar.css}">
+
+	<style>
+		/* Estilos del área de contenido principal y cabecera */
+		.main-content {
+			flex: 1;
+			padding: 30px;
+			background-color: #ffffff;
+			overflow-y: auto;
+		}
+
+		.top-header {
+			display: flex;
+			justify-content: flex-end;
+			margin-bottom: 30px;
+		}
+
+		.user-profile {
+			font-size: 1.3em;
+			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+	</style>
 </head>
 
 <body>
-	<h1>Inventario de Productos</h1>
 
-	<div style="margin-bottom: 20px;">
-		<form th:action="@{/productos}" method="get">
-			<input type="text" name="palabraClave" th:value="${palabraClave}" placeholder="Buscar por nombre..." />
-			<button type="submit">Buscar</button>
-			<a th:href="@{/productos}">Limpiar</a>
-		</form>
+	<div class="layout-wrapper">
+
+		<div class="sidebar">
+			<div class="logo-container">
+				<div class="logo-mockup">CF</div>
+			</div>
+
+			<ul class="nav-menu">
+				<li><a th:href="@{/dashboard}">Dashboard</a></li>
+				<li><a th:href="@{/ventas}">Ventas</a></li>
+				<li class="active"><a th:href="@{/productos}">Productos</a></li>
+				<li><a th:href="@{/clientes}">Clientes</a></li>
+				<li><a th:href="@{/proveedores}">Proveedores</a></li>
+				<li><a th:href="@{/categorias}">Categorías</a></li>
+				<li><a th:href="@{/usuarios}">Usuarios</a></li>
+			</ul>
+
+			<div class="sidebar-divider"></div>
+
+			<ul class="nav-menu bottom-menu">
+				<li>
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-btn">
+							Cerrar sesión<br><br>Salir
+						</button>
+					</form>
+				</li>
+			</ul>
+		</div>
+
+		<div class="main-content">
+
+			<div class="top-header">
+				<div class="user-profile">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+						viewBox="0 0 16 16">
+						<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+						<path fill-rule="evenodd"
+							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+					</svg>
+					Admin
+				</div>
+			</div>
+
+			<h2 class="text-secondary fw-bold mb-3">Inventario de Productos</h2>
+			<p class="text-muted mb-4">Gestión del catálogo de medicamentos y control de stock.</p>
+
+			<div th:if="${success}" th:text="${success}" class="alert alert-success py-2 small fw-bold mb-4 shadow-sm"
+				role="alert"></div>
+			<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold mb-4 shadow-sm"
+				role="alert"></div>
+
+			<div class="d-flex justify-content-between align-items-center mb-4">
+
+				<form th:action="@{/productos}" method="get" class="d-flex" style="width: 450px;">
+					<div class="input-group shadow-sm">
+						<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
+							placeholder="Buscar por nombre o código..." autocomplete="off">
+						<button type="submit" class="btn btn-primary fw-bold px-3">🔍 Buscar</button>
+						<a th:href="@{/productos}" class="btn btn-outline-secondary">Limpiar</a>
+					</div>
+				</form>
+
+				<a th:href="@{/productos/nuevo}" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
+					➕ Registrar Nuevo Producto
+				</a>
+			</div>
+
+			<div class="card card-body border-0 shadow-sm p-0">
+				<div class="table-responsive rounded border">
+					<table class="table table-striped table-hover align-middle text-center mb-0">
+						<thead class="table-secondary text-uppercase small fw-bold border-bottom">
+							<tr>
+								<th style="padding: 15px;">Código</th>
+								<th class="text-start">Nombre del Producto</th>
+								<th>Categoría</th>
+								<th>Proveedor</th>
+								<th>Precio Venta</th>
+								<th>Stock</th>
+								<th>Vencimiento</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="prod : ${lista}">
+								<td class="text-muted fw-bold" th:text="${prod.codigo}"></td>
+								<td class="text-start fw-semibold" th:text="${prod.nombre}"></td>
+								<td th:text="${prod.categoria.nombre}"></td>
+								<td th:text="${prod.proveedor.nombre}"></td>
+
+								<td class="text-primary fw-bold"
+									th:text="'S/. ' + ${#numbers.formatDecimal(prod.precioVenta, 1, 2)}"></td>
+
+								<td th:classappend="${prod.stockActual <= prod.stockMinimo} ? 'text-danger fw-bold fs-6' : 'text-success fw-bold fs-6'"
+									th:text="${prod.stockActual}">
+								</td>
+
+								<td th:text="${#temporals.format(prod.fechaVencimiento, 'dd-MM-yyyy')}"></td>
+
+								<td>
+									<div class="d-flex justify-content-center gap-2">
+										<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}"
+											class="btn btn-warning btn-sm fw-bold shadow-sm" style="color: #664d03;">
+											✏️ Editar
+										</a>
+										<a th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
+											class="btn btn-danger btn-sm fw-bold shadow-sm"
+											onclick="return confirm('¿Estás seguro de que deseas retirar este producto del catálogo? Esta acción no se puede deshacer.');">
+											🗑️ Eliminar
+										</a>
+									</div>
+								</td>
+							</tr>
+							<tr th:if="${lista.isEmpty()}">
+								<td colspan="8" class="text-center text-muted py-5 fst-italic fs-5">
+									No se encontraron productos registrados que coincidan con la búsqueda.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
 	</div>
-	<a th:href="@{/productos/nuevo}">Registrar Nuevo Producto</a>
-	<table border="1">
-		<thead>
-			<tr>
-				<th>Código</th>
-				<th>Nombre</th>
-				<th>Categoría</th>
-				<th>Proveedor</th>
-				<th>Precio Venta</th>
-				<th>Stock</th>
-				<th>Vencimiento</th>
-				<th>Acciones</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="prod : ${lista}">
-				<td th:text="${prod.codigo}"></td>
-				<td th:text="${prod.nombre}"></td>
-				<td th:text="${prod.categoria.nombre}"></td>
-				<td th:text="${prod.proveedor.nombre}"></td>
-				<td th:text="${prod.precioVenta}"></td>
-				<td th:text="${prod.stockActual}"
-					th:style="${prod.stockActual <= prod.stockMinimo} ? 'color: red; font-weight: bold;' : ''">
-				</td>
-				<td th:text="${prod.fechaVencimiento}"></td>
-				<td>
-					<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}">Editar</a>
-					<a th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
-						onclick="return confirm('¿Estás seguro de que deseas retirar este producto del catálogo?');"
-						style="color: red;">Eliminar</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
