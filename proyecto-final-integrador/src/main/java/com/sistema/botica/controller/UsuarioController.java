@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.sistema.botica.DTO.UsuarioDTO;
 import com.sistema.botica.entity.Usuario;
 import com.sistema.botica.service.UsuarioService;
 
@@ -28,26 +29,48 @@ public class UsuarioController {
 
 	@GetMapping("/nuevo")
 	public String nuevo(Model modelo) {
-		modelo.addAttribute("usuario", new Usuario());
+		modelo.addAttribute("usuario", new UsuarioDTO());
 		return "usuarios_formulario";
 	}
 
 	@GetMapping("/editar/{id}")
 	public String editar(@PathVariable("id") Integer id, Model modelo) {
+
 		Usuario usuario = usuarioService.buscarPorId(id);
+
 		if (usuario == null) {
 			return "redirect:/usuarios";
 		}
-		modelo.addAttribute("usuario", usuario);
+
+		UsuarioDTO dto = new UsuarioDTO();
+
+		dto.setIdUsuario(usuario.getIdUsuario());
+		dto.setNombre(usuario.getNombre());
+		dto.setUsername(usuario.getUsername());
+
+		// Condierando que se mantiene el hash actual para evitar perder contraseña en
+		// caso entre una cadena vacia
+		dto.setPassword("");
+
+		dto.setRol(usuario.getRol());
+		dto.setEstado(usuario.getEstado());
+
+		modelo.addAttribute("usuario", dto);
+
 		return "usuarios_formulario";
 	}
 
 	@PostMapping("/guardar")
-	public String guardar(@Validated @ModelAttribute("usuario") Usuario usuario, BindingResult result) {
+	public String guardar(
+			@Validated @ModelAttribute("usuario") UsuarioDTO usuarioDTO,
+			BindingResult result) {
+
 		if (result.hasErrors()) {
 			return "usuarios_formulario";
 		}
-		usuarioService.guardar(usuario);
+
+		usuarioService.guardar(usuarioDTO);
+
 		return "redirect:/usuarios";
 	}
 

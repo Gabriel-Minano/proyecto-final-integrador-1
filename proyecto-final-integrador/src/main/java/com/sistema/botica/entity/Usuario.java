@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -33,6 +34,7 @@ public class Usuario {
 
 	@NotBlank(message = "La constraseña es obligatoria")
 	@Size(max = 255)
+	@JsonIgnore
 	@Column(name = "password", length = 255)
 	private String password;
 
@@ -43,7 +45,7 @@ public class Usuario {
 
 	@Column(name = "estado", columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean estado = true;
-	
+
 	// Un usuario (empleado) puede realizar muchas ventas
 	@JsonIgnore
 	@OneToMany(mappedBy = "usuario")
@@ -104,6 +106,5 @@ public class Usuario {
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
 	}
-	
-	
+
 }
