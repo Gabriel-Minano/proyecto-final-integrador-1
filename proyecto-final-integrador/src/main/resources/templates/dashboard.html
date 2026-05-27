@@ -124,6 +124,8 @@
 	</style>
 </head>
 
+
+
 <body>
 
 	<div class="layout-wrapper">
@@ -220,7 +222,7 @@
 
 			<div class="bottom-layout">
 				<div class="chart-placeholder">
-					[ Ventas - productos: mes ]
+					<canvas id="ventasChart"></canvas>
 				</div>
 
 				<div class="alertas-panel">
@@ -245,5 +247,47 @@
 	</div>
 
 </body>
+<!--js para manerjar el grafico de ventas por dia con charts js-->
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
+
+    // Datos enviados desde Spring
+    let ventasPorDia = /*[[${ventasPorDia}]]*/ [];
+
+    // Arrays para Chart.js
+    let labels = [];
+    let data = [];
+
+    ventasPorDia.forEach(v => {
+        labels.push("Día " + v.dia);
+        data.push(v.total);
+    });
+
+    // Crear gráfico
+    const ctx = document.getElementById('ventasChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Ventas por día',
+                data: data,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
 
 </html>

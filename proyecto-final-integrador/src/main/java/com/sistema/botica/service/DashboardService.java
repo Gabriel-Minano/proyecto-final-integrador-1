@@ -12,17 +12,19 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sistema.botica.DTO.VentaPorDiaDTO;
 import com.sistema.botica.Repository.ProductoRepository;
 import com.sistema.botica.Repository.VentaRepository;
 import com.sistema.botica.entity.Producto;
 
 @Service
 public class DashboardService {
-	@Autowired
-	private ProductoRepository productoRepo;
-	@Autowired
+    @Autowired
+    private ProductoRepository productoRepo;
+    @Autowired
     private VentaRepository ventaRepo;
-	public Map<String, Object> calcularIndicadores(Integer mes, Integer anio) {
+
+    public Map<String, Object> calcularIndicadores(Integer mes, Integer anio) {
         Map<String, Object> indicadores = new HashMap<>();
 
         // 1. CÁLCULOS DE VENTAS (Afectados por el filtro de fecha)
@@ -45,10 +47,14 @@ public class DashboardService {
         // 3. LISTAS PARA ALERTAS
         List<Producto> productosAgotados = productoRepo.findByEstadoTrueAndStockActualEquals(0);
         List<Producto> productosVencidos = productoRepo.findByEstadoTrueAndFechaVencimientoBefore(LocalDate.now());
-        
+
         indicadores.put("alertasAgotados", productosAgotados);
         indicadores.put("alertasVencidos", productosVencidos);
 
         return indicadores;
+    }
+
+    public List<VentaPorDiaDTO> obtenerVentasPorDia(Integer mes, Integer anio) {
+        return ventaRepo.obtenerVentasPorDia(mes, anio);
     }
 }
