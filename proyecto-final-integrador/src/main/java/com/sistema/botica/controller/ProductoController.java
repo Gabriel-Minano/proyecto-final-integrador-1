@@ -29,11 +29,41 @@ public class ProductoController {
 	@Autowired
 	private ProveedorService proveedorService;
 
+	// @GetMapping
+	// public String listar(@RequestParam(name = "palabraClave", required = false)
+	// String palabraClave, Model modelo) {
+	// List<Producto> lista = productoService.listarProductosClave(palabraClave);
+	// modelo.addAttribute("lista", lista);
+	// modelo.addAttribute("palabraClave", palabraClave);
+	// return "productos";
+	// }
 	@GetMapping
-	public String listar(@RequestParam(name = "palabraClave", required = false) String palabraClave, Model modelo) {
-		List<Producto> lista = productoService.listarProductosClave(palabraClave);
+	public String listar(
+			@RequestParam(name = "palabraClave", required = false) String palabraClave,
+
+			@RequestParam(name = "filtro", required = false) String filtro,
+
+			Model modelo) {
+
+		List<Producto> lista;
+
+		// Aplicar filtros
+		if (filtro != null && !filtro.isEmpty()) {
+
+			lista = productoService.filtrarProductos(filtro);
+
+		} else {
+
+			// Búsqueda normal
+			lista = productoService.listarProductosClave(palabraClave);
+		}
+
 		modelo.addAttribute("lista", lista);
+
 		modelo.addAttribute("palabraClave", palabraClave);
+
+		modelo.addAttribute("filtro", filtro);
+
 		return "productos";
 	}
 
