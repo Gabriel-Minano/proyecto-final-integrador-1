@@ -22,6 +22,15 @@ public class ProveedorService {
 		return proveedorRepository.findByEstadoTrue();
 	}
 
+	// Listar proveedores por palabra clave
+	public List<Proveedor> listarProductosClave(String palabraClave) {
+		if (palabraClave != null && !palabraClave.isEmpty()) {
+			return proveedorRepository.buscarPorCoincidencia(palabraClave);
+		}
+		return listarActivos();
+
+	}
+
 	public void guardar(Proveedor proveedor) {
 		proveedorRepository.save(proveedor);
 	}
@@ -33,8 +42,8 @@ public class ProveedorService {
 	public void eliminar(Integer id) {
 		proveedorRepository.deleteById(id);
 	}
-	
-	//Eliminación lógica
+
+	// Eliminación lógica
 	public void eliminarLogico(Integer id) {
 		Proveedor proveedor = proveedorRepository.findById(id).orElse(null);
 		if (proveedor != null) {

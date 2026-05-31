@@ -23,6 +23,15 @@ public class UsuarioService {
 		return usuarioRepository.findByEstadoTrue();
 	}
 
+	// Listar usuarios por palabra clave
+	public List<Usuario> listarProductosClave(String palabraClave) {
+		if (palabraClave != null && !palabraClave.isEmpty()) {
+			return usuarioRepository.buscarPorCoincidencia(palabraClave);
+		}
+		return listarActivos();
+
+	}
+
 	public void guardar(UsuarioDTO dto) {
 
 		Usuario usuario;
@@ -30,9 +39,7 @@ public class UsuarioService {
 		// EDITAR
 		if (dto.getIdUsuario() != null) {
 
-			usuario = usuarioRepository
-					.findById(dto.getIdUsuario())
-					.orElse(new Usuario());
+			usuario = usuarioRepository.findById(dto.getIdUsuario()).orElse(new Usuario());
 
 		} else {
 
@@ -46,11 +53,9 @@ public class UsuarioService {
 		usuario.setEstado(dto.getEstado());
 
 		// SOLO actualizar contraseña si escribieron una nueva
-		if (dto.getPassword() != null &&
-				!dto.getPassword().isBlank()) {
+		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
 
-			usuario.setPassword(
-					passwordEncoder.encode(dto.getPassword()));
+			usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
 
 		usuarioRepository.save(usuario);

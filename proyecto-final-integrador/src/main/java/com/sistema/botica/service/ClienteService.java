@@ -16,16 +16,27 @@ public class ClienteService {
 	public List<Cliente> listarActivos() {
 		return clienteRepository.findByEstadoTrue();
 	}
+
+	// Listar clientes por palabra clave
+	public List<Cliente> listarProductosClave(String palabraClave) {
+		if (palabraClave != null && !palabraClave.isEmpty()) {
+			return clienteRepository.buscarPorCoincidencia(palabraClave);
+		}
+		return listarActivos();
+
+	}
+
 	public void guardar(Cliente cliente) {
 		clienteRepository.save(cliente);
 	}
+
 	public Cliente buscarPorId(Integer id) {
 		return clienteRepository.findById(id).orElse(null);
 	}
-	
+
 	public void eliminarLogico(Integer id) {
 		Cliente cliente = clienteRepository.findById(id).orElse(null);
-		if(cliente != null) {
+		if (cliente != null) {
 			cliente.setEstado(false);
 			clienteRepository.save(cliente);
 		}

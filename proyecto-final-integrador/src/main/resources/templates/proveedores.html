@@ -87,7 +87,17 @@
 			<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold mb-4 shadow-sm"
 				role="alert"></div>
 
-			<div class="d-flex justify-content-end mb-4">
+			<div class="d-flex justify-content-between mb-4">
+				<form th:action="@{/proveedores}" method="get" class="d-flex" style="width: 550px">
+					<div class="input-group shadow-sm">
+						<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
+							placeholder="Buscar por RUC o razón social..." autocomplete="off" maxlength="11">
+						<button type="submit" class="btn btn-primary fw-bold px-3">
+							🔍 Buscar
+						</button>
+						<a th:href="@{/proveedores}" class="btn btn-outline-secondary">Limpiar</a>
+					</div>
+				</form>
 				<a th:href="@{/proveedores/nuevo}" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
 					➕ Crear Nuevo Proveedor
 				</a>

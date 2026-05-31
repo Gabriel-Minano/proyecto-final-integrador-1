@@ -1,5 +1,7 @@
 package com.sistema.botica.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sistema.botica.entity.Proveedor;
 import com.sistema.botica.service.ProveedorService;
@@ -21,8 +24,10 @@ public class ProveedorController {
 	private ProveedorService proveedorService;
 
 	@GetMapping
-	public String listar(Model modelo) {
-		modelo.addAttribute("lista", proveedorService.listarActivos());
+	public String listar(@RequestParam(required = false) String palabraClave, Model modelo) {
+		List<Proveedor> lista = proveedorService.listarProductosClave(palabraClave);
+		modelo.addAttribute("lista", lista);
+		modelo.addAttribute("palabraClave", palabraClave);
 		return "proveedores";
 	}
 
