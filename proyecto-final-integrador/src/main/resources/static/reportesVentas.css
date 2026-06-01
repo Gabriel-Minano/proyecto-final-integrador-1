@@ -1,0 +1,178 @@
+/* =========================================
+   ESTILOS DEL MÓDULO DE REPORTES (PROTOTIPO)
+   ========================================= */
+
+/* Cabecera y Título */
+.reporte-header {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	color: #0d6efd;
+	margin-bottom: 5px;
+}
+
+.reporte-header i {
+	font-size: 2rem;
+}
+
+.reporte-subtitle {
+	color: #6c757d;
+	margin-bottom: 25px;
+	font-size: 0.95rem;
+}
+
+/* Tarjeta de Filtros */
+.filtro-card {
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-bottom: 25px;
+	background: #fff;
+}
+
+.filtro-header {
+	background-color: #0d6efd;
+	color: white;
+	padding: 10px 20px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.filtro-body {
+	padding: 20px;
+}
+
+/* Tarjetas de Indicadores (KPIs) */
+.kpi-card {
+	background: #fff;
+	border: 1px solid #e9ecef;
+	border-radius: 10px;
+	padding: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+	height: 100%;
+}
+
+.kpi-title {
+	font-size: 0.85rem;
+	color: #6c757d;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+}
+
+.kpi-value {
+	font-size: 1.8rem;
+	font-weight: bold;
+	margin: 0;
+}
+
+.kpi-icon {
+	font-size: 2.5rem;
+	opacity: 0.5;
+}
+
+/* Colores específicos del prototipo para cada KPI */
+.kpi-blue .kpi-value {
+	color: #0d6efd;
+}
+
+.kpi-blue .kpi-icon {
+	color: #0d6efd;
+}
+
+.kpi-green .kpi-value {
+	color: #198754;
+}
+
+.kpi-green .kpi-icon {
+	color: #198754;
+}
+
+.kpi-cyan .kpi-value {
+	color: #0dcaf0;
+}
+
+.kpi-cyan .kpi-icon {
+	color: #0dcaf0;
+}
+
+.kpi-yellow .kpi-value {
+	color: #ffc107;
+}
+
+.kpi-yellow .kpi-icon {
+	color: #ffc107;
+}
+
+/* Tarjeta de Tabla de Resultados */
+.resultados-card {
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.resultados-header {
+	background-color: #f8f9fa;
+	padding: 15px 20px;
+	border-bottom: 1px solid #dee2e6;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
+	color: #495057;
+}
+
+.resultados-badge {
+	background-color: #0d6efd;
+	color: white;
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.85rem;
+	font-weight: normal;
+}
+
+.tabla-reporte {
+	margin-bottom: 0;
+}
+
+.tabla-reporte thead th {
+	background-color: #e9ecef;
+	color: #495057;
+	font-size: 0.85rem;
+	padding: 12px 15px;
+	border-bottom: none;
+}
+
+.tabla-reporte tbody td {
+	padding: 12px 15px;
+	vertical-align: middle;
+	color: #212529;
+	font-size: 0.9rem;
+}
+
+.resultados-footer {
+	background-color: #f8f9fa;
+	padding: 15px 20px;
+	border-top: 1px solid #dee2e6;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 20px;
+}
+
+.total-label {
+	font-weight: bold;
+	color: #212529;
+}
+
+.total-monto {
+	font-weight: bold;
+	color: #0d6efd;
+	font-size: 1.1rem;
+}

@@ -38,4 +38,7 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
     List<VentaPorDiaDTO> obtenerVentasPorDia(
             @Param("mes") Integer mes,
             @Param("anio") Integer anio);
+    
+    //Esto se usará en el modulo de reportes de Ventas, para el filtro de fechas
+    List<Venta> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
 }
