@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Reporte de Productos e Inventario - Conquistadores Farma</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+	<link rel="stylesheet" th:href="@{/navBar.css}">
+	<link rel="stylesheet" th:href="@{/reportesProductos.css}">
+
+	<style>
+		.main-content {
+			flex: 1;
+			padding: 30px;
+			background-color: #f4f7f6;
+			overflow-y: auto;
+		}
+
+		.top-header {
+			display: flex;
+			justify-content: flex-end;
+			margin-bottom: 20px;
+		}
+
+		.user-profile {
+			font-size: 1.1em;
+			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-weight: 500;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="layout-wrapper">
+
+		<div class="sidebar">
+			<div class="logo-container">
+				<div class="logo-mockup">CF</div>
+			</div>
+			<ul class="nav-menu">
+				<li><a th:href="@{/dashboard}">Dashboard</a></li>
+				<li><a th:href="@{/ventas}">Ventas</a></li>
+				<li class="active"><a th:href="@{/productos}">Productos</a></li>
+				<li><a th:href="@{/clientes}">Clientes</a></li>
+				<li><a th:href="@{/proveedores}">Proveedores</a></li>
+				<li><a th:href="@{/categorias}">Categorías</a></li>
+				<li><a th:href="@{/usuarios}">Usuarios</a></li>
+			</ul>
+			<div class="sidebar-divider"></div>
+			<ul class="nav-menu bottom-menu">
+				<li>
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-btn">Cerrar sesión<br><br>Salir</button>
+					</form>
+				</li>
+			</ul>
+		</div>
+
+		<div class="main-content">
+
+			<div class="top-header">
+				<div class="user-profile">
+					<i class="bi bi-person-circle fs-4"></i> Admin
+				</div>
+			</div>
+
+			<div class="reporte-header">
+				<i class="bi bi-box-seam"></i>
+				<h2 class="mb-0 fw-bold">Reporte de Inventario</h2>
+			</div>
+			<p class="reporte-subtitle">Analice la salud del almacén y la rotación de artículos por periodo.</p>
+
+			<div class="filtro-card shadow-sm mb-4">
+				<div class="filtro-header">
+					<i class="bi bi-funnel-fill"></i> Filtros del reporte
+				</div>
+				<div class="filtro-body">
+					<form th:action="@{/reportes/productos}" method="get" id="formFiltro">
+						<div class="row g-3 align-items-end">
+							<div class="col-md-4">
+								<label class="form-label fw-bold small text-secondary">Fecha desde</label>
+								<input type="date" class="form-control" name="fechaDesde" id="fechaDesde"
+									th:value="${fechaDesde}" required>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label fw-bold small text-secondary">Fecha hasta</label>
+								<input type="date" class="form-control" name="fechaHasta" id="fechaHasta"
+									th:value="${fechaHasta}" required>
+							</div>
+							<div class="col-md-4 d-flex justify-content-end gap-2">
+								<button type="button" class="btn btn-light border fw-semibold text-secondary"
+									onclick="limpiarFiltros()">
+									<i class="bi bi-arrow-counterclockwise"></i> Limpiar
+								</button>
+								<button type="submit" class="btn btn-primary fw-semibold shadow-sm" id="btnBuscar">
+									<i class="bi bi-search"></i> Generar
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-heart-pulse-fill me-2"></i>Salud Actual del
+				Inventario</h5>
+
+			<div class="row g-3 mb-4">
+				<div class="col-md-3">
+					<div class="kpi-card kpi-green">
+						<div>
+							<div class="kpi-title">Productos Disponibles</div>
+							<p class="kpi-value"
+								th:text="${#numbers.formatDecimal(reporte.porcentajeDisponibles, 1, 1)} + '%'">0.0%</p>
+							<small class="text-muted"
+								th:text="'Base: ' + ${reporte.totalProductosActivos} + ' activos'"></small>
+						</div>
+						<i class="bi bi-check-circle-fill kpi-icon"></i>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="kpi-card kpi-yellow">
+						<div>
+							<div class="kpi-title">Stock Crítico</div>
+							<p class="kpi-value"
+								th:text="${#numbers.formatDecimal(reporte.porcentajeStockCritico, 1, 1)} + '%'">0.0%</p>
+							<small class="text-muted">Requieren reposición</small>
+						</div>
+						<i class="bi bi-exclamation-triangle-fill kpi-icon"></i>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="kpi-card kpi-red">
+						<div>
+							<div class="kpi-title">Agotados</div>
+							<p class="kpi-value"
+								th:text="${#numbers.formatDecimal(reporte.porcentajeAgotados, 1, 1)} + '%'">0.0%</p>
+							<small class="text-muted">Pérdida de venta</small>
+						</div>
+						<i class="bi bi-x-circle-fill kpi-icon"></i>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="kpi-card kpi-cyan">
+						<div>
+							<div class="kpi-title">Sobrestock</div>
+							<p class="kpi-value"
+								th:text="${#numbers.formatDecimal(reporte.porcentajeSobrestock, 1, 1)} + '%'">0.0%</p>
+							<small class="text-muted">Capital inmovilizado</small>
+						</div>
+						<i class="bi bi-boxes kpi-icon"></i>
+					</div>
+				</div>
+			</div>
+
+			<h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-graph-up-arrow me-2"></i>Dinámica del Periodo
+				Seleccionado</h5>
+
+			<div class="row g-3 mb-4">
+
+				<div class="col-md-4 d-flex flex-column gap-3">
+					<div class="kpi-card kpi-blue flex-fill mb-0">
+						<div>
+							<div class="kpi-title">Unidades Despachadas</div>
+							<p class="kpi-value" th:text="${reporte.totalUnidadesDespachadas}">0</p>
+						</div>
+						<i class="bi bi-box-arrow-right kpi-icon"></i>
+					</div>
+					<div class="kpi-card kpi-dark flex-fill mb-0">
+						<div>
+							<div class="kpi-title">Valorización de Rotación</div>
+							<p class="kpi-value fs-4 mt-1"
+								th:text="'S/ ' + ${#numbers.formatDecimal(reporte.valorizacionTotal, 1, 2)}">S/ 0.00</p>
+						</div>
+						<i class="bi bi-cash-coin kpi-icon"></i>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="ranking-card shadow-sm">
+						<div class="ranking-header bg-success text-white">
+							<i class="bi bi-star-fill me-2"></i> Top 10 - Mayor Rotación
+						</div>
+						<div class="ranking-body">
+							<table class="table table-sm table-borderless table-striped mb-0 small">
+								<tbody>
+									<tr th:each="item : ${reporte.top10MasVendidos}">
+										<td class="text-truncate text-secondary" style="max-width: 150px;"
+											th:text="${item.key}" th:title="${item.key}"></td>
+										<td class="text-end fw-bold text-dark" th:text="${item.value} + ' unds'"></td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(reporte.top10MasVendidos)}">
+										<td colspan="2" class="text-center text-muted py-3">Sin movimientos</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="ranking-card shadow-sm">
+						<div class="ranking-header bg-danger text-white">
+							<i class="bi bi-exclamation-diamond-fill me-2"></i> Top 10 - Riesgo Estancamiento
+						</div>
+						<div class="ranking-body">
+							<table class="table table-sm table-borderless table-striped mb-0 small">
+								<tbody>
+									<tr th:each="item : ${reporte.top10MenosVendidos}">
+										<td class="text-truncate text-secondary" style="max-width: 150px;"
+											th:text="${item.key}" th:title="${item.key}"></td>
+										<td class="text-end fw-bold text-dark" th:text="${item.value} + ' unds'"></td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(reporte.top10MenosVendidos)}">
+										<td colspan="2" class="text-center text-muted py-3">Sin movimientos</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="resultados-card shadow-sm mb-5">
+				<div class="resultados-header">
+					<span><i class="bi bi-table me-2"></i> Resultados del reporte</span>
+					<span class="resultados-badge"
+						th:text="'Total: ' + ${reporte.paginaMovimientos.totalElements} + ' registros'">Total: 0
+						registros</span>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-hover tabla-reporte">
+						<thead>
+							<tr>
+								<th class="ps-3">ID Detalle</th>
+								<th>Fecha y Hora</th>
+								<th>ID Venta</th>
+								<th>Código</th>
+								<th>Producto</th>
+								<th>Categoría</th>
+								<th class="text-center">Cant.</th>
+								<th class="text-end">P. Unit (S/.)</th>
+								<th class="text-end pe-3">Subtotal (S/.)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="dv : ${reporte.paginaMovimientos.content}">
+								<td class="fw-bold text-secondary" th:text="${dv.idDetalle}"></td>
+								<td th:text="${#temporals.format(dv.venta.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+								<td th:text="${dv.venta.idVenta}"></td>
+								<td class="fw-bold text-muted" th:text="${dv.producto.codigo}"></td>
+								<td th:text="${dv.producto.nombre}"></td>
+								<td th:text="${dv.producto.categoria.nombre}"></td>
+								<td class="text-center fw-bold" th:text="${dv.cantidad}"></td>
+								<td class="text-end text-muted"
+									th:text="${#numbers.formatDecimal(dv.precioUnitario, 1, 2)}"></td>
+								<td class="text-end pe-3 fw-bold text-success"
+									th:text="${#numbers.formatDecimal(dv.subtotal, 1, 2)}"></td>
+							</tr>
+							<tr th:if="${reporte.paginaMovimientos.empty}">
+								<td colspan="9" class="text-center text-muted py-5">
+									<i class="bi bi-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+									No se encontraron salidas con los rangos de fechas seleccionados.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="d-flex justify-content-center bg-white py-3 border-top"
+					th:if="${reporte.paginaMovimientos.totalPages > 1}">
+					<nav aria-label="Navegación de resultados">
+						<ul class="pagination pagination-sm mb-0 shadow-sm">
+							<li class="page-item" th:classappend="${reporte.paginaMovimientos.first ? 'disabled' : ''}">
+								<a class="page-link text-secondary fw-bold"
+									th:href="@{/reportes/productos(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${reporte.paginaMovimientos.number - 1})}">
+									&laquo; Anterior
+								</a>
+							</li>
+							<li class="page-item"
+								th:each="i : ${#numbers.sequence(0, reporte.paginaMovimientos.totalPages - 1)}"
+								th:classappend="${i == reporte.paginaMovimientos.number ? 'active' : ''}">
+								<a class="page-link fw-bold"
+									th:href="@{/reportes/productos(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${i})}"
+									th:text="${i + 1}">1</a>
+							</li>
+							<li class="page-item" th:classappend="${reporte.paginaMovimientos.last ? 'disabled' : ''}">
+								<a class="page-link text-secondary fw-bold"
+									th:href="@{/reportes/productos(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${reporte.paginaMovimientos.number + 1})}">
+									Siguiente &raquo;
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="resultados-footer">
+					<span class="total-label">Total valorizado:</span>
+					<span class="total-monto"
+						th:text="'S/ ' + ${#numbers.formatDecimal(reporte.valorizacionTotal, 1, 2)}">S/ 0.00</span>
+
+					<div class="ms-4 d-flex gap-2">
+						<a th:href="@{/reportes/productos/exportar/pdf(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta})}"
+							class="btn btn-outline-danger fw-bold shadow-sm">
+							<i class="bi bi-file-earmark-pdf-fill"></i> PDF
+						</a>
+						<a th:href="@{/reportes/productos/exportar/excel(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta})}"
+							class="btn btn-success fw-bold shadow-sm" style="background-color: #198754;">
+							<i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
+						</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script th:src="@{/reportesProductos.js}"></script>
+</body>
+
+</html>

@@ -86,7 +86,7 @@
 			<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold mb-4 shadow-sm"
 				role="alert"></div>
 
-			<div class="d-flex justify-content-between align-items-center mb-4">
+			<div class="d-flex justify-content-start align-items-center mb-4 gap-3">
 				<form th:action="@{/productos}" method="get" class="d-flex" style="width: 450px">
 					<div class="input-group shadow-sm">
 						<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
@@ -98,6 +98,9 @@
 					</div>
 				</form>
 
+				<a th:href="@{/reportes/productos}" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
+					Reportes
+				</a>
 				<a th:href="@{/productos/nuevo}" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
 					➕ Registrar Nuevo Producto
 				</a>

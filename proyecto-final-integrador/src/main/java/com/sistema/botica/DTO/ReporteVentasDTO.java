@@ -1,9 +1,11 @@
 package com.sistema.botica.DTO;
 
 import java.math.BigDecimal;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 import com.sistema.botica.entity.Venta;
+
 //He creado esto para evitar mandar objetos complejos y llenar la vista
 //Esto se usará para el módulo de reportes
 public class ReporteVentasDTO {
@@ -11,7 +13,7 @@ public class ReporteVentasDTO {
 	private Integer productosVendidos;
 	private String productoMasVendido;
 	private String mesMasVentas;
-	private List<Venta> listaVentas;
+	private Page<Venta> paginaVentas;
 
 	public BigDecimal getTotalVentas() {
 		return totalVentas;
@@ -45,12 +47,12 @@ public class ReporteVentasDTO {
 		this.mesMasVentas = mesMasVentas;
 	}
 
-	public List<Venta> getListaVentas() {
-		return listaVentas;
+	public Page<Venta> getPaginaVentas() {
+		return paginaVentas;
 	}
 
-	public void setListaVentas(List<Venta> listaVentas) {
-		this.listaVentas = listaVentas;
+	public void setPaginaVentas(Page<Venta> paginaVentas) {
+		this.paginaVentas = paginaVentas;
 	}
 
 }

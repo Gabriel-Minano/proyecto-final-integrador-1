@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -41,4 +43,7 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
     
     //Esto se usará en el modulo de reportes de Ventas, para el filtro de fechas
     List<Venta> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
+    
+    //Opción para la paginación, puesto que cargar todo ocasiona lentitud y es antiestético
+    Page<Venta> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin, Pageable pageable);
 }

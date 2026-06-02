@@ -1,0 +1,214 @@
+.reporte-header {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	color: #0d6efd;
+	margin-bottom: 5px;
+}
+
+.reporte-header i {
+	font-size: 2em;
+}
+
+.reporte-subtitle {
+	color: #666;
+	margin-bottom: 25px;
+	padding-left: 2px;
+}
+
+/* =========================================
+   TARJETAS DE FILTRO Y RESULTADOS
+   ========================================= */
+.filtro-card,
+.resultados-card {
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-bottom: 25px;
+	background: #fff;
+}
+
+.filtro-header {
+	background-color: #0d6efd;
+	color: white;
+	padding: 10px 20px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.filtro-body {
+	padding: 20px;
+}
+
+.resultados-header {
+	background-color: #f8f9fa;
+	padding: 15px 20px;
+	border-bottom: 1px solid #dee2e6;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
+	color: #495057;
+}
+
+.resultados-badge {
+	background-color: #0d6efd;
+	color: white;
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.85rem;
+	font-weight: normal;
+}
+
+/* =========================================
+   KPI CARDS (Métricas)
+   ========================================= */
+.kpi-card {
+	background: #fff;
+	border-radius: 8px;
+	padding: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px solid #e0e0e0;
+	border-left: 5px solid;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	height: 100%;
+}
+
+.kpi-title {
+	font-size: 0.85em;
+	font-weight: 700;
+	color: #666;
+	text-transform: uppercase;
+	margin-bottom: 5px;
+}
+
+.kpi-value {
+	font-size: 1.8em;
+	font-weight: bold;
+	color: #333;
+	margin: 0;
+}
+
+.kpi-icon {
+	font-size: 2.5em;
+	opacity: 0.2;
+}
+
+/* Colores para las tarjetas KPI */
+.kpi-blue {
+	border-left-color: #0d6efd;
+}
+
+.kpi-blue .kpi-icon {
+	color: #0d6efd;
+}
+
+.kpi-green {
+	border-left-color: #198754;
+}
+
+.kpi-green .kpi-icon {
+	color: #198754;
+}
+
+.kpi-cyan {
+	border-left-color: #0dcaf0;
+}
+
+.kpi-cyan .kpi-icon {
+	color: #0dcaf0;
+}
+
+.kpi-yellow {
+	border-left-color: #ffc107;
+}
+
+.kpi-yellow .kpi-icon {
+	color: #ffc107;
+}
+
+.kpi-red {
+	border-left-color: #dc3545;
+}
+
+.kpi-red .kpi-icon {
+	color: #dc3545;
+}
+
+.kpi-dark {
+	border-left-color: #212529;
+}
+
+.kpi-dark .kpi-icon {
+	color: #212529;
+}
+
+/* =========================================
+   TABLAS TOP 10 (Rankings)
+   ========================================= */
+.ranking-card {
+	background: #fff;
+	border-radius: 8px;
+	border: 1px solid #e0e0e0;
+	overflow: hidden;
+	height: 100%;
+}
+
+.ranking-header {
+	padding: 10px 15px;
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.ranking-body {
+	padding: 0;
+}
+
+.ranking-body table td {
+	padding: 8px 15px;
+	vertical-align: middle;
+}
+
+.tabla-reporte {
+	margin-bottom: 0;
+}
+
+.tabla-reporte thead th {
+	background-color: #e9ecef;
+	color: #495057;
+	font-size: 0.85rem;
+	padding: 12px 15px;
+	border-bottom: none;
+}
+
+.tabla-reporte tbody td {
+	padding: 12px 15px;
+	vertical-align: middle;
+	color: #212529;
+	font-size: 0.9rem;
+}
+
+.resultados-footer {
+	background-color: #f8f9fa;
+	padding: 15px 20px;
+	border-top: 1px solid #dee2e6;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 20px;
+}
+
+.total-label {
+	font-weight: bold;
+	color: #212529;
+}
+
+.total-monto {
+	font-weight: bold;
+	color: #0d6efd;
+	font-size: 1.1rem;
+}

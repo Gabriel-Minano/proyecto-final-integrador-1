@@ -72,7 +72,7 @@
 
 			<div class="reporte-header">
 				<i class="bi bi-bar-chart-fill"></i>
-				<h2 class="mb-0 fw-bold">Reporte de Ventas e Inventario</h2>
+				<h2 class="mb-0 fw-bold">Reporte de Ventas</h2>
 			</div>
 			<p class="reporte-subtitle">Genere un reporte filtrado por periodo y analice el rendimiento.</p>
 
@@ -83,12 +83,12 @@
 				<div class="filtro-body">
 					<form th:action="@{/reportes/ventas}" method="get">
 						<div class="row g-3 align-items-end">
-							<div class="col-md-3">
+							<!--<div class="col-md-3">
 								<label class="form-label fw-bold small text-secondary">Tipo de reporte</label>
 								<select class="form-select text-muted">
 									<option value="ventas">Ventas realizadas</option>
 								</select>
-							</div>
+							</div>-->
 							<div class="col-md-3">
 								<label class="form-label fw-bold small text-secondary">Fecha desde</label>
 								<input type="date" class="form-control" name="fechaDesde" id="fechaDesde"
@@ -112,7 +112,7 @@
 					</form>
 				</div>
 			</div>
-
+			<!--Los indicadores de gestión-->
 			<div class="row g-3 mb-4">
 				<div class="col-md-3">
 					<div class="kpi-card kpi-blue">
@@ -158,40 +158,76 @@
 				<div class="resultados-header">
 					<span><i class="bi bi-table me-2"></i> Resultados del reporte</span>
 					<span class="resultados-badge"
-						th:text="'Total: ' + ${reporte.listaVentas.size()} + ' registros'">Total: 0 registros</span>
+						th:text="'Total: ' + ${reporte.paginaVentas.totalElements} + ' registros'">Total: 0
+						registros</span>
 				</div>
 
+				<!--Tabla que incluirá la paginación-->
 				<div class="table-responsive">
 					<table class="table table-hover tabla-reporte">
 						<thead>
 							<tr>
-								<th>N° Venta</th>
+								<th>ID Venta</th>
 								<th>Fecha</th>
 								<th>Cliente</th>
 								<th>Cajero</th>
 								<th class="text-center">N° Items</th>
+								<th class="text-center">Sum. Unidades</th>
 								<th class="text-end">Total (S/.)</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="v : ${reporte.listaVentas}">
+							<tr th:each="v : ${reporte.paginaVentas.content}">
 								<td class="fw-bold text-secondary" th:text="${v.idVenta}"></td>
 								<td th:text="${#temporals.format(v.fecha, 'dd/MM/yyyy HH:mm')}"></td>
 								<td th:text="${v.cliente.nombre} + ' ' + ${v.cliente.apellido}"></td>
 								<td th:text="${v.usuario.nombre}"></td>
 								<td class="text-center fw-semibold text-secondary"
 									th:text="${v.listaDetallesVenta.size()}"></td>
+								<td class="text-center" th:text="${#aggregates.sum(v.listaDetallesVenta.![cantidad])}">
+								</td>
 								<td class="text-end fw-bold text-success"
 									th:text="${#numbers.formatDecimal(v.total, 1, 2)}"></td>
 							</tr>
-							<tr th:if="${reporte.listaVentas.isEmpty()}">
+							<tr th:if="${reporte.paginaVentas.empty}">
 								<td colspan="6" class="text-center text-muted py-5">
 									<i class="bi bi-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
-									No se encontraron registros con los filtros seleccionados.
+									No se encontraron registros con los rangos de fechas seleccionados.
 								</td>
 							</tr>
 						</tbody>
 					</table>
+				</div>
+				<!--Botones de la paginación de los reportes-->
+				<div class="d-flex justify-content-center bg-white py-3 border-top"
+					th:if="${reporte.paginaVentas.totalPages > 1}">
+					<nav aria-label="Navegación de resultados">
+						<ul class="pagination pagination-sm mb-0 shadow-sm">
+
+							<li class="page-item" th:classappend="${reporte.paginaVentas.first ? 'disabled' : ''}">
+								<a class="page-link text-secondary fw-bold"
+									th:href="@{/reportes/ventas(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${reporte.paginaVentas.number - 1})}">
+									&laquo; Anterior
+								</a>
+							</li>
+
+							<li class="page-item"
+								th:each="i : ${#numbers.sequence(0, reporte.paginaVentas.totalPages - 1)}"
+								th:classappend="${i == reporte.paginaVentas.number ? 'active' : ''}">
+								<a class="page-link fw-bold"
+									th:href="@{/reportes/ventas(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${i})}"
+									th:text="${i + 1}">1</a>
+							</li>
+
+							<li class="page-item" th:classappend="${reporte.paginaVentas.last ? 'disabled' : ''}">
+								<a class="page-link text-secondary fw-bold"
+									th:href="@{/reportes/ventas(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${reporte.paginaVentas.number + 1})}">
+									Siguiente &raquo;
+								</a>
+							</li>
+
+						</ul>
+					</nav>
 				</div>
 				<div class="resultados-footer">
 					<span class="total-label">Total general:</span>
