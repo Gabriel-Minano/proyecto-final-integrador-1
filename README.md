@@ -12,3 +12,4 @@ Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValue
 - [A mejorar | Alta prioridad] En todos los formularios añadir la posibilidad de reactivar los datos desde la edición, para ello se debe filtrar los productos, categorías, empleados, proveedores y clientes desactivados.
 
 - [A mejorar | Media prioridad] Mejorar la presentación de las tablas, poner todos los campos en las columnas o cabeceras, evitar traer los datos de salto (Enlaces con otras tablas, join references, etc).
+- [A mejorar | baja prioridad] Cambiar los iconos de los módulos por iconos de BootStrap, para mejorar el diseño
