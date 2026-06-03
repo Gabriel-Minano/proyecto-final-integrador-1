@@ -87,6 +87,13 @@ public class ProductoController {
 
 	@PostMapping("/guardar")
 	public String guardar(@Validated @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
+		//Spring instancia los objetos, por eso usé !=null, porque el objeto existe en memoria, pero no tiene nada, todo es nulo dentro de este
+		if (producto.getCategoria() != null && producto.getCategoria().getIdCategoria() == null) {
+			result.rejectValue("categoria", "error.categoria", "Debe seleccionar una categoría válida");
+		}
+		if (producto.getProveedor() != null && producto.getProveedor().getIdProveedor() == null) {
+			result.rejectValue("proveedor", "error.proveedor", "Debe seleccionar un proveedor válido");
+		}
 		if (result.hasErrors()) {
 			cargarListasParaFormulario(model);
 			return "productos_formulario";
