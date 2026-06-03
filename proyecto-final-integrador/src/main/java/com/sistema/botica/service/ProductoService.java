@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sistema.botica.Repository.ProductoRepository;
@@ -81,5 +83,16 @@ public class ProductoService {
 			producto.setEstado(false);
 			productoRepository.save(producto);
 		}
+	}
+	
+	public Page<Producto> listarPaginadosYFiltrados(String palabraClave, String filtro, Pageable pageable) {
+		LocalDate hoy = LocalDate.now();
+		LocalDate fechaLimite = hoy.plusDays(30);
+		
+		if (filtro == null || filtro.isEmpty()) {
+			filtro = "activos";
+		}
+
+		return productoRepository.buscarPaginadosYFiltrados(palabraClave, filtro, hoy, fechaLimite, pageable);
 	}
 }

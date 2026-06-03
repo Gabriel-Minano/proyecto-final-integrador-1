@@ -107,7 +107,7 @@
 				</form>
 				<div class="d-flex gap-3 align-items-center">
 					<span class="badge bg-primary rounded-pill px-3 py-2 shadow-sm"
-						th:text="'Total: ' + ${paginaClientes.totalElements} + ' clientes'">Total: 0</span>
+						th:text="'Total filtrado: ' + ${paginaClientes.totalElements} + ' clientes'">Total: 0</span>
 					<a th:href="@{/clientes/nuevo}" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
 						Nuevo Cliente
 					</a>
@@ -149,7 +149,8 @@
 											class="btn btn-warning btn-sm fw-bold shadow-sm" style="color: #664d03;">
 											Editar
 										</a>
-										<a th:href="@{/clientes/eliminar/{id}(id=${cli.idCliente})}"
+										<a th:if="${cli.estado}"
+											th:href="@{/clientes/eliminar/{id}(id=${cli.idCliente})}"
 											class="btn btn-danger btn-sm fw-bold shadow-sm"
 											onclick="return confirm('¿Estás seguro de que deseas retirar a este cliente del sistema?');">
 											Eliminar

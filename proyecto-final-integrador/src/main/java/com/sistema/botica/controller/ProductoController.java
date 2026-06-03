@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,31 +44,49 @@ public class ProductoController {
 	// modelo.addAttribute("palabraClave", palabraClave);
 	// return "productos";
 	// }
+	/*
+	 * @GetMapping public String listar(
+	 * 
+	 * @RequestParam(name = "palabraClave", required = false) String palabraClave,
+	 * 
+	 * @RequestParam(name = "filtro", required = false) String filtro,
+	 * 
+	 * Model modelo) {
+	 * 
+	 * List<Producto> lista;
+	 * 
+	 * // Aplicar filtros if (filtro != null && !filtro.isEmpty()) {
+	 * 
+	 * lista = productoService.filtrarProductos(filtro);
+	 * 
+	 * } else {
+	 * 
+	 * // Búsqueda normal lista =
+	 * productoService.listarProductosClave(palabraClave); }
+	 * 
+	 * modelo.addAttribute("lista", lista);
+	 * 
+	 * modelo.addAttribute("palabraClave", palabraClave);
+	 * 
+	 * modelo.addAttribute("filtro", filtro);
+	 * 
+	 * return "productos"; }
+	 */
+	
 	@GetMapping
 	public String listar(
 			@RequestParam(name = "palabraClave", required = false) String palabraClave,
-
 			@RequestParam(name = "filtro", required = false) String filtro,
-
+			@RequestParam(defaultValue = "0") int page,
 			Model modelo) {
 
-		List<Producto> lista;
+		// Paginación de 10 en 10, ordenando por ID descendente
+		PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("idProducto").descending());
+		
+		Page<Producto> paginaProductos = productoService.listarPaginadosYFiltrados(palabraClave, filtro, pageRequest);
 
-		// Aplicar filtros
-		if (filtro != null && !filtro.isEmpty()) {
-
-			lista = productoService.filtrarProductos(filtro);
-
-		} else {
-
-			// Búsqueda normal
-			lista = productoService.listarProductosClave(palabraClave);
-		}
-
-		modelo.addAttribute("lista", lista);
-
+		modelo.addAttribute("paginaProductos", paginaProductos);
 		modelo.addAttribute("palabraClave", palabraClave);
-
 		modelo.addAttribute("filtro", filtro);
 
 		return "productos";

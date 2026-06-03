@@ -3,6 +3,8 @@ package com.sistema.botica.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -67,4 +69,21 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
             @Param("hoy") LocalDate hoy,
             @Param("fechaLimite") LocalDate fechaLimite);
 
+    @Query("SELECT p FROM Producto p WHERE " +
+ 	       "(:filtro = 'todos' OR " +
+ 	       "(:filtro = 'activos' AND p.estado = true) OR " +
+ 	       "(:filtro = 'eliminados' AND p.estado = false) OR " +
+ 	       "(:filtro = 'stock' AND p.estado = true AND p.stockActual > 0) OR " +
+ 	       "(:filtro = 'sinstock' AND p.estado = true AND p.stockActual = 0) OR " +
+ 	       "(:filtro = 'vencer' AND p.estado = true AND p.fechaVencimiento BETWEEN :hoy AND :fechaLimite) OR " +
+ 	       "(:filtro = 'vencido' AND p.estado = true AND p.fechaVencimiento < :hoy)) AND " +
+ 	       "(:palabraClave IS NULL OR :palabraClave = '' OR " +
+ 	       "LOWER(p.nombre) LIKE LOWER(CONCAT('%', :palabraClave, '%')) OR " +
+ 	       "LOWER(p.codigo) LIKE LOWER(CONCAT('%', :palabraClave, '%')))")
+ 	Page<Producto> buscarPaginadosYFiltrados(
+ 			@Param("palabraClave") String palabraClave, 
+ 			@Param("filtro") String filtro, 
+ 			@Param("hoy") LocalDate hoy, 
+ 			@Param("fechaLimite") LocalDate fechaLimite, 
+ 			Pageable pageable);
 }
