@@ -1,8 +1,14 @@
 package com.sistema.botica.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sistema.botica.entity.Cliente;
 import com.sistema.botica.service.ClienteService;
@@ -29,10 +36,25 @@ public class ClienteController {
 	 */
 
 	@GetMapping
-	public String listar(@RequestParam(required = false) String palabraClave, Model modelo) {
-		List<Cliente> lista = clienteService.listarProductosClave(palabraClave);
-		modelo.addAttribute("lista", lista);
+	public String listar(@RequestParam(required = false) String palabraClave,
+			@RequestParam(required = false, defaultValue = "activos") String estadoFiltro,
+			@RequestParam(defaultValue = "0") int page, Model modelo) {
+
+		Boolean estadoABuscar = null;
+		if ("activos".equals(estadoFiltro)) {
+			estadoABuscar = true;
+		} else if ("inactivos".equals(estadoFiltro)) {
+			estadoABuscar = false;
+		}
+
+		PageRequest pageRequest = PageRequest.of(page, 15, Sort.by("idCliente").descending());
+		Page<Cliente> paginaClientes = clienteService.listarPaginadosYFiltrados(palabraClave, estadoABuscar,
+				pageRequest);
+
+		modelo.addAttribute("paginaClientes", paginaClientes);
 		modelo.addAttribute("palabraClave", palabraClave);
+		modelo.addAttribute("estadoFiltro", estadoFiltro);
+
 		return "clientes";
 	}
 
@@ -69,5 +91,21 @@ public class ClienteController {
 		}
 		clienteService.eliminarLogico(id);
 		return "redirect:/clientes";
+	}
+	
+	@GetMapping("/api/buscar")
+	@ResponseBody
+	public List<Map<String, Object>> buscarClientesAjax(@RequestParam("q") String palabraClave) {
+		// Buscamos las coincidencias
+		List<Cliente> clientes = clienteService.listarProductosClave(palabraClave);
+		
+		// Donde dice 20 se le puede cambiar para que busque más digamos 50 0 70 resultados
+		return clientes.stream().limit(20).map(c -> {
+			Map<String, Object> map = new HashMap<>();
+			map.put("idCliente", c.getIdCliente());
+			map.put("documento", c.getDocumento());
+			map.put("nombreCompleto", c.getNombre() + " " + c.getApellido());
+			return map;
+		}).collect(Collectors.toList());
 	}
 }
