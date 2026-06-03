@@ -1,6 +1,9 @@
 package com.sistema.botica.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sistema.botica.entity.Producto;
 import com.sistema.botica.service.CategoriaService;
@@ -116,5 +120,23 @@ public class ProductoController {
 	private void cargarListasParaFormulario(Model modelo) {
 		modelo.addAttribute("listaCategorias", categoriaService.listarTodas());
 		modelo.addAttribute("listaProveedores", proveedorService.listarTodos());
+	}
+	
+	@GetMapping("/api/buscar")
+	@ResponseBody
+	public List<Map<String, Object>> buscarProductosAjax(@RequestParam("q") String palabraClave) {
+		
+		List<Producto> productos = productoService.listarProductosClave(palabraClave);
+		
+		return productos.stream().limit(20).map(p -> {
+			Map<String, Object> map = new HashMap<>();
+			map.put("idProducto", p.getIdProducto());
+			map.put("codigo", p.getCodigo());
+			map.put("categoria", p.getCategoria() != null ? p.getCategoria().getNombre() : "");
+			map.put("nombre", p.getNombre());
+			map.put("stockActual", p.getStockActual());
+			map.put("precioVenta", p.getPrecioVenta());
+			return map;
+		}).collect(Collectors.toList());
 	}
 }

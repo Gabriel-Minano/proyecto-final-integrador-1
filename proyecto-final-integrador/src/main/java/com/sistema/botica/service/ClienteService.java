@@ -3,6 +3,8 @@ package com.sistema.botica.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sistema.botica.Repository.ClienteRepository;
@@ -40,5 +42,10 @@ public class ClienteService {
 			cliente.setEstado(false);
 			clienteRepository.save(cliente);
 		}
+	}
+	
+	//Método nuevo para filtrar con paginación.
+	public Page<Cliente> listarPaginadosYFiltrados(String palabraClave, Boolean estado, Pageable pageable) {
+		return clienteRepository.buscarPaginadosYFiltrados(palabraClave, estado, pageable);
 	}
 }

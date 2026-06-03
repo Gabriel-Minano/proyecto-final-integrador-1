@@ -100,19 +100,17 @@
 			<div class="modal-content border-0 shadow-lg">
 				<div class="modal-header bg-primary text-white">
 					<h5 class="modal-title fw-bold">Buscador de Clientes</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body p-4">
 					<div class="mb-3">
 						<input type="text" id="inputBuscarCliente"
 							class="form-control form-control-lg border-primary shadow-sm"
-							placeholder="Filtre por DNI o Apellidos..."
-							onkeyup="filtrarModal('inputBuscarCliente', 'tablaClientesModal', 'fila-cliente', ['.busqueda-doc', '.busqueda-nombre'])">
+							placeholder="Escriba DNI o Apellidos para buscar en BD..."
+							oninput="buscarClientesBackend(this.value)">
 					</div>
 					<div class="table-responsive border rounded" style="max-height: 300px;">
-						<table class="table table-hover table-striped text-center align-middle mb-0"
-							id="tablaClientesModal">
+						<table class="table table-hover table-striped text-center align-middle mb-0">
 							<thead class="table-light sticky-top">
 								<tr>
 									<th>Documento (DNI/RUC)</th>
@@ -120,17 +118,10 @@
 									<th>Acción</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="c : ${listaClientes}" class="fila-cliente">
-									<td class="busqueda-doc fw-semibold text-secondary" th:text="${c.documento}"></td>
-									<td class="busqueda-nombre text-start ps-4"
-										th:text="${c.nombre} + ' ' + ${c.apellido}"></td>
-									<td>
-										<button type="button" class="btn btn-success btn-sm fw-bold px-3 shadow-sm"
-											th:onclick="seleccionarCliente([[${c.idCliente}]], [[${c.documento}]], [[${c.nombre} + ' ' + ${c.apellido}]])">
-											Asignar
-										</button>
-									</td>
+							<tbody id="tbodyClientesAjax">
+								<tr>
+									<td colspan="3" class="text-muted py-4">Use la barra superior para buscar un
+										cliente...</td>
 								</tr>
 							</tbody>
 						</table>
@@ -144,20 +135,18 @@
 		<div class="modal-dialog modal-xl modal-dialog-centered">
 			<div class="modal-content border-0 shadow-lg">
 				<div class="modal-header bg-success text-white">
-					<h5 class="modal-title fw-bold">Catálogo de Medicamentos y Productos</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<h5 class="modal-title fw-bold">Catálogo de Medicamentos</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body p-4">
 					<div class="mb-3">
 						<input type="text" id="inputBuscarProducto"
 							class="form-control form-control-lg border-success shadow-sm"
-							placeholder="Filtre por Código, Nombre o Categoría..."
-							onkeyup="filtrarModal('inputBuscarProducto', 'tablaProductosModal', 'fila-producto', ['.busqueda-codigo', '.busqueda-nombre', '.busqueda-categoria'])">
+							placeholder="Escriba Código o Nombre para buscar en BD..."
+							oninput="buscarProductosBackend(this.value)">
 					</div>
 					<div class="table-responsive border rounded" style="max-height: 350px;">
-						<table class="table table-hover table-striped text-center align-middle mb-0"
-							id="tablaProductosModal">
+						<table class="table table-hover table-striped text-center align-middle mb-0">
 							<thead class="table-light sticky-top">
 								<tr>
 									<th>Código</th>
@@ -168,22 +157,10 @@
 									<th>Acción</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="p : ${listaProductos}" class="fila-producto">
-									<td class="busqueda-codigo text-muted small" th:text="${p.codigo}"></td>
-									<td class="busqueda-categoria small" th:text="${p.categoria.nombre}"></td>
-									<td class="busqueda-nombre text-start fw-semibold" th:text="${p.nombre}"></td>
-									<td th:classappend="${p.stockActual <= p.stockMinimo} ? 'text-danger fw-bold' : 'text-success fw-bold'"
-										th:text="${p.stockActual}"></td>
-									<td class="fw-bold text-primary" th:text="'S/. ' + ${p.precioVenta}"></td>
-									<td>
-										<button type="button" class="btn btn-primary btn-sm fw-bold px-3 shadow-sm"
-											th:disabled="${p.stockActual == 0}"
-											th:classappend="${p.stockActual == 0} ? 'btn-secondary' : 'btn-primary'"
-											th:onclick="agregarFilaProducto([[${p.idProducto}]], [[${p.nombre}]], [[${p.precioVenta}]], [[${p.stockActual}]])">
-											<span th:text="${p.stockActual == 0} ? 'Agotado' : 'Agregar'"></span>
-										</button>
-									</td>
+							<tbody id="tbodyProductosAjax">
+								<tr>
+									<td colspan="6" class="text-muted py-4">Use la barra superior para buscar un
+										producto...</td>
 								</tr>
 							</tbody>
 						</table>
@@ -271,21 +248,98 @@
 		// --- LÓGICA DE LOS MODALES (Búsqueda Universal) ---
 
 		// Función genérica para filtrar tablas de cualquier modal
-		function filtrarModal(inputId, tablaId, claseFila, selectoresTexto) {
-			const filtro = document.getElementById(inputId).value.toLowerCase();
-			const filas = document.querySelectorAll(`#${tablaId} .${claseFila}`);
+		// ==========================================
+		// BÚSQUEDA ASÍNCRONA (AJAX) - CLIENTES
+		// ==========================================
+		async function buscarClientesBackend(palabra) {
+			const tbody = document.getElementById('tbodyClientesAjax');
 
-			filas.forEach(fila => {
-				let coincide = false;
-				// Busca en todas las columnas indicadas en los selectores
-				selectoresTexto.forEach(selector => {
-					const elemento = fila.querySelector(selector);
-					if (elemento && elemento.innerText.toLowerCase().includes(filtro)) {
-						coincide = true;
-					}
+			// Si el input está vacío, limpiamos la tabla
+			if (palabra.trim() === '') {
+				tbody.innerHTML = '<tr><td colspan="3" class="text-muted py-4">Use la barra superior para buscar un cliente...</td></tr>';
+				return;
+			}
+
+			try {
+				// Llamada silenciosa al servidor
+				const respuesta = await fetch(`/clientes/api/buscar?q=${encodeURIComponent(palabra)}`);
+				const clientes = await respuesta.json();
+
+				tbody.innerHTML = ''; // Limpiamos tabla
+
+				if (clientes.length === 0) {
+					tbody.innerHTML = '<tr><td colspan="3" class="text-danger py-4">No se encontraron resultados.</td></tr>';
+					return;
+				}
+
+				// Dibujamos las filas recibidas
+				clientes.forEach(c => {
+					tbody.innerHTML += `
+								<tr>
+									<td class="fw-semibold text-secondary">${c.documento}</td>
+									<td class="text-start ps-4">${c.nombreCompleto}</td>
+									<td>
+										<button type="button" class="btn btn-success btn-sm fw-bold px-3 shadow-sm"
+											onclick="seleccionarCliente(${c.idCliente}, '${c.documento}', '${c.nombreCompleto.replace(/'/g, "\\'")}')">
+											Asignar
+										</button>
+									</td>
+								</tr>
+							`;
 				});
-				fila.style.display = coincide ? "" : "none";
-			});
+			} catch (error) {
+				console.error("Error al buscar clientes:", error);
+			}
+		}
+
+		// ==========================================
+		// BÚSQUEDA ASÍNCRONA (AJAX) - PRODUCTOS
+		// ==========================================
+		async function buscarProductosBackend(palabra) {
+			const tbody = document.getElementById('tbodyProductosAjax');
+
+			if (palabra.trim() === '') {
+				tbody.innerHTML = '<tr><td colspan="6" class="text-muted py-4">Use la barra superior para buscar un producto...</td></tr>';
+				return;
+			}
+
+			try {
+				const respuesta = await fetch(`/productos/api/buscar?q=${encodeURIComponent(palabra)}`);
+				const productos = await respuesta.json();
+
+				tbody.innerHTML = '';
+
+				if (productos.length === 0) {
+					tbody.innerHTML = '<tr><td colspan="6" class="text-danger py-4">No se encontraron productos.</td></tr>';
+					return;
+				}
+
+				productos.forEach(p => {
+					const sinStock = p.stockActual <= 0;
+					const claseStock = sinStock ? 'text-danger fw-bold' : 'text-success fw-bold';
+					const btnClase = sinStock ? 'btn-secondary disabled' : 'btn-primary';
+					const textoBtn = sinStock ? 'Agotado' : 'Agregar';
+
+					tbody.innerHTML += `
+								<tr>
+									<td class="text-muted small">${p.codigo}</td>
+									<td class="small">${p.categoria}</td>
+									<td class="text-start fw-semibold">${p.nombre}</td>
+									<td class="${claseStock}">${p.stockActual}</td>
+									<td class="fw-bold text-primary">S/. ${parseFloat(p.precioVenta).toFixed(2)}</td>
+									<td>
+										<button type="button" class="btn ${btnClase} btn-sm fw-bold px-3 shadow-sm"
+											${sinStock ? 'disabled' : ''}
+											onclick="agregarFilaProducto(${p.idProducto}, '${p.nombre.replace(/'/g, "\\'")}', ${p.precioVenta}, ${p.stockActual})">
+											${textoBtn}
+										</button>
+									</td>
+								</tr>
+							`;
+				});
+			} catch (error) {
+				console.error("Error al buscar productos:", error);
+			}
 		}
 
 		// Asignación de Cliente desde el Modal
