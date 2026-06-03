@@ -74,7 +74,7 @@ public class ProductoReporteController {
 
 		// Obtenemos los datos (Para la exportación usamos un tamaño de página muy
 		// grande para que traiga todos los registros de ese periodo)
-		Pageable pageRequest = PageRequest.of(0, 10000, Sort.by("venta.fecha").descending());
+		Pageable pageRequest = PageRequest.of(0, Integer.MAX_VALUE, Sort.by("venta.fecha").descending());
 		ReporteProductosDTO reporte = productoReporteService.generarReporteProductos(inicio, fin, pageRequest);
 
 		byte[] pdfContent = exportService.generarPdf(reporte, inicio, fin);
@@ -95,7 +95,7 @@ public class ProductoReporteController {
 		LocalDateTime fin = fechaHasta.atTime(LocalTime.MAX);
 
 		// Obtenemos los datos completos del periodo
-		Pageable pageRequest = PageRequest.of(0, 10000, Sort.by("venta.fecha").descending());
+		Pageable pageRequest = PageRequest.of(0, Integer.MAX_VALUE, Sort.by("venta.fecha").descending());
 		ReporteProductosDTO reporte = productoReporteService.generarReporteProductos(inicio, fin, pageRequest);
 
 		byte[] excelContent = exportService.generarExcel(reporte, inicio, fin);
