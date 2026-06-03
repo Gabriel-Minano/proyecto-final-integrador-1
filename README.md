@@ -6,10 +6,10 @@ Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValue
 - [A mejorar] En el dashboard añadir más años, solo hay 2025 y 2026
 - [*Solucionado*] Solucionar el error que muestra dos veces el mensaje "No se puede registrar una venta sin productos en el detalle" ubicado en el Módulo de Ventas, al momento de registrar una venta, Por otro lado añadir un dismiss, para ocultar el mensaje de error, de la misma forma corregir el tamaño del mensaje al momento de concretar una venta, puesto que es muy pequeño y el botón de X se sale.
 
-- [A mejorar] Añadir la posibilidad de que los empleados puedan acceder al módulo de productos, categorías y ventas, pero que no tengan acceso a reportes, edición, agregación o eliminación.
+- [*Solucionado parcialmente*] Añadir la posibilidad de que los empleados puedan acceder al módulo de productos, categorías y ventas, pero que no tengan acceso a reportes, edición, agregación o eliminación. *Falta asegurar los formularios*
 
-- [A mejorar | Alta prioridad] Añadir paginación en Ventas, Productos y Clientes. Los otros no requieren de la paginación. En Ventas, poner un filtro obligatorio que especifique que se debe seleccionar entre meses, puesto que paginar todo un año no es adecuado y ocasionará desbordamiento.
-- [A mejorar | Alta prioridad] En todos los formularios añadir la posibilidad de reactivar los datos desde la edición, para ello se debe filtrar los productos, categorías, empleados, proveedores y clientes desactivados.
+- [*Solucionado parcialmente*] Añadir paginación en Ventas, Productos y Clientes. Los otros no requieren de la paginación. En Ventas, poner un filtro obligatorio que especifique que se debe seleccionar entre meses, puesto que paginar todo un año no es adecuado y ocasionará desbordamiento. *Falta actualizar los módulos de usuarios, categorías y proveedores*
+- [*Solucionado parcialmente*] En todos los formularios añadir la posibilidad de reactivar los datos desde la edición, para ello se debe filtrar los productos, categorías, empleados, proveedores y clientes desactivados. *Solo agregué para clientes y productos, falta usuarios, categorías etc.*
 
 - [A mejorar | Media prioridad] Mejorar la presentación de las tablas, poner todos los campos en las columnas o cabeceras, evitar traer los datos de salto (Enlaces con otras tablas, join references, etc).
-- [A mejorar | baja prioridad] Cambiar los iconos de los módulos por iconos de BootStrap, para mejorar el diseño
+- [A mejorar | baja prioridad] Cambiar los iconos de los módulos por iconos de BootStrap, para mejorar el diseño *Por el momento le quité los íconos por que eran demasiado feos*
