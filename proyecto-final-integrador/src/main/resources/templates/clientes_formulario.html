@@ -47,8 +47,8 @@
 		<div th:if="${cliente.idCliente != null}">
 			<label>Estado en el Sistema:</label>
 			<select th:field="*{estado}">
-				<option th:value="true">Activo (Habilitado para operar)</option>
-				<option th:value="false">Inactivo (Eliminado del panel principal)</option>
+				<option th:value="true">Activo</option>
+				<option th:value="false">Inactivo</option>
 			</select>
 		</div>
 		<br>

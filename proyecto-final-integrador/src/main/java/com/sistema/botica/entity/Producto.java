@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,69 +26,70 @@ import jakarta.validation.constraints.Size;
 @Table(name = "producto")
 public class Producto {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_producto")
-    private Integer idProducto;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_producto")
+	private Integer idProducto;
 
 	@NotBlank(message = "El nombre del producto es obligatorio")
-    @Size(max = 100, message = "El nombre no debe exceder los 100 caracteres")
-    @Column(name = "nombre", length = 100)
-    private String nombre;
+	@Size(max = 100, message = "El nombre no debe exceder los 100 caracteres")
+	@Column(name = "nombre", length = 100)
+	private String nombre;
 
 	@NotBlank(message = "El código es obligatorio")
-    @Size(max = 50)
-    @Column(name = "codigo", length = 50)
-    private String codigo;
+	@Size(max = 50)
+	@Column(name = "codigo", length = 50)
+	private String codigo;
 
 	@NotNull(message = "El precio de compra es obligatorio")
-    @DecimalMin(value = "0.01", message = "El precio de compra debe ser mayor a 0")
-    @Column(name = "precio_compra", precision = 10, scale = 2)
-    private BigDecimal precioCompra;
+	@DecimalMin(value = "0.01", message = "El precio de compra debe ser mayor a 0")
+	@Column(name = "precio_compra", precision = 10, scale = 2)
+	private BigDecimal precioCompra;
 
 	@NotNull(message = "El precio de venta es obligatorio")
-    @DecimalMin(value = "0.01", message = "El precio de venta debe ser mayor a 0")
-    @Column(name = "precio_venta", precision = 10, scale = 2)
-    private BigDecimal precioVenta;
+	@DecimalMin(value = "0.01", message = "El precio de venta debe ser mayor a 0")
+	@Column(name = "precio_venta", precision = 10, scale = 2)
+	private BigDecimal precioVenta;
 
 	@NotNull(message = "El stock actual es obligatorio")
-    @Min(value = 0, message = "El stock no puede ser negativo")
-    @Column(name = "stock_actual")
-    private Integer stockActual;
+	@Min(value = 0, message = "El stock no puede ser negativo")
+	@Column(name = "stock_actual")
+	private Integer stockActual;
 
 	@NotNull(message = "El stock mínimo es obligatorio")
-    @Min(value = 0, message = "El stock mínimo no puede ser negativo")
-    @Column(name = "stock_minimo")
-    private Integer stockMinimo;
+	@Min(value = 0, message = "El stock mínimo no puede ser negativo")
+	@Column(name = "stock_minimo")
+	private Integer stockMinimo;
 
 	@NotNull(message = "El stock máximo es obligatorio")
-    @Min(value = 1, message = "El stock máximo debe ser mayor a cero")
-    @Column(name = "stock_maximo")
-    private Integer stockMaximo;
-	
+	@Min(value = 1, message = "El stock máximo debe ser mayor a cero")
+	@Column(name = "stock_maximo")
+	private Integer stockMaximo;
+
 	@NotNull(message = "La fecha de vencimiento es obligatoria")
-    @Future(message = "La fecha de vencimiento debe ser en el futuro")
-    @Column(name = "fecha_vencimiento")
-    private LocalDate fechaVencimiento;
+	@Future(message = "La fecha de vencimiento debe ser en el futuro")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "fecha_vencimiento")
+	private LocalDate fechaVencimiento;
 
-    // Muchos productos pertenecen a una categoría
+	// Muchos productos pertenecen a una categoría
 	@NotNull(message = "Debe seleccionar una categoría")
-    @ManyToOne
-    @JoinColumn(name = "id_categoria")
-    private Categoria categoria;
+	@ManyToOne
+	@JoinColumn(name = "id_categoria")
+	private Categoria categoria;
 
-    // Muchos productos son distribuidos por un proveedor
+	// Muchos productos son distribuidos por un proveedor
 	@NotNull(message = "Debe seleccionar un proveedor")
-    @ManyToOne
-    @JoinColumn(name = "id_proveedor")
-    private Proveedor proveedor;
+	@ManyToOne
+	@JoinColumn(name = "id_proveedor")
+	private Proveedor proveedor;
 
-	//Eliminación lógica, osea desactiva el producto
+	// Eliminación lógica, osea desactiva el producto
 	@Column(name = "estado", columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean estado = true;
-	
-    // Un producto puede estar en muchos detalles de venta
-    @OneToMany(mappedBy = "producto")
-    private List<DetalleVenta> listaDetallesVenta;
+
+	// Un producto puede estar en muchos detalles de venta
+	@OneToMany(mappedBy = "producto")
+	private List<DetalleVenta> listaDetallesVenta;
 
 	public Integer getIdProducto() {
 		return idProducto;
@@ -191,5 +194,5 @@ public class Producto {
 	public void setStockMaximo(Integer stockMaximo) {
 		this.stockMaximo = stockMaximo;
 	}
-    
+
 }

@@ -36,7 +36,8 @@
 <body>
 
 	<div class="layout-wrapper">
-
+	
+		<!--Side bar-->
 		<div th:replace="~{componentes/sidebar :: menuLateral('clientes')}"></div>
 
 		<div class="main-content">
@@ -73,7 +74,7 @@
 				<div class="d-flex gap-3 align-items-center">
 					<span class="badge bg-primary rounded-pill px-3 py-2 shadow-sm"
 						th:text="'Total filtrado: ' + ${paginaClientes.totalElements} + ' clientes'">Total: 0</span>
-					<a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/clientes/nuevo}"
+					<a th:href="@{/clientes/nuevo}"
 						class="btn btn-success fw-bold px-4 py-2 shadow-sm">
 						Nuevo Cliente
 					</a>

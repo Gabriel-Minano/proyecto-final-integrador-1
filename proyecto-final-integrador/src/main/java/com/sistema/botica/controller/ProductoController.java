@@ -105,6 +105,7 @@ public class ProductoController {
 		if (producto == null) {
 			return "redirect:/productos";
 		}
+	    System.out.println(producto.getFechaVencimiento());
 		modelo.addAttribute("producto", producto);
 		cargarListasParaFormulario(modelo);
 		return "productos_formulario";
