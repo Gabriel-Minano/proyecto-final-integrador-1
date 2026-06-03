@@ -1,4 +1,6 @@
-Versión 0.6 | Actual
+Versión 0.6.a | Actual
+- [Solucionado] corregí un error relacionado a que no se renderizaba la fecha del producto a vencer debido a que faltó poner el formateador en la fecha de vencimiento de la entidad Producto (	@DateTimeFormat(pattern = "yyyy-MM-dd") ) -> Gabriel
+- [Solucionado] Corregí el error relacionado a que no activava el producto, puesto que había un input invisible en el formulario de Productos que seteaba el valor de estado por defecto y Thymeleaf usaba ese valor primero antes del editado, para ello eliminé dicho input hidden. -> Gabriel
 - [Error] Corregir que no se actualiza el estado de Producto al reactivar, clientes funciona utilizar eso para la corrección -> Gabriel
 - [Añadir | Priodidad Media] La reactivación de Categorias, Proveedores y Usuarios, junto al select de Inactivo, Activo, Todos. -> James
 - [Añadir | Priodidad Baja] En las listas de las tablas poner todos las columnas.
