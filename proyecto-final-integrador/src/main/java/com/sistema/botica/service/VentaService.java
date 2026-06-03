@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,5 +46,14 @@ public class VentaService {
 		}
 		//JPA guarda en cascada todos los detalles de esa venta
 		ventaRepository.save(venta);
+	}
+	public Page<Venta> listarPaginadasPorFecha(LocalDateTime inicio, LocalDateTime fin, Pageable pageable) {
+		return ventaRepository.findByFechaBetween(inicio, fin, pageable);
+	}
+	
+	//Este es diferente al de arriba, puesto que añade busqueda por clave si es necesario, si alguien va a cambiar esto, dirijase al repository
+	// Y modifique o agregue la consulta que necesite, ya sea por DNI, nombre de empleado, username, datos de cliente etc.
+	public Page<Venta> listarPaginadasPorFechaYClave(LocalDateTime inicio, LocalDateTime fin, String palabraClave, Pageable pageable) {
+		return ventaRepository.buscarVentasPaginadasYFiltradas(inicio, fin, palabraClave, pageable);
 	}
 }

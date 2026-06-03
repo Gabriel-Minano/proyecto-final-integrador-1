@@ -82,19 +82,71 @@
 			<h2 class="text-secondary fw-bold mb-3">Registro de Ventas Realizadas</h2>
 			<p class="text-muted mb-4">Historial general de transacciones y operaciones internas de la botica.</p>
 
-			<div th:if="${success}" th:text="${success}" class="alert alert-success py-2 small fw-bold mb-4 shadow-sm"
-				role="alert"></div>
+			<!--Esto no me acuerdo para que lo puse. revisar porfa-->
+			<div th:if="${success}"
+				class="alert alert-success alert-dismissible fade show py-3 medium fw-bold d-flex align-items-center shadow-sm">
+				<span th:text="${success}">Este texto no se renderizará, lo dejé para visibilidad</span>
+				<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+
+			<!--Esto lo puse para manejar el caso de que intente poner una fecha superior a 6 meses-->
+			<div th:if="${error}"
+				class="alert alert-danger alert-dismissible fade show py-3 medium fw-bold d-flex align-items-center shadow-sm">
+				<span th:text="${error}">Este texto no se renderizará, lo dejé para visibilidad</span>
+				<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
 
 			<div class="mb-4">
 				<a th:href="@{/ventas/nuevo}" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
-					➕ Registrar Nueva Venta
+					Registrar Nueva Venta
 				</a>
 				<a th:href="@{/reportes/ventas}" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
 					Reportes
 				</a>
 			</div>
+			<!--Esto es el filtro por fecha, solo permitirá hasta 6 meses por razones de rendimiento-->
+			<div class="card shadow-sm mb-4 border-0">
+				<div class="card-body bg-light rounded">
+					<form th:action="@{/ventas}" method="get" class="row g-3 align-items-end">
 
-			<div class="card card-body border-0 shadow-sm p-0">
+						<div class="col-md-4">
+							<label class="form-label fw-bold text-secondary small">Buscar Cliente</label>
+							<div class="input-group shadow-sm">
+								<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
+									placeholder="Nombre o Apellido..." autocomplete="off" />
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<label class="form-label fw-bold text-secondary small">Desde Fecha (Máx. 6 m.)</label>
+							<input type="date" class="form-control shadow-sm" name="fechaDesde" th:value="${fechaDesde}"
+								required>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-bold text-secondary small">Hasta Fecha</label>
+							<input type="date" class="form-control shadow-sm" name="fechaHasta" th:value="${fechaHasta}"
+								required>
+						</div>
+
+						<div class="col-md-2 d-flex justify-content-end gap-2">
+							<button type="submit" class="btn btn-primary fw-bold px-3 shadow-sm flex-grow-1">
+								<i class="bi bi-search"></i> Buscar
+							</button>
+							<a th:href="@{/productos}" class="btn btn-outline-secondary">Limpiar</a>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="d-flex justify-content-between align-items-center mb-2">
+				<h6 class="fw-bold text-secondary mb-0">Historial de Transacciones</h6>
+				<span class="badge bg-primary rounded-pill px-3 py-2"
+					th:text="'Total filtrado: ' + ${paginaVentas.totalElements} + ' ventas'">Total: 0</span>
+			</div>
+
+			<div class="card card-body border-0 shadow-sm p-0 mb-4">
 				<div class="table-responsive rounded border">
 					<table class="table table-striped table-hover align-middle text-center mb-0">
 						<thead class="table-secondary text-uppercase small fw-bold border-bottom">
@@ -108,7 +160,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="v : ${listaVentas}">
+							<tr th:each="v : ${paginaVentas.content}">
 								<td class="fw-bold text-secondary" th:text="${v.idVenta}"></td>
 								<td th:text="${#temporals.format(v.fecha, 'dd-MM-yyyy HH:mm:ss')}"></td>
 								<td class="text-start ps-4" th:text="${v.cliente.nombre} + ' ' + ${v.cliente.apellido}">
@@ -122,16 +174,42 @@
 									</button>
 								</td>
 							</tr>
-							<tr th:if="${listaVentas.isEmpty()}">
+							<tr th:if="${paginaVentas.empty}">
 								<td colspan="6" class="text-center text-muted py-5 fst-italic fs-5">
-									No se han registrado ventas en el sistema aún.
+									<i class="bi bi-calendar-x d-block fs-1 mb-2 opacity-50"></i>
+									No se encontraron ventas con los filtros aplicados.
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-			</div>
 
+				<div class="card-footer bg-white d-flex justify-content-center py-3 border-top"
+					th:if="${paginaVentas.totalPages > 1}">
+					<nav aria-label="Navegación de ventas">
+						<ul class="pagination pagination-sm mb-0 shadow-sm">
+							<li class="page-item" th:classappend="${paginaVentas.first ? 'disabled' : ''}">
+								<a class="page-link text-secondary fw-bold"
+									th:href="@{/ventas(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, palabraClave=${palabraClave}, page=${paginaVentas.number - 1})}">
+									&laquo; Anterior
+								</a>
+							</li>
+							<li class="page-item" th:each="i : ${#numbers.sequence(0, paginaVentas.totalPages - 1)}"
+								th:classappend="${i == paginaVentas.number ? 'active' : ''}">
+								<a class="page-link fw-bold"
+									th:href="@{/ventas(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, palabraClave=${palabraClave}, page=${i})}"
+									th:text="${i + 1}">1</a>
+							</li>
+							<li class="page-item" th:classappend="${paginaVentas.last ? 'disabled' : ''}">
+								<a class="page-link text-secondary fw-bold"
+									th:href="@{/ventas(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, palabraClave=${palabraClave}, page=${paginaVentas.number + 1})}">
+									Siguiente &raquo;
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
 		</div>
 	</div>
 

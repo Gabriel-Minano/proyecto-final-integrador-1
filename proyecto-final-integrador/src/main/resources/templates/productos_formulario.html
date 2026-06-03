@@ -3,6 +3,7 @@
 
 <head>
 	<title>Formulario de Producto</title>
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -26,8 +27,8 @@
 
 		<div>
 			<label>Categoría:</label>
-			<select th:field="*{categoria.idCategoria}">
-				<option value="">-- Seleccione Categoría --</option>
+			<select th:field="*{categoria.idCategoria}" class="select-buscador" style="width: 300px;" required>
+				<option value="">-- Buscar y Seleccionar Categoría --</option>
 				<option th:each="cat : ${listaCategorias}" th:value="${cat.idCategoria}" th:text="${cat.nombre}">
 				</option>
 			</select>
@@ -36,8 +37,8 @@
 
 		<div>
 			<label>Proveedor:</label>
-			<select th:field="*{proveedor.idProveedor}">
-				<option value="">-- Seleccione Proveedor --</option>
+			<select th:field="*{proveedor.idProveedor}" class="select-buscador" style="width: 300px;" required>
+				<option value="">-- Buscar y Seleccionar Proveedor --</option>
 				<option th:each="prov : ${listaProveedores}" th:value="${prov.idProveedor}" th:text="${prov.nombre}">
 				</option>
 			</select>
@@ -84,6 +85,23 @@
 		<button type="submit">Guardar Producto</button>
 		<a th:href="@{/productos}">Cancelar</a>
 	</form>
+	<script src="https://code.jquery.com/jquery-4.0.0.min.js"
+		integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js">
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('.select-buscador').select2({
+				placeholder: "Escriba para buscar...",
+				allowClear: true,
+				language: {
+					noResults: function () {
+						return "No se encontraron resultados";
+					}
+				}
+			});
+		});
+	</script>
 </body>
 
 </html>

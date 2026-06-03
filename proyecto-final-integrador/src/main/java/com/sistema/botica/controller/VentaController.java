@@ -1,6 +1,15 @@
 package com.sistema.botica.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sistema.botica.entity.Usuario;
@@ -37,8 +47,42 @@ public class VentaController {
 	private ProductoService productoService;
 
 	@GetMapping
-	public String listar(Model model) {
-		model.addAttribute("listaVentas", ventaService.listarTodas());
+	public String listar(
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta,
+			@RequestParam(required = false) String palabraClave, @RequestParam(defaultValue = "0") int page,
+			Model model, RedirectAttributes flash) {
+		if (fechaDesde == null) {
+			fechaDesde = LocalDate.now().minusMonths(1);
+		}
+		if (fechaHasta == null) {
+			fechaHasta = LocalDate.now();
+		}
+
+		// El Chronounit sirve para evitar la modificación de la url y que cause que el
+		// sistema estalle por la gran cantidad de datos
+		// Ejemplo si se intenta modificar de forma maliciosa la url añadiendo 3 años de
+		// registro de ventas, esto ocasionará que el sistema
+		// no aguante y la base de datos se caería.
+		long mesesDiferencia = ChronoUnit.MONTHS.between(fechaDesde.withDayOfMonth(1),
+				fechaHasta.withDayOfMonth(1));
+		if (mesesDiferencia > 6 || fechaDesde.isAfter(fechaHasta)) {
+			flash.addFlashAttribute("error",
+					"Rango de fechas inválido o superior a 6 meses. Se ha restaurado al último mes.");
+			return "redirect:/ventas";
+		}
+
+		LocalDateTime inicio = fechaDesde.atStartOfDay();
+		LocalDateTime fin = fechaHasta.atTime(LocalTime.MAX);
+
+		PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("fecha").descending());
+		Page<Venta> paginaVentas = ventaService.listarPaginadasPorFechaYClave(inicio, fin, palabraClave, pageRequest);
+
+		model.addAttribute("paginaVentas", paginaVentas);
+		model.addAttribute("fechaDesde", fechaDesde);
+		model.addAttribute("fechaHasta", fechaHasta);
+		model.addAttribute("palabraClave", palabraClave); // [Recordatorio] esto sirve para que se mantenga en la vista y no se borre
+
 		return "ventas";
 	}
 
