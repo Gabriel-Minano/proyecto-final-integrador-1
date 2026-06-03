@@ -82,6 +82,15 @@
 				style="color:red"></span>
 		</div>
 
+		<div th:if="${producto.idProducto != null}">
+			<label>Estado del Producto:</label><br>
+			<select th:field="*{estado}" class="form-select mt-1">
+				<option th:value="true">Activo</option>
+				<option th:value="false">Inactivo</option>
+			</select>
+		</div>
+		<input th:if="${producto.idProducto == null}" type="hidden" th:field="*{estado}" th:value="true">
+
 		<button type="submit">Guardar Producto</button>
 		<a th:href="@{/productos}">Cancelar</a>
 	</form>
