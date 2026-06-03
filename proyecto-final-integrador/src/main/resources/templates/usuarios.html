@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<meta charset="UTF-8">
@@ -37,46 +37,12 @@
 
 	<div class="layout-wrapper">
 
-		<div class="sidebar">
-			<div class="logo-container">
-				<div class="logo-mockup">CF</div>
-			</div>
-
-			<ul class="nav-menu">
-				<li><a th:href="@{/dashboard}">Dashboard</a></li>
-				<li><a th:href="@{/ventas}">Ventas</a></li>
-				<li><a th:href="@{/productos}">Productos</a></li>
-				<li><a th:href="@{/clientes}">Clientes</a></li>
-				<li><a th:href="@{/proveedores}">Proveedores</a></li>
-				<li><a th:href="@{/categorias}">Categorías</a></li>
-				<li class="active"><a th:href="@{/usuarios}">Usuarios</a></li>
-			</ul>
-			<div class="sidebar-divider"></div>
-
-			<ul class="nav-menu bottom-menu">
-				<li>
-					<form th:action="@{/logout}" method="post">
-						<button type="submit" class="logout-btn">
-							Cerrar sesión<br><br>Salir
-						</button>
-					</form>
-				</li>
-			</ul>
-		</div>
+		<div th:replace="~{componentes/sidebar :: menuLateral('usuarios')}"></div>
 
 		<div class="main-content">
 
-			<div class="top-header">
-				<div class="user-profile">
-					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-						viewBox="0 0 16 16">
-						<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-						<path fill-rule="evenodd"
-							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-					</svg>
-					Admin
-				</div>
-			</div>
+			<!--Cabecera con el ROL y USERNAME-->
+			<div th:replace="~{componentes/header :: topHeader}"></div>
 
 			<h2 class="text-secondary fw-bold mb-3">Personal de la Botica</h2>
 			<p class="text-muted mb-4">Gestión de empleados, cajeros y administradores con acceso al sistema.</p>
@@ -93,13 +59,13 @@
 						<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
 							placeholder="Buscar por rol o nombre..." autocomplete="off" />
 						<button type="submit" class="btn btn-primary fw-bold px-3">
-							🔍 Buscar
+							Buscar
 						</button>
 						<a th:href="@{/usuarios}" class="btn btn-outline-secondary">Limpiar</a>
 					</div>
 				</form>
 				<a th:href="@{/usuarios/nuevo}" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
-					➕ Registrar Empleado
+					Registrar Empleado
 				</a>
 			</div>
 
@@ -130,12 +96,12 @@
 									<div class="d-flex justify-content-center gap-2">
 										<a th:href="@{/usuarios/editar/{id}(id=${usu.idUsuario})}"
 											class="btn btn-warning btn-sm fw-bold shadow-sm" style="color: #664d03;">
-											✏️ Editar
+											Editar
 										</a>
 										<a th:href="@{/usuarios/eliminar/{id}(id=${usu.idUsuario})}"
 											class="btn btn-danger btn-sm fw-bold shadow-sm"
 											onclick="return confirm('¿Estás seguro de que deseas retirar a este usuario del sistema?');">
-											🗑️ Eliminar
+											Eliminar
 										</a>
 									</div>
 								</td>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<meta charset="UTF-8">
@@ -17,7 +17,6 @@
 			overflow-y: auto;
 		}
 
-		/* Cabecera Admin (Arriba a la derecha) */
 		.top-header {
 			display: flex;
 			justify-content: flex-end;
@@ -32,7 +31,6 @@
 			gap: 10px;
 		}
 
-		/* Estilos Originales de tu Dashboard */
 		.filtro-container {
 			margin-bottom: 30px;
 		}
@@ -129,48 +127,12 @@
 <body>
 
 	<div class="layout-wrapper">
-
-		<div class="sidebar">
-			<div class="logo-container">
-				<div class="logo-mockup">CF</div>
-			</div>
-
-			<ul class="nav-menu">
-				<li class="active"><a th:href="@{/dashboard}">Dashboard</a></li>
-				<li><a th:href="@{/ventas}">Ventas</a></li>
-				<li><a th:href="@{/productos}">Productos</a></li>
-				<li><a th:href="@{/clientes}">Clientes</a></li>
-				<li><a th:href="@{/proveedores}">Proveedores</a></li>
-				<li><a th:href="@{/categorias}">Categorías</a></li>
-				<li><a th:href="@{/usuarios}">Usuarios</a></li>
-			</ul>
-
-			<div class="sidebar-divider"></div>
-
-			<ul class="nav-menu bottom-menu">
-				<li>
-					<form th:action="@{/logout}" method="post">
-						<button type="submit" class="logout-btn">
-							Cerrar sesión<br><br>Salir
-						</button>
-					</form>
-				</li>
-			</ul>
-		</div>
-
+		<!--Menú desplegable, se encuentra en templates/componentes/sidebar.html-->
+		<div th:replace="~{componentes/sidebar :: menuLateral('dashboard')}"></div>
 		<div class="main-content">
 
-			<div class="top-header">
-				<div class="user-profile">
-					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-						viewBox="0 0 16 16">
-						<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-						<path fill-rule="evenodd"
-							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-					</svg>
-					Admin
-				</div>
-			</div>
+			<!--Cabecera con el ROL y USERNAME-->
+			<div th:replace="~{componentes/header :: topHeader}"></div>
 
 			<div class="filtro-container">
 				<form th:action="@{/dashboard}" method="get">
@@ -253,40 +215,40 @@
 
 <script th:inline="javascript">
 
-    // Datos enviados desde Spring
-    let ventasPorDia = /*[[${ventasPorDia}]]*/ [];
+	// Datos enviados desde Spring
+	let ventasPorDia = /*[[${ventasPorDia}]]*/[];
 
-    // Arrays para Chart.js
-    let labels = [];
-    let data = [];
+	// Arrays para Chart.js
+	let labels = [];
+	let data = [];
 
-    ventasPorDia.forEach(v => {
-        labels.push("Día " + v.dia);
-        data.push(v.total);
-    });
+	ventasPorDia.forEach(v => {
+		labels.push("Día " + v.dia);
+		data.push(v.total);
+	});
 
-    // Crear gráfico
-    const ctx = document.getElementById('ventasChart').getContext('2d');
+	// Crear gráfico
+	const ctx = document.getElementById('ventasChart').getContext('2d');
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Ventas por día',
-                data: data,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+	new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: labels,
+			datasets: [{
+				label: 'Ventas por día',
+				data: data,
+				borderWidth: 1
+			}]
+		},
+		options: {
+			responsive: true,
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			}
+		}
+	});
 
 </script>
 

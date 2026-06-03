@@ -15,7 +15,7 @@ public class RaizController {
 			if (isAdmin) {
 				return "redirect:/dashboard"; // Administrador va al panel de control
 			} else {
-				return "redirect:/ventas/nuevo"; // Cajero va directo a facturar
+				return "redirect:/ventas"; // Cajero va directo a facturar
 			}
 		}
 		return "redirect:/login";

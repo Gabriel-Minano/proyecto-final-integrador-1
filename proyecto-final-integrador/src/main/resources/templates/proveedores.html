@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<meta charset="UTF-8">
@@ -37,47 +37,12 @@
 
 	<div class="layout-wrapper">
 
-		<div class="sidebar">
-			<div class="logo-container">
-				<div class="logo-mockup">CF</div>
-			</div>
-
-			<ul class="nav-menu">
-				<li><a th:href="@{/dashboard}">Dashboard</a></li>
-				<li><a th:href="@{/ventas}">Ventas</a></li>
-				<li><a th:href="@{/productos}">Productos</a></li>
-				<li><a th:href="@{/clientes}">Clientes</a></li>
-				<li class="active"><a th:href="@{/proveedores}">Proveedores</a></li>
-				<li><a th:href="@{/categorias}">Categorías</a></li>
-				<li><a th:href="@{/usuarios}">Usuarios</a></li>
-			</ul>
-
-			<div class="sidebar-divider"></div>
-
-			<ul class="nav-menu bottom-menu">
-				<li>
-					<form th:action="@{/logout}" method="post">
-						<button type="submit" class="logout-btn">
-							Cerrar sesión<br><br>Salir
-						</button>
-					</form>
-				</li>
-			</ul>
-		</div>
+		<div th:replace="~{componentes/sidebar :: menuLateral('proveedores')}"></div>
 
 		<div class="main-content">
 
-			<div class="top-header">
-				<div class="user-profile">
-					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-						viewBox="0 0 16 16">
-						<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-						<path fill-rule="evenodd"
-							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-					</svg>
-					Admin
-				</div>
-			</div>
+			<!--Cabecera con el ROL y USERNAME-->
+			<div th:replace="~{componentes/header :: topHeader}"></div>
 
 			<h2 class="text-secondary fw-bold mb-3">Directorio de Proveedores</h2>
 			<p class="text-muted mb-4">Gestión de laboratorios y empresas distribuidoras de la botica.</p>
@@ -93,13 +58,14 @@
 						<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
 							placeholder="Buscar por RUC o razón social..." autocomplete="off" maxlength="11">
 						<button type="submit" class="btn btn-primary fw-bold px-3">
-							🔍 Buscar
+							Buscar
 						</button>
 						<a th:href="@{/proveedores}" class="btn btn-outline-secondary">Limpiar</a>
 					</div>
 				</form>
-				<a th:href="@{/proveedores/nuevo}" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
-					➕ Crear Nuevo Proveedor
+				<a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/proveedores/nuevo}"
+					class="btn btn-success fw-bold px-4 py-2 shadow-sm">
+					Crear Nuevo Proveedor
 				</a>
 			</div>
 
@@ -113,7 +79,7 @@
 								<th style="width: 15%;">RUC</th>
 								<th style="width: 15%;">Teléfono</th>
 								<th class="text-start" style="width: 22%;">Dirección</th>
-								<th style="width: 15%;">Acciones</th>
+								<th sec:authorize="hasRole('ADMINISTRADOR')" style="width: 15%;">Acciones</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -124,16 +90,16 @@
 								<td th:text="${prov.telefono}"></td>
 								<td class="text-start text-muted small" th:text="${prov.direccion}"></td>
 
-								<td>
+								<td sec:authorize="hasRole('ADMINISTRADOR')">
 									<div class="d-flex justify-content-center gap-2">
 										<a th:href="@{/proveedores/editar/{id}(id=${prov.idProveedor})}"
 											class="btn btn-warning btn-sm fw-bold shadow-sm" style="color: #664d03;">
-											✏️ Editar
+											Editar
 										</a>
 										<a th:href="@{/proveedores/eliminar/{id}(id=${prov.idProveedor})}"
 											class="btn btn-danger btn-sm fw-bold shadow-sm"
 											onclick="return confirm('¿Estás seguro de que deseas retirar a este proveedor del sistema?');">
-											🗑️ Eliminar
+											Eliminar
 										</a>
 									</div>
 								</td>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+	<div th:fragment="menuLateral(vistaActiva)" class="sidebar">
+		<div class="logo-container">
+			<div class="logo-mockup">CF</div>
+		</div>
+
+		<ul class="nav-menu">
+			<li sec:authorize="hasRole('ADMINISTRADOR')" th:classappend="${vistaActiva == 'dashboard'} ? 'active' : ''">
+				<a th:href="@{/dashboard}">Dashboard</a>
+			</li>
+
+			<li th:classappend="${vistaActiva == 'caja'} ? 'active' : ''">
+				<a th:href="@{/ventas/nuevo}">Realizar una venta</a>
+			</li>
+
+			<li th:classappend="${vistaActiva == 'ventas'} ? 'active' : ''">
+				<a th:href="@{/ventas}">Ventas</a>
+			</li>
+
+			<li th:classappend="${vistaActiva == 'productos'} ? 'active' : ''">
+				<a th:href="@{/productos}">Productos</a>
+			</li>
+
+			<li th:classappend="${vistaActiva == 'clientes'} ? 'active' : ''">
+				<a th:href="@{/clientes}">Clientes</a>
+			</li>
+
+			<li th:classappend="${vistaActiva == 'proveedores'} ? 'active' : ''">
+				<a th:href="@{/proveedores}">Proveedores</a>
+			</li>
+
+			<li th:classappend="${vistaActiva == 'categorias'} ? 'active' : ''">
+				<a th:href="@{/categorias}">Categorías</a>
+			</li>
+
+			<li sec:authorize="hasRole('ADMINISTRADOR')" th:classappend="${vistaActiva == 'usuarios'} ? 'active' : ''">
+				<a th:href="@{/usuarios}">Usuarios</a>
+			</li>
+		</ul>
+
+		<div class="sidebar-divider"></div>
+
+		<ul class="nav-menu bottom-menu">
+			<li>
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="logout-btn">
+						Cerrar sesión<br /><br />Salir
+					</button>
+				</form>
+			</li>
+		</ul>
+
+	</div>
+
+</body>
+
+</html>

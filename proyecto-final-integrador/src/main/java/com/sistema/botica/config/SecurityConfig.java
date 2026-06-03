@@ -17,21 +17,39 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> auth
-				// Permitir acceso libre a los recursos estáticos y a la pantalla de login
+				// 1. Recursos públicos y login
 				.requestMatchers("/login", "/css/**", "/js/**").permitAll()
 
-				// Restricción estricta: Solo el Administrador ve la gestión base y el Dashboard
-				.requestMatchers("/dashboard", "/productos/**", "/categorias/**", "/proveedores/**", "/usuarios/**")
+				// 2. PERMISOS COMPARTIDOS (ADMINISTRADOR y CAJERO)
+				// Facturación y búsqueda AJAX (El núcleo del cajero)
+				.requestMatchers("/ventas/nuevo", "/ventas/guardar").hasAnyRole("ADMINISTRADOR", "CAJERO")
+				.requestMatchers("/clientes/api/buscar", "/productos/api/buscar").hasAnyRole("ADMINISTRADOR", "CAJERO")
+
+				// Permitir ver los listados principales (Lectura)
+				.requestMatchers("/ventas", "/productos", "/clientes", "/categorias", "/proveedores")
+				.hasAnyRole("ADMINISTRADOR", "CAJERO")
+
+				// 3. PERMISOS EXCLUSIVOS (Solo ADMINISTRADOR)
+				// Paneles gerenciales
+				.requestMatchers("/dashboard", "/usuarios/**", "/reportes/**").hasRole("ADMINISTRADOR")
+
+				// Rutas de modificación (El muro de seguridad en el backend)
+				.requestMatchers("/productos/nuevo", "/productos/editar/**", "/productos/eliminar/**",
+						"/productos/guardar")
+				.hasRole("ADMINISTRADOR")
+				.requestMatchers("/clientes/nuevo", "/clientes/editar/**", "/clientes/eliminar/**", "/clientes/guardar")
+				.hasRole("ADMINISTRADOR")
+				.requestMatchers("/categorias/nuevo", "/categorias/editar/**", "/categorias/eliminar/**",
+						"/categorias/guardar")
+				.hasRole("ADMINISTRADOR")
+				.requestMatchers("/proveedores/nuevo", "/proveedores/editar/**", "/proveedores/eliminar/**",
+						"/proveedores/guardar")
 				.hasRole("ADMINISTRADOR")
 
-				// Acceso compartido o específico para Ventas
-				.requestMatchers("/ventas/nuevo", "/ventas/guardar").hasAnyRole("ADMINISTRADOR", "CAJERO")
-				.requestMatchers("/ventas").hasRole("ADMINISTRADOR") // Historial para auditoría del admin
-
 				// Cualquier otra petición requiere estar autenticado
-				.anyRequest().authenticated()).formLogin(form -> form.loginPage("/login") // Ruta de nuestra vista HTML
-																							// personalizada
-						.defaultSuccessUrl("/", true) // Redirige a la raíz para evaluar el rol tras iniciar sesión
+				.anyRequest().authenticated()).formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true) // Redirige
+																														// al
+																														// RaizController
 						.permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll());
 
