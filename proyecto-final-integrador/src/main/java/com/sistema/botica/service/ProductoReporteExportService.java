@@ -126,77 +126,77 @@ public class ProductoReporteExportService {
 			// Proporciones de ancho para cada columna
 			table.setWidths(new float[] { 1f, 1.8f, 1.2f, 1.2f, 3f, 2f, 1f, 1.2f, 1.5f });
 
-			
 			// Los top 10 inician desde acá
-            Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
-            
-            // Tabla de dos columnas sin bordeado
-            PdfPTable topsContainer = new PdfPTable(2);
-            topsContainer.setWidthPercentage(100);
-            topsContainer.setSpacingAfter(20);
+			Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
 
-            // 10 más vendidos
-            PdfPTable topMasTable = new PdfPTable(2);
-            topMasTable.setWidthPercentage(95);
-            topMasTable.setWidths(new float[]{3f, 1f}); 
-            
-            PdfPCell masHeader = new PdfPCell(new Phrase("Top 10 - Mayor Rotación", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE)));
-            masHeader.setBackgroundColor(new Color(25, 135, 84)); // Bootstrap Success Green
-            masHeader.setColspan(2);
-            masHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
-            masHeader.setPadding(5);
-            topMasTable.addCell(masHeader);
+			// Tabla de dos columnas sin bordeado
+			PdfPTable topsContainer = new PdfPTable(2);
+			topsContainer.setWidthPercentage(100);
+			topsContainer.setSpacingAfter(20);
 
-            for (java.util.Map.Entry<String, Integer> item : reporte.getTop10MasVendidos()) {
-                topMasTable.addCell(new PdfPCell(new Phrase(item.getKey(), cellFont)));
-                PdfPCell valCell = new PdfPCell(new Phrase(item.getValue() + " unds", cellFont));
-                valCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                topMasTable.addCell(valCell);
-            }
-            if (reporte.getTop10MasVendidos().isEmpty()) {
-                PdfPCell empty = new PdfPCell(new Phrase("Sin movimientos", cellFont));
-                empty.setColspan(2);
-                empty.setHorizontalAlignment(Element.ALIGN_CENTER);
-                topMasTable.addCell(empty);
-            }
+			// 10 más vendidos
+			PdfPTable topMasTable = new PdfPTable(2);
+			topMasTable.setWidthPercentage(95);
+			topMasTable.setWidths(new float[] { 3f, 1f });
 
-            // 10 menos vendidos
-            PdfPTable topMenosTable = new PdfPTable(2);
-            topMenosTable.setWidthPercentage(95);
-            topMenosTable.setWidths(new float[]{3f, 1f});
-            
-            PdfPCell menosHeader = new PdfPCell(new Phrase("Top 10 - Riesgo Estancamiento", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE)));
-            menosHeader.setBackgroundColor(new Color(220, 53, 69)); // Bootstrap Danger Red
-            menosHeader.setColspan(2);
-            menosHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
-            menosHeader.setPadding(5);
-            topMenosTable.addCell(menosHeader);
+			PdfPCell masHeader = new PdfPCell(new Phrase("Top 10 - Mayor Rotación",
+					FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE)));
+			masHeader.setBackgroundColor(new Color(25, 135, 84)); // Bootstrap Success Green
+			masHeader.setColspan(2);
+			masHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+			masHeader.setPadding(5);
+			topMasTable.addCell(masHeader);
 
-            for (java.util.Map.Entry<String, Integer> item : reporte.getTop10MenosVendidos()) {
-                topMenosTable.addCell(new PdfPCell(new Phrase(item.getKey(), cellFont)));
-                PdfPCell valCell = new PdfPCell(new Phrase(item.getValue() + " unds", cellFont));
-                valCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                topMenosTable.addCell(valCell);
-            }
-            if (reporte.getTop10MenosVendidos().isEmpty()) {
-                PdfPCell empty = new PdfPCell(new Phrase("Sin movimientos", cellFont));
-                empty.setColspan(2);
-                empty.setHorizontalAlignment(Element.ALIGN_CENTER);
-                topMenosTable.addCell(empty);
-            }
+			for (java.util.Map.Entry<String, Integer> item : reporte.getTop10MasVendidos()) {
+				topMasTable.addCell(new PdfPCell(new Phrase(item.getKey(), cellFont)));
+				PdfPCell valCell = new PdfPCell(new Phrase(item.getValue() + " unds", cellFont));
+				valCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				topMasTable.addCell(valCell);
+			}
+			if (reporte.getTop10MasVendidos().isEmpty()) {
+				PdfPCell empty = new PdfPCell(new Phrase("Sin movimientos", cellFont));
+				empty.setColspan(2);
+				empty.setHorizontalAlignment(Element.ALIGN_CENTER);
+				topMasTable.addCell(empty);
+			}
 
-            // Insertar las mini-tablas dentro del contenedor sin bordes
-            PdfPCell cellLeft = new PdfPCell(topMasTable);
-            cellLeft.setBorder(Rectangle.NO_BORDER);
-            topsContainer.addCell(cellLeft);
+			// 10 menos vendidos
+			PdfPTable topMenosTable = new PdfPTable(2);
+			topMenosTable.setWidthPercentage(95);
+			topMenosTable.setWidths(new float[] { 3f, 1f });
 
-            PdfPCell cellRight = new PdfPCell(topMenosTable);
-            cellRight.setBorder(Rectangle.NO_BORDER);
-            topsContainer.addCell(cellRight);
+			PdfPCell menosHeader = new PdfPCell(new Phrase("Top 10 - Riesgo Estancamiento",
+					FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE)));
+			menosHeader.setBackgroundColor(new Color(220, 53, 69)); // Bootstrap Danger Red
+			menosHeader.setColspan(2);
+			menosHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+			menosHeader.setPadding(5);
+			topMenosTable.addCell(menosHeader);
 
-            document.add(topsContainer);
-			
-			
+			for (java.util.Map.Entry<String, Integer> item : reporte.getTop10MenosVendidos()) {
+				topMenosTable.addCell(new PdfPCell(new Phrase(item.getKey(), cellFont)));
+				PdfPCell valCell = new PdfPCell(new Phrase(item.getValue() + " unds", cellFont));
+				valCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				topMenosTable.addCell(valCell);
+			}
+			if (reporte.getTop10MenosVendidos().isEmpty()) {
+				PdfPCell empty = new PdfPCell(new Phrase("Sin movimientos", cellFont));
+				empty.setColspan(2);
+				empty.setHorizontalAlignment(Element.ALIGN_CENTER);
+				topMenosTable.addCell(empty);
+			}
+
+			// Insertar las mini-tablas dentro del contenedor sin bordes
+			PdfPCell cellLeft = new PdfPCell(topMasTable);
+			cellLeft.setBorder(Rectangle.NO_BORDER);
+			topsContainer.addCell(cellLeft);
+
+			PdfPCell cellRight = new PdfPCell(topMenosTable);
+			cellRight.setBorder(Rectangle.NO_BORDER);
+			topsContainer.addCell(cellRight);
+
+			document.add(topsContainer);
+
 			// Cabeceras
 			String[] headers = { "ID", "Fecha y Hora", "Venta", "Código", "Producto", "Categoría", "Cant.", "P. Unit",
 					"Subtotal" };

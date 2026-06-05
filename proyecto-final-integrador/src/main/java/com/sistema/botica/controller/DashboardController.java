@@ -1,5 +1,7 @@
 package com.sistema.botica.controller;
 
+import java.time.Year;
+import java.util.stream.IntStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,6 +42,14 @@ public class DashboardController {
                 dashboardService.obtenerVentasPorDia(mes, anio));
         model.addAttribute("mesSeleccionado", mes);
         model.addAttribute("anioSeleccionado", anio);
+
+        int anioActual = Year.now().getValue();
+
+        model.addAttribute(
+                "anios",
+                IntStream.rangeClosed(2025, anioActual + 5)
+                        .boxed()
+                        .toList());
 
         return "dashboard";
     }
