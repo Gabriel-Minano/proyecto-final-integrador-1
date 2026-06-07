@@ -3,58 +3,50 @@
 
 <body>
 
-	<div th:fragment="menuLateral(vistaActiva)" class="sidebar">
-		<div class="logo-container">
-			<div class="logo-mockup">CF</div>
+	<nav th:fragment="menuLateral(vistaActiva)" class="app-sidebar">
+		<div class="sidebar-brand">
+			<div class="brand-icon"><i class="bi bi-capsule"></i></div>
+			<div class="brand-text">
+				Conquistadores Farma
+				<small>Sistema de Gestión</small>
+			</div>
 		</div>
 
-		<ul class="nav-menu">
+		<ul class="sidebar-nav">
 			<li sec:authorize="hasRole('ADMINISTRADOR')" th:classappend="${vistaActiva == 'dashboard'} ? 'active' : ''">
-				<a th:href="@{/dashboard}">Dashboard</a>
+				<a th:href="@{/dashboard}"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
 			</li>
-
 			<li th:classappend="${vistaActiva == 'caja'} ? 'active' : ''">
-				<a th:href="@{/ventas/nuevo}">Realizar una venta</a>
+				<a th:href="@{/ventas/nuevo}"><i class="bi bi-cart-check-fill"></i> Realizar Venta</a>
 			</li>
-
 			<li th:classappend="${vistaActiva == 'ventas'} ? 'active' : ''">
-				<a th:href="@{/ventas}">Ventas</a>
+				<a th:href="@{/ventas}"><i class="bi bi-receipt-cutoff"></i> Ventas</a>
 			</li>
-
 			<li th:classappend="${vistaActiva == 'productos'} ? 'active' : ''">
-				<a th:href="@{/productos}">Productos</a>
+				<a th:href="@{/productos}"><i class="bi bi-box-seam-fill"></i> Productos</a>
 			</li>
-
 			<li th:classappend="${vistaActiva == 'clientes'} ? 'active' : ''">
-				<a th:href="@{/clientes}">Clientes</a>
+				<a th:href="@{/clientes}"><i class="bi bi-people-fill"></i> Clientes</a>
 			</li>
-
 			<li th:classappend="${vistaActiva == 'proveedores'} ? 'active' : ''">
-				<a th:href="@{/proveedores}">Proveedores</a>
+				<a th:href="@{/proveedores}"><i class="bi bi-truck"></i> Proveedores</a>
 			</li>
-
 			<li th:classappend="${vistaActiva == 'categorias'} ? 'active' : ''">
-				<a th:href="@{/categorias}">Categorías</a>
+				<a th:href="@{/categorias}"><i class="bi bi-tags-fill"></i> Categorías</a>
 			</li>
-
 			<li sec:authorize="hasRole('ADMINISTRADOR')" th:classappend="${vistaActiva == 'usuarios'} ? 'active' : ''">
-				<a th:href="@{/usuarios}">Usuarios</a>
+				<a th:href="@{/usuarios}"><i class="bi bi-shield-lock-fill"></i> Usuarios</a>
 			</li>
 		</ul>
 
-		<div class="sidebar-divider"></div>
-
-		<ul class="nav-menu bottom-menu">
-			<li>
-				<form th:action="@{/logout}" method="post">
-					<button type="submit" class="logout-btn">
-						Cerrar sesión<br /><br />Salir
-					</button>
-				</form>
-			</li>
-		</ul>
-
-	</div>
+		<div class="sidebar-footer">
+			<form th:action="@{/logout}" method="post">
+				<button type="submit" class="logout-btn">
+					<i class="bi bi-box-arrow-left"></i> Cerrar Sesión
+				</button>
+			</form>
+		</div>
+	</nav>
 
 </body>
 

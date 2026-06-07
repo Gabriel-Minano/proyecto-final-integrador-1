@@ -1,21 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Formulario de Categoría</title></head>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Formulario de Categoría - Conquistadores Farma</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
 <body>
-    <h1 th:text="${categoria.idCategoria != null} ? 'Editar Categoría' : 'Nueva Categoría'"></h1>
-    
-    <form th:action="@{/categorias/guardar}" th:object="${categoria}" method="post">
-        <input type="hidden" th:field="*{idCategoria}" />
-		<input type="hidden" th:field="*{estado}" />
 
-        <div>
-            <label>Nombre:</label>
-            <input type="text" th:field="*{nombre}" />
-            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
-        </div>
-        
-        <button type="submit">Guardar</button>
-        <a th:href="@{/categorias}">Cancelar</a>
-    </form>
+	<div class="login-wrapper" style="background: var(--app-bg);">
+		<div style="width: 100%; max-width: 580px;">
+
+			<!-- Barra superior azul -->
+			<div class="app-header mb-4" style="border-radius: 12px;">
+				<div class="header-brand">
+					<i class="bi bi-capsule"></i>
+					<span>Botica Conquistadores Farma</span>
+				</div>
+			</div>
+
+			<div class="app-card">
+				<div class="app-card-header">
+					<i class="bi bi-tags-fill"></i>
+					<span th:text="${categoria.idCategoria != null} ? 'Editar Categoría' : 'Nueva Categoría'">Nueva Categoría</span>
+				</div>
+				<div class="app-card-body">
+					<form th:action="@{/categorias/guardar}" th:object="${categoria}" method="post" class="app-form">
+						<input type="hidden" th:field="*{idCategoria}" />
+						<input type="hidden" th:field="*{estado}" />
+
+						<div class="mb-3">
+							<label class="form-label required">Nombre de la categoría</label>
+							<input type="text" th:field="*{nombre}" class="form-control"
+								placeholder="Ej. Analgésicos, Antibióticos, Cuidado personal" />
+							<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
+							<div class="form-help">Ingrese un nombre descriptivo para clasificar los productos.</div>
+						</div>
+
+						<div class="form-actions">
+							<a th:href="@{/categorias}" class="btn btn-app-secondary">
+								<i class="bi bi-x-lg"></i> Cancelar
+							</a>
+							<button type="submit" class="btn btn-app-primary">
+								<i class="bi bi-check-lg"></i> Guardar
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,213 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-	<meta charset="UTF-8" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Inventario de Productos - Conquistadores Farma</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-	<link rel="stylesheet" th:href="@{navBar.css}" />
-
-	<style>
-		/* Estilos del área de contenido principal y cabecera */
-		.main-content {
-			flex: 1;
-			padding: 30px;
-			background-color: #ffffff;
-			overflow-y: auto;
-		}
-
-		.top-header {
-			display: flex;
-			justify-content: flex-end;
-			margin-bottom: 30px;
-		}
-
-		.user-profile {
-			font-size: 1.3em;
-			color: #333;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-		}
-	</style>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 
 <body>
-	<div class="layout-wrapper">
-
+	<div class="app-body">
 		<div th:replace="~{componentes/sidebar :: menuLateral('productos')}"></div>
 
-		<div class="main-content">
-			
-			<!--Cabecera con el ROL y USERNAME-->
+		<div class="app-main">
 			<div th:replace="~{componentes/header :: topHeader}"></div>
 
-			<h2 class="text-secondary fw-bold mb-3">Inventario de Productos</h2>
-			<p class="text-muted mb-4">
-				Gestión del catálogo de medicamentos y control de stock.
-			</p>
+			<div class="app-content">
+				<h1 class="app-page-title"><i class="bi bi-box-seam-fill me-2 text-primary"></i>Inventario de Productos</h1>
+				<p class="app-page-subtitle">Gestión del catálogo de medicamentos y control de stock.</p>
 
-			<div th:if="${success}" th:text="${success}" class="alert alert-success py-2 small fw-bold mb-4 shadow-sm"
-				role="alert"></div>
-			<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold mb-4 shadow-sm"
-				role="alert"></div>
+				<div th:if="${success}" th:text="${success}" class="alert alert-success py-2 small fw-bold mb-4" role="alert"></div>
+				<div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold mb-4" role="alert"></div>
 
-			<div class="d-flex justify-content-start align-items-center mb-4 gap-3">
-				<form th:action="@{/productos}" method="get" class="d-flex" style="width: 450px">
-					<div class="input-group shadow-sm">
-						<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
-							placeholder="Buscar por nombre o código..." autocomplete="off" />
-						<button type="submit" class="btn btn-primary fw-bold px-3">
-							Buscar
-						</button>
-						<a th:href="@{/productos}" class="btn btn-outline-secondary">Limpiar</a>
+				<div class="d-flex flex-wrap justify-content-start align-items-center mb-4 gap-3">
+					<form th:action="@{/productos}" method="get" class="d-flex" style="max-width: 450px; flex:1;">
+						<div class="input-group">
+							<input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
+								placeholder="Buscar por nombre o código..." autocomplete="off" />
+							<button type="submit" class="btn btn-app-primary">
+								<i class="bi bi-search"></i> Buscar
+							</button>
+							<a th:href="@{/productos}" class="btn btn-app-secondary">Limpiar</a>
+						</div>
+					</form>
+
+					<a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/reportes/productos}" class="btn btn-app-primary">
+						<i class="bi bi-graph-up"></i> Reportes
+					</a>
+					<a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/productos/nuevo}" class="btn btn-app-primary">
+						<i class="bi bi-plus-lg"></i> Nuevo Producto
+					</a>
+				</div>
+
+				<!-- Filtros por estado -->
+				<div class="d-flex flex-wrap gap-2 mb-4">
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='activos')}"
+						th:classappend="${filtro == null || filtro == 'activos'} ? 'btn-primary text-white' : 'btn-outline-primary'"
+						class="btn btn-sm fw-semibold">Activos</a>
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='todos')}"
+						th:classappend="${filtro == 'todos'} ? 'btn-secondary text-white' : 'btn-outline-secondary'"
+						class="btn btn-sm fw-semibold">Todos</a>
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='stock')}"
+						th:classappend="${filtro == 'stock'} ? 'btn-success text-white' : 'btn-outline-success'"
+						class="btn btn-sm fw-semibold">Con Stock</a>
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='sinstock')}"
+						th:classappend="${filtro == 'sinstock'} ? 'btn-danger text-white' : 'btn-outline-danger'"
+						class="btn btn-sm fw-semibold">Sin Stock</a>
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='vencer')}"
+						th:classappend="${filtro == 'vencer'} ? 'btn-warning text-dark' : 'btn-outline-warning'"
+						class="btn btn-sm fw-semibold">Prox. Vencimiento</a>
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='vencido')}"
+						th:classappend="${filtro == 'vencido'} ? 'btn-dark text-white' : 'btn-outline-dark'"
+						class="btn btn-sm fw-semibold">Vencidos</a>
+					<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='eliminados')}"
+						th:classappend="${filtro == 'eliminados'} ? 'btn-secondary text-white' : 'btn-outline-secondary'"
+						class="btn btn-sm fw-semibold">Eliminados</a>
+				</div>
+
+				<div class="d-flex justify-content-end mb-2">
+					<span class="app-badge bg-primary text-white"
+						th:text="'Total filtrado: ' + ${paginaProductos.totalElements} + ' productos'">Total: 0</span>
+				</div>
+
+				<div class="app-card">
+					<div class="app-card-header">
+						<i class="bi bi-box-seam-fill"></i> Catálogo de Productos
 					</div>
-				</form>
+					<div class="table-responsive">
+						<table class="app-table table table-hover align-middle text-center mb-0">
+							<thead>
+								<tr>
+									<th>Código</th>
+									<th class="text-start">Nombre del Producto</th>
+									<th>Categoría</th>
+									<th>Precio Venta</th>
+									<th>Stock</th>
+									<th>Vencimiento</th>
+									<th>Estado</th>
+									<th sec:authorize="hasRole('ADMINISTRADOR')">Acciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="prod : ${paginaProductos.content}">
+									<td class="text-muted fw-bold" th:text="${prod.codigo}"></td>
+									<td class="text-start fw-semibold" th:text="${prod.nombre}"></td>
+									<td th:text="${prod.categoria.nombre}"></td>
+									<td class="text-primary fw-bold"
+										th:text="'S/. ' + ${#numbers.formatDecimal(prod.precioVenta, 1, 2)}"></td>
+									<td>
+										<span
+											th:classappend="${prod.stockActual <= prod.stockMinimo} ? 'badge bg-danger' : 'badge bg-success'"
+											th:text="${prod.stockActual}"></span>
+									</td>
+									<td th:text="${#temporals.format(prod.fechaVencimiento, 'dd-MM-yyyy')}"></td>
+									<td>
+										<span th:if="${prod.estado}"
+											class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Activo</span>
+										<span th:unless="${prod.estado}"
+											class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">Inactivo</span>
+									</td>
+									<td sec:authorize="hasRole('ADMINISTRADOR')">
+										<div class="d-flex justify-content-center gap-2">
+											<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}"
+												class="btn btn-warning btn-sm fw-bold">
+												<i class="bi bi-pencil-fill"></i>
+											</a>
+											<a th:if="${prod.estado}"
+												th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
+												class="btn btn-danger btn-sm fw-bold"
+												onclick="return confirm('¿Estás seguro de que deseas desactivar este producto del catálogo?');">
+												<i class="bi bi-trash-fill"></i>
+											</a>
+										</div>
+									</td>
+								</tr>
+								<tr th:if="${paginaProductos.empty}">
+									<td colspan="8" class="text-center text-muted py-5 fst-italic">
+										<i class="bi bi-inbox d-block fs-1 mb-2 opacity-50"></i>
+										No se encontraron productos con los filtros actuales.
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-				<a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/reportes/productos}"
-					class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
-					Reportes
-				</a>
-				<a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/productos/nuevo}"
-					class="btn btn-success fw-bold px-4 py-2 shadow-sm">
-					Registrar Nuevo Producto
-				</a>
-			</div>
-			<!-- container para lo btn filtros -->
-			<div class="d-flex flex-wrap gap-2 mb-4">
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='activos')}"
-					th:classappend="${filtro == null || filtro == 'activos'} ? 'btn-primary text-white shadow-sm' : 'btn-outline-primary'"
-					class="btn fw-semibold">
-					Activos
-				</a>
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='todos')}"
-					th:classappend="${filtro == 'todos'} ? 'btn-secondary text-white shadow-sm' : 'btn-outline-secondary'"
-					class="btn fw-semibold">
-					Todos
-				</a>
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='stock')}"
-					th:classappend="${filtro == 'stock'} ? 'btn-success text-white shadow-sm' : 'btn-outline-success'"
-					class="btn fw-semibold">
-					Con Stock
-				</a>
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='sinstock')}"
-					th:classappend="${filtro == 'sinstock'} ? 'btn-danger text-white shadow-sm' : 'btn-outline-danger'"
-					class="btn fw-semibold">
-					Sin Stock
-				</a>
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='vencer')}"
-					th:classappend="${filtro == 'vencer'} ? 'btn-warning text-dark shadow-sm' : 'btn-outline-warning'"
-					class="btn fw-semibold">
-					Prox. Vencimiento
-				</a>
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='vencido')}"
-					th:classappend="${filtro == 'vencido'} ? 'btn-dark text-white shadow-sm' : 'btn-outline-dark'"
-					class="btn fw-semibold">
-					Vencidos
-				</a>
-				<a th:href="@{/productos(palabraClave=${palabraClave}, filtro='eliminados')}"
-					th:classappend="${filtro == 'eliminados'} ? 'btn-secondary text-white shadow-sm' : 'btn-outline-secondary'"
-					class="btn fw-semibold">
-					Eliminados | Desactivados
-				</a>
-			</div>
-
-			<div class="d-flex justify-content-end mb-2">
-				<span class="badge bg-primary rounded-pill px-3 py-2 shadow-sm"
-					th:text="'Total filtrado: ' + ${paginaProductos.totalElements} + ' productos'">Total: 0</span>
-			</div>
-
-			<div class="card card-body border-0 shadow-sm p-0 mb-4">
-				<div class="table-responsive rounded border">
-					<table class="table table-striped table-hover align-middle text-center mb-0">
-						<thead class="table-secondary text-uppercase small fw-bold border-bottom">
-							<tr>
-								<th>Código</th>
-								<th class="text-start">Nombre del Producto</th>
-								<th>Categoría</th>
-								<th>Precio Venta</th>
-								<th>Stock</th>
-								<th>Vencimiento</th>
-								<th>Estado</th>
-								<th sec:authorize="hasRole('ADMINISTRADOR')">Acciones</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="prod : ${paginaProductos.content}">
-								<td class="text-muted fw-bold" th:text="${prod.codigo}"></td>
-								<td class="text-start fw-semibold" th:text="${prod.nombre}"></td>
-								<td th:text="${prod.categoria.nombre}"></td>
-								<td class="text-primary fw-bold"
-									th:text="'S/. ' + ${#numbers.formatDecimal(prod.precioVenta, 1, 2)}"></td>
-
-								<td>
-									<span
-										th:classappend="${prod.stockActual <= prod.stockMinimo} ? 'badge bg-danger fs-6' : 'badge bg-success fs-6'"
-										th:text="${prod.stockActual}"></span>
-								</td>
-
-								<td th:text="${#temporals.format(prod.fechaVencimiento, 'dd-MM-yyyy')}"></td>
-
-								<td>
-									<span th:if="${prod.estado}"
-										class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
-										Activo</span>
-									<span th:unless="${prod.estado}"
-										class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
-										Inactivo</span>
-								</td>
-
-								<td sec:authorize="hasRole('ADMINISTRADOR')">
-									<div class="d-flex justify-content-center gap-2">
-										<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}"
-											class="btn btn-warning btn-sm fw-bold shadow-sm" style="color: #664d03">
-											Editar
-										</a>
-										<a th:if="${prod.estado}"
-											th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
-											class="btn btn-danger btn-sm fw-bold shadow-sm"
-											onclick="return confirm('¿Estás seguro de que deseas desactivar este producto del catálogo?');">
-											Eliminar
-										</a>
-									</div>
-								</td>
-							</tr>
-							<tr th:if="${paginaProductos.empty}">
-								<td colspan="8" class="text-center text-muted py-5 fst-italic fs-5">
-									<i class="bi bi-inbox d-block fs-1 mb-2 opacity-50"></i>
-									No se encontraron productos con los filtros actuales.
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="d-flex justify-content-center py-3 border-top"
+						th:if="${paginaProductos.totalPages > 1}">
+						<nav>
+							<ul class="pagination pagination-sm mb-0">
+								<li class="page-item" th:classappend="${paginaProductos.first ? 'disabled' : ''}">
+									<a class="page-link"
+										th:href="@{/productos(palabraClave=${palabraClave}, filtro=${filtro}, page=${paginaProductos.number - 1})}">
+										&laquo; Anterior
+									</a>
+								</li>
+								<li class="page-item" th:each="i : ${#numbers.sequence(0, paginaProductos.totalPages - 1)}"
+									th:classappend="${i == paginaProductos.number ? 'active' : ''}">
+									<a class="page-link"
+										th:href="@{/productos(palabraClave=${palabraClave}, filtro=${filtro}, page=${i})}"
+										th:text="${i + 1}">1</a>
+								</li>
+								<li class="page-item" th:classappend="${paginaProductos.last ? 'disabled' : ''}">
+									<a class="page-link"
+										th:href="@{/productos(palabraClave=${palabraClave}, filtro=${filtro}, page=${paginaProductos.number + 1})}">
+										Siguiente &raquo;
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
 				</div>
 
-				<div class="card-footer bg-white d-flex justify-content-center py-3 border-top"
-					th:if="${paginaProductos.totalPages > 1}">
-					<nav aria-label="Navegación de productos">
-						<ul class="pagination pagination-sm mb-0 shadow-sm">
-							<li class="page-item" th:classappend="${paginaProductos.first ? 'disabled' : ''}">
-								<a class="page-link text-secondary fw-bold"
-									th:href="@{/productos(palabraClave=${palabraClave}, filtro=${filtro}, page=${paginaProductos.number - 1})}">
-									&laquo; Anterior
-								</a>
-							</li>
-							<li class="page-item" th:each="i : ${#numbers.sequence(0, paginaProductos.totalPages - 1)}"
-								th:classappend="${i == paginaProductos.number ? 'active' : ''}">
-								<a class="page-link fw-bold"
-									th:href="@{/productos(palabraClave=${palabraClave}, filtro=${filtro}, page=${i})}"
-									th:text="${i + 1}">1</a>
-							</li>
-							<li class="page-item" th:classappend="${paginaProductos.last ? 'disabled' : ''}">
-								<a class="page-link text-secondary fw-bold"
-									th:href="@{/productos(palabraClave=${palabraClave}, filtro=${filtro}, page=${paginaProductos.number + 1})}">
-									Siguiente &raquo;
-								</a>
-							</li>
-						</ul>
-					</nav>
-				</div>
 			</div>
 		</div>
 	</div>

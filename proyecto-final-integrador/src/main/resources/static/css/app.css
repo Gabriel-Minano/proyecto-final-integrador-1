@@ -1,0 +1,894 @@
+/* =============================================
+   SISTEMA BOTICA CONQUISTADORES FARMA
+   Hoja de estilos global (app.css)
+   ============================================= */
+
+/* --- Importar fuente Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* --- Variables CSS (Design Tokens) --- */
+:root {
+    --app-primary: #0d6efd;
+    --app-primary-dark: #0a58ca;
+    --app-primary-light: #3d8bfd;
+    --app-bg: #f0f2f5;
+    --app-bg-card: #ffffff;
+    --app-text: #343a40;
+    --app-text-secondary: #6c757d;
+    --app-text-muted: #adb5bd;
+    --app-border: #dee2e6;
+    --app-border-light: #e9ecef;
+    --app-success: #198754;
+    --app-danger: #dc3545;
+    --app-warning: #ffc107;
+    --app-info: #0dcaf0;
+    --app-sidebar-width: 250px;
+    --app-header-height: 56px;
+    --app-radius: 8px;
+    --app-radius-lg: 12px;
+    --app-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --app-shadow-lg: 0 4px 16px rgba(0,0,0,0.10);
+    --app-transition: all 0.2s ease;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    color: var(--app-text);
+    background-color: var(--app-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- Layout Principal --- */
+.app-body {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =============================================
+   SIDEBAR
+   ============================================= */
+.app-sidebar {
+    width: var(--app-sidebar-width);
+    min-height: 100vh;
+    background: linear-gradient(180deg, #1a1f36 0%, #252b48 100%);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: var(--app-transition);
+}
+
+.app-sidebar .sidebar-brand {
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.app-sidebar .sidebar-brand .brand-icon {
+    width: 42px;
+    height: 42px;
+    background: var(--app-primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.4);
+}
+
+.app-sidebar .sidebar-brand .brand-text {
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+.app-sidebar .sidebar-brand .brand-text small {
+    display: block;
+    font-weight: 400;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+}
+
+.app-sidebar .sidebar-nav {
+    list-style: none;
+    padding: 12px 10px;
+    margin: 0;
+    flex: 1;
+}
+
+.app-sidebar .sidebar-nav li {
+    margin-bottom: 2px;
+}
+
+.app-sidebar .sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.65);
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: var(--app-transition);
+}
+
+.app-sidebar .sidebar-nav li a i {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+}
+
+.app-sidebar .sidebar-nav li a:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+.app-sidebar .sidebar-nav li.active a {
+    background: var(--app-primary);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.35);
+}
+
+.app-sidebar .sidebar-footer {
+    padding: 12px 10px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.app-sidebar .sidebar-footer .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 16px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: var(--app-transition);
+}
+
+.app-sidebar .sidebar-footer .logout-btn:hover {
+    background: rgba(220,53,69,0.15);
+    color: #f87171;
+}
+
+.app-sidebar .sidebar-footer .logout-btn i {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+}
+
+/* =============================================
+   AREA DE CONTENIDO PRINCIPAL
+   ============================================= */
+.app-main {
+    flex: 1;
+    margin-left: var(--app-sidebar-width);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* =============================================
+   HEADER (Barra Superior Azul)
+   ============================================= */
+.app-header {
+    background: var(--app-primary);
+    color: #fff;
+    padding: 0 28px;
+    height: var(--app-header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.25);
+}
+
+.app-header .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.app-header .header-brand i {
+    font-size: 22px;
+}
+
+.app-header .header-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    background: rgba(255,255,255,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.app-header .header-user i {
+    font-size: 18px;
+}
+
+/* =============================================
+   CONTENIDO DE PÁGINA
+   ============================================= */
+.app-content {
+    flex: 1;
+    padding: 28px;
+    background-color: var(--app-bg);
+    overflow-y: auto;
+}
+
+/* --- Título de Página --- */
+.app-page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--app-text);
+    margin-bottom: 4px;
+}
+
+.app-page-subtitle {
+    font-size: 13.5px;
+    color: var(--app-text-secondary);
+    margin-bottom: 24px;
+}
+
+/* =============================================
+   TARJETAS (Cards)
+   ============================================= */
+.app-card {
+    background: var(--app-bg-card);
+    border: 1px solid var(--app-border-light);
+    border-radius: var(--app-radius-lg);
+    box-shadow: var(--app-shadow);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.app-card-header {
+    background: var(--app-primary);
+    color: #fff;
+    padding: 14px 20px;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-card-header i {
+    font-size: 20px;
+}
+
+.app-card-body {
+    padding: 24px;
+}
+
+/* =============================================
+   FORMULARIOS
+   ============================================= */
+.app-form .form-label {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--app-text);
+    margin-bottom: 6px;
+}
+
+.app-form .required::after {
+    content: ' *';
+    color: var(--app-danger);
+    font-weight: 700;
+}
+
+.app-form .form-control,
+.app-form .form-select {
+    border: 1px solid var(--app-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    transition: var(--app-transition);
+    color: var(--app-text);
+}
+
+.app-form .form-control:focus,
+.app-form .form-select:focus {
+    border-color: var(--app-primary);
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+}
+
+.app-form .form-control::placeholder {
+    color: var(--app-text-muted);
+}
+
+.app-form .form-help {
+    font-size: 12px;
+    color: var(--app-text-secondary);
+    margin-top: 5px;
+}
+
+.app-form .form-error {
+    font-size: 12px;
+    color: var(--app-danger);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.app-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--app-border-light);
+    margin-top: 24px;
+}
+
+/* =============================================
+   BOTONES
+   ============================================= */
+.btn-app-primary {
+    background-color: var(--app-primary);
+    border-color: var(--app-primary);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 13.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--app-transition);
+}
+
+.btn-app-primary:hover {
+    background-color: var(--app-primary-dark);
+    border-color: var(--app-primary-dark);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.35);
+}
+
+.btn-app-secondary {
+    background-color: #fff;
+    border: 1px solid var(--app-border);
+    color: var(--app-text-secondary);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 13.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--app-transition);
+}
+
+.btn-app-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+    color: var(--app-text);
+}
+
+/* =============================================
+   TABLAS
+   ============================================= */
+.app-table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.app-table thead th {
+    background-color: #f0f2f5;
+    color: var(--app-text-secondary);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--app-border);
+    white-space: nowrap;
+}
+
+.app-table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    font-size: 13.5px;
+    color: var(--app-text);
+    border-bottom: 1px solid var(--app-border-light);
+}
+
+.app-table tbody tr:hover {
+    background-color: #f8f9ff;
+}
+
+.app-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =============================================
+   ALERTAS 
+   ============================================= */
+.app-content .alert {
+    border-radius: var(--app-radius);
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+}
+
+/* =============================================
+   BADGE
+   ============================================= */
+.app-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+/* =============================================
+   PAGINACIÓN
+   ============================================= */
+.app-card .pagination {
+    margin: 0;
+}
+
+.app-card .page-link {
+    border-radius: 6px !important;
+    margin: 0 2px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--app-border);
+    color: var(--app-text-secondary);
+    padding: 6px 12px;
+}
+
+.app-card .page-item.active .page-link {
+    background-color: var(--app-primary);
+    border-color: var(--app-primary);
+    color: #fff;
+}
+
+/* =============================================
+   DASHBOARD CARDS
+   ============================================= */
+.dash-card {
+    border-radius: var(--app-radius-lg);
+    padding: 22px 20px;
+    color: #fff;
+    box-shadow: var(--app-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.dash-card .dash-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 48px;
+    opacity: 0.2;
+}
+
+.dash-card .dash-label {
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.dash-card .dash-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.dash-card.bg-ingresos { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.dash-card.bg-ventas   { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.dash-card.bg-clientes { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.dash-card.bg-critico  { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+/* =============================================
+   KPI CARDS (Reportes)
+   ============================================= */
+.kpi-card {
+    background: #fff;
+    border-radius: var(--app-radius);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--app-border-light);
+    border-left: 5px solid;
+    box-shadow: var(--app-shadow);
+    height: 100%;
+}
+
+.kpi-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--app-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+}
+
+.kpi-value {
+    font-size: 1.8em;
+    font-weight: 800;
+    color: var(--app-text);
+    margin: 0;
+}
+
+.kpi-icon {
+    font-size: 2.5em;
+    opacity: 0.15;
+}
+
+.kpi-blue { border-left-color: var(--app-primary); }
+.kpi-blue .kpi-icon { color: var(--app-primary); }
+.kpi-green { border-left-color: var(--app-success); }
+.kpi-green .kpi-icon { color: var(--app-success); }
+.kpi-cyan { border-left-color: var(--app-info); }
+.kpi-cyan .kpi-icon { color: var(--app-info); }
+.kpi-yellow { border-left-color: var(--app-warning); }
+.kpi-yellow .kpi-icon { color: var(--app-warning); }
+.kpi-red { border-left-color: var(--app-danger); }
+.kpi-red .kpi-icon { color: var(--app-danger); }
+.kpi-dark { border-left-color: #212529; }
+.kpi-dark .kpi-icon { color: #212529; }
+
+/* =============================================
+   REPORTES – Filtro y Resultados
+   ============================================= */
+.filtro-card,
+.resultados-card {
+    border: 1px solid var(--app-border-light);
+    border-radius: var(--app-radius-lg);
+    overflow: hidden;
+    margin-bottom: 24px;
+    background: #fff;
+    box-shadow: var(--app-shadow);
+}
+
+.filtro-header {
+    background-color: var(--app-primary);
+    color: white;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filtro-body {
+    padding: 20px;
+}
+
+.resultados-header {
+    background-color: #f8f9fa;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--app-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #495057;
+}
+
+.resultados-badge {
+    background-color: var(--app-primary);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.resultados-footer {
+    background-color: #f8f9fa;
+    padding: 14px 20px;
+    border-top: 1px solid var(--app-border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+}
+
+.total-label {
+    font-weight: 700;
+    color: var(--app-text);
+}
+
+.total-monto {
+    font-weight: 800;
+    color: var(--app-primary);
+    font-size: 1.1rem;
+}
+
+/* =============================================
+   REPORTES – Tabla
+   ============================================= */
+.tabla-reporte {
+    margin-bottom: 0;
+}
+
+.tabla-reporte thead th {
+    background-color: #f0f2f5;
+    color: #495057;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 12px 16px;
+    border-bottom: none;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.tabla-reporte tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    color: var(--app-text);
+    font-size: 13px;
+}
+
+/* =============================================
+   REPORTES – Rankings
+   ============================================= */
+.ranking-card {
+    background: #fff;
+    border-radius: var(--app-radius-lg);
+    border: 1px solid var(--app-border-light);
+    overflow: hidden;
+    height: 100%;
+    box-shadow: var(--app-shadow);
+}
+
+.ranking-header {
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.ranking-body {
+    padding: 0;
+}
+
+.ranking-body table td {
+    padding: 9px 16px;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+/* =============================================
+   REPORTE HEADER
+   ============================================= */
+.reporte-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--app-primary);
+    margin-bottom: 4px;
+}
+
+.reporte-header i {
+    font-size: 2em;
+}
+
+.reporte-subtitle {
+    color: var(--app-text-secondary);
+    font-size: 13.5px;
+    margin-bottom: 24px;
+}
+
+/* =============================================
+   ALERTAS PANEL (Dashboard)
+   ============================================= */
+.alertas-panel {
+    background: #fff;
+    border-radius: var(--app-radius-lg);
+    border: 1px solid var(--app-border-light);
+    box-shadow: var(--app-shadow);
+    overflow: hidden;
+}
+
+.alertas-panel .panel-title {
+    background: var(--app-danger);
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alertas-panel .panel-body {
+    padding: 16px;
+}
+
+.alerta-item {
+    background-color: #fef2f2;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border-left: 4px solid var(--app-danger);
+    color: #991b1b;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.alerta-item:last-child {
+    margin-bottom: 0;
+}
+
+/* =============================================
+   CHART PLACEHOLDER (Dashboard)
+   ============================================= */
+.chart-container {
+    background: #fff;
+    border-radius: var(--app-radius-lg);
+    border: 1px solid var(--app-border-light);
+    box-shadow: var(--app-shadow);
+    overflow: hidden;
+}
+
+.chart-container .chart-title {
+    background: var(--app-primary);
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-container .chart-body {
+    padding: 20px;
+    height: 320px;
+}
+
+/* =============================================
+   LOGIN PAGE
+   ============================================= */
+.login-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 50%, #084298 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+}
+
+.login-card .login-header {
+    background: var(--app-primary);
+    padding: 32px 24px;
+    text-align: center;
+    color: #fff;
+}
+
+.login-card .login-header .login-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 14px;
+}
+
+.login-card .login-header h3 {
+    margin: 0 0 4px;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.login-card .login-header p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 13px;
+}
+
+.login-card .login-body {
+    padding: 28px 28px 32px;
+}
+
+/* =============================================
+   MÓDULO CAJA (Ventas Formulario)
+   ============================================= */
+.caja-wrapper {
+    min-height: 100vh;
+    background: var(--app-bg);
+    padding: 20px;
+}
+
+.caja-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: var(--app-radius-lg);
+    box-shadow: var(--app-shadow-lg);
+    overflow: hidden;
+}
+
+.caja-header {
+    background: var(--app-primary);
+    color: #fff;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.caja-body {
+    padding: 24px;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+    }
+
+    .app-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .app-main {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .app-content {
+        padding: 16px;
+    }
+
+    .app-page-title {
+        font-size: 18px;
+    }
+
+    .dash-card .dash-value {
+        font-size: 22px;
+    }
+}

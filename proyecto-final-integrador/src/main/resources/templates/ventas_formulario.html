@@ -3,109 +3,127 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Módulo de Caja - Conquistadores Farma</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 
-<body class="bg-light p-4">
+<body>
 
-	<div class="container bg-white p-4 rounded shadow-sm" style="max-width: 1100px;">
-		<div th:if="${error}"
-			class="alert alert-danger alert-dismissible fade show py-3 medium fw-bold d-flex align-items-center shadow-sm">
-			<span th:text="${error}">¡Ha ocurrido un error!</span>
-			<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
-				aria-label="Close"></button>
+	<div class="caja-wrapper">
+		<!-- Barra superior -->
+		<div class="app-header mb-4" style="border-radius: 12px; max-width: 1100px; margin: 0 auto;">
+			<div class="header-brand">
+				<i class="bi bi-capsule"></i>
+				<span>Botica Conquistadores Farma</span>
+			</div>
 		</div>
 
-		<div th:if="${success}"
-			class="alert alert-success alert-dismissible fade show py-3 medium fw-bold d-flex align-items-center shadow-sm"
-			role="alert">
-			<span th:text="${success}">¡Operación completada con éxito!</span>
-			<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
-				aria-label="Close"></button>
-		</div>
+		<div class="caja-container">
+			<div class="caja-header">
+				<i class="bi bi-cart-check-fill"></i> Módulo de Caja - Nueva Venta
+			</div>
+			<div class="caja-body">
 
-		<h2 class="text-primary mb-3 border-bottom pb-2 fw-bold">Módulo de Caja - Nueva Venta</h2>
+				<div th:if="${error}"
+					class="alert alert-danger alert-dismissible fade show py-2 small fw-bold d-flex align-items-center">
+					<i class="bi bi-exclamation-triangle-fill me-2"></i>
+					<span th:text="${error}">¡Ha ocurrido un error!</span>
+					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
 
-		<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post" id="ventaForm">
+				<div th:if="${success}"
+					class="alert alert-success alert-dismissible fade show py-2 small fw-bold d-flex align-items-center" role="alert">
+					<i class="bi bi-check-circle-fill me-2"></i>
+					<span th:text="${success}">¡Operación completada con éxito!</span>
+					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
 
-			<div class="row g-3 mb-4 p-3 bg-light rounded border">
-				<div class="col-md-6">
-					<label class="form-label fw-semibold text-secondary small">Cliente:</label>
-					<div class="input-group shadow-sm">
-						<input type="text" id="visualCliente" class="form-control bg-white fw-bold text-secondary"
-							placeholder="Haga clic en buscar..." readonly required>
-						<input type="hidden" th:field="*{cliente.idCliente}" id="idClienteOculto">
-						<button class="btn btn-primary fw-bold" type="button" data-bs-toggle="modal"
-							data-bs-target="#modalCliente">
-							🔍 Buscar Cliente
+				<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post" id="ventaForm" class="app-form">
+
+					<div class="row g-3 mb-4 p-3 rounded border" style="background: var(--app-bg);">
+						<div class="col-md-6">
+							<label class="form-label fw-bold small text-secondary">Cliente:</label>
+							<div class="input-group">
+								<input type="text" id="visualCliente" class="form-control bg-white fw-bold text-secondary"
+									placeholder="Haga clic en buscar..." readonly required>
+								<input type="hidden" th:field="*{cliente.idCliente}" id="idClienteOculto">
+								<button class="btn btn-app-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalCliente">
+									<i class="bi bi-search"></i> Buscar
+								</button>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label fw-bold small text-secondary">Cajero / Operador:</label>
+							<div class="form-control bg-light text-muted fw-bold">
+								<i class="bi bi-person-fill me-1"></i> <span th:text="${usernameLogueado}">Usuario</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h6 class="fw-bold text-secondary mb-0"><i class="bi bi-list-check me-1"></i> Detalle de Medicamentos</h6>
+						<button type="button" class="btn btn-app-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalProducto">
+							<i class="bi bi-plus-lg"></i> Agregar Producto
 						</button>
 					</div>
-				</div>
 
-				<div class="col-md-6">
-					<label class="form-label fw-semibold text-secondary small">Cajero / Operador:</label>
-					<div class="form-control bg-light text-muted fw-bold border-secondary-subtle">
-						👤 <span th:text="${usernameLogueado}">Usuario</span>
+					<div class="table-responsive border rounded mb-4" style="min-height: 200px; background: #fafafa;">
+						<table class="app-table table table-bordered align-middle text-center mb-0" id="tablaDetalle">
+							<thead>
+								<tr>
+									<th style="width: 40%;">Producto / Medicamento</th>
+									<th style="width: 15%;">Precio (S/.)</th>
+									<th style="width: 15%;">Cantidad</th>
+									<th style="width: 20%;">Subtotal (S/.)</th>
+									<th style="width: 10%;">Remover</th>
+								</tr>
+							</thead>
+							<tbody id="tbodyDetalle">
+							</tbody>
+						</table>
 					</div>
-				</div>
-			</div>
 
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h5 class="fw-bold text-secondary mb-0">Detalle de Medicamentos</h5>
-				<button type="button" class="btn btn-primary btn-sm fw-bold shadow-sm" data-bs-toggle="modal"
-					data-bs-target="#modalProducto">
-					➕ Buscar y Agregar Producto
-				</button>
-			</div>
+					<div class="d-flex justify-content-end align-items-center gap-3 border-top pt-3 mb-4">
+						<span class="fs-5 fw-bold text-dark">TOTAL NETO A COBRAR: S/.</span>
+						<input type="number" step="0.01" th:field="*{total}" id="totalVenta"
+							class="form-control text-end fw-bold text-success fs-4 bg-white border-0" style="width: 180px;"
+							readonly required />
+					</div>
 
-			<div class="table-responsive border rounded mb-4" style="min-height: 200px; background-color: #fafafa;">
-				<table class="table table-bordered align-middle text-center mb-0" id="tablaDetalle">
-					<thead class="table-secondary small text-uppercase fw-bold">
-						<tr>
-							<th style="width: 40%;">Producto / Medicamento</th>
-							<th style="width: 15%;">Precio (S/.)</th>
-							<th style="width: 15%;">Cantidad</th>
-							<th style="width: 20%;">Subtotal (S/.)</th>
-							<th style="width: 10%;">Remover</th>
-						</tr>
-					</thead>
-					<tbody id="tbodyDetalle">
-					</tbody>
-				</table>
-			</div>
+					<div class="d-flex gap-2">
+						<button type="submit" class="btn btn-app-primary px-5">
+							<i class="bi bi-check-lg"></i> Procesar Venta
+						</button>
+					</div>
+				</form>
 
-			<div class="d-flex justify-content-end align-items-center gap-3 border-top pt-3 mb-4">
-				<span class="fs-4 fw-bold text-dark">TOTAL NETO A COBRAR: S/.</span>
-				<input type="number" step="0.01" th:field="*{total}" id="totalVenta"
-					class="form-control text-end fw-bold text-success fs-4 bg-white border-0" style="width: 180px;"
-					readonly required />
-			</div>
+				<form th:action="@{/logout}" method="post">
+					<div class="d-flex gap-2 mt-3">
+						<button type="submit" class="btn btn-danger btn-sm">
+							<i class="bi bi-box-arrow-left"></i> Cerrar Sesión
+						</button>
+					</div>
+				</form>
 
-			<div class="d-flex gap-2">
-				<button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">Procesar Venta</button>
 			</div>
-		</form>
-		<form th:action="@{/logout}" method="post">
-			<div class="d-flex gap-2 mt-1">
-				<button type="submit" class="btn btn-danger">
-					Cerrar Sesión (Salir)
-				</button>
-			</div>
-		</form>
+		</div>
 	</div>
 
+	<!-- Modal Clientes -->
 	<div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered">
-			<div class="modal-content border-0 shadow-lg">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title fw-bold">Buscador de Clientes</h5>
+			<div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+				<div class="modal-header" style="background: var(--app-primary); color: #fff;">
+					<h5 class="modal-title fw-bold"><i class="bi bi-people-fill me-2"></i>Buscador de Clientes</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body p-4">
 					<div class="mb-3">
 						<input type="text" id="inputBuscarCliente"
-							class="form-control form-control-lg border-primary shadow-sm"
+							class="form-control form-control-lg"
 							placeholder="Escriba DNI o Apellidos para buscar en BD..."
 							oninput="buscarClientesBackend(this.value)">
 					</div>
@@ -120,8 +138,7 @@
 							</thead>
 							<tbody id="tbodyClientesAjax">
 								<tr>
-									<td colspan="3" class="text-muted py-4">Use la barra superior para buscar un
-										cliente...</td>
+									<td colspan="3" class="text-muted py-4">Use la barra superior para buscar un cliente...</td>
 								</tr>
 							</tbody>
 						</table>
@@ -131,17 +148,18 @@
 		</div>
 	</div>
 
+	<!-- Modal Productos -->
 	<div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-xl modal-dialog-centered">
-			<div class="modal-content border-0 shadow-lg">
-				<div class="modal-header bg-success text-white">
-					<h5 class="modal-title fw-bold">Catálogo de Medicamentos</h5>
+			<div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+				<div class="modal-header" style="background: var(--app-success); color: #fff;">
+					<h5 class="modal-title fw-bold"><i class="bi bi-box-seam-fill me-2"></i>Catálogo de Medicamentos</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body p-4">
 					<div class="mb-3">
 						<input type="text" id="inputBuscarProducto"
-							class="form-control form-control-lg border-success shadow-sm"
+							class="form-control form-control-lg"
 							placeholder="Escriba Código o Nombre para buscar en BD..."
 							oninput="buscarProductosBackend(this.value)">
 					</div>
@@ -159,8 +177,7 @@
 							</thead>
 							<tbody id="tbodyProductosAjax">
 								<tr>
-									<td colspan="6" class="text-muted py-4">Use la barra superior para buscar un
-										producto...</td>
+									<td colspan="6" class="text-muted py-4">Use la barra superior para buscar un producto...</td>
 								</tr>
 							</tbody>
 						</table>
@@ -174,9 +191,6 @@
 	<script>
 		let contadorFilas = 0;
 
-		// --- LÓGICA DE DETALLE DE VENTA ---
-
-		// Inyecta una fila con campos de solo lectura basados en el producto seleccionado
 		function agregarFilaProducto(idProducto, nombreProducto, precio, stockDisponible) {
 			const tbody = document.getElementById('tbodyDetalle');
 			const row = document.createElement('tr');
@@ -198,7 +212,7 @@
                     <input type="number" name="listaDetallesVenta[${contadorFilas}].subtotal" id="sub-${contadorFilas}" class="form-control form-control-sm text-end bg-light border-0 subtotal-item text-primary fw-bold" readonly step="0.01" value="${parseFloat(precio).toFixed(2)}" />
                 </td>
                 <td>
-                    <button type="button" class="btn btn-outline-danger btn-sm fw-bold" onclick="eliminarFila(${contadorFilas})">✕</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm fw-bold" onclick="eliminarFila(${contadorFilas})"><i class="bi bi-x-lg"></i></button>
                 </td>
             `;
 
@@ -206,7 +220,6 @@
 			contadorFilas++;
 			recalcularTotalGeneral();
 
-			// Cierra el modal de productos automáticamente
 			const modalEl = document.getElementById('modalProducto');
 			const modal = bootstrap.Modal.getInstance(modalEl);
 			modal.hide();
@@ -215,14 +228,11 @@
 		function calcularFilaSubtotal(index, stockDisponible) {
 			const inputCantidad = document.getElementById('cant-' + index);
 			let cantidad = parseInt(inputCantidad.value) || 0;
-
-			// Validación de Frontend: Impide vender más del stock
 			if (cantidad > stockDisponible) {
 				alert('¡Stock insuficiente! Solo quedan ' + stockDisponible + ' unidades de este producto.');
 				cantidad = stockDisponible;
 				inputCantidad.value = cantidad;
 			}
-
 			const precio = parseFloat(document.getElementById('precio-' + index).value) || 0;
 			const subtotal = (precio * cantidad).toFixed(2);
 			document.getElementById('sub-' + index).value = subtotal;
@@ -245,112 +255,86 @@
 			}
 		}
 
-		// --- LÓGICA DE LOS MODALES (Búsqueda Universal) ---
-
-		// Función genérica para filtrar tablas de cualquier modal
-		// ==========================================
-		// BÚSQUEDA ASÍNCRONA (AJAX) - CLIENTES
-		// ==========================================
 		async function buscarClientesBackend(palabra) {
 			const tbody = document.getElementById('tbodyClientesAjax');
-
-			// Si el input está vacío, limpiamos la tabla
 			if (palabra.trim() === '') {
 				tbody.innerHTML = '<tr><td colspan="3" class="text-muted py-4">Use la barra superior para buscar un cliente...</td></tr>';
 				return;
 			}
-
 			try {
-				// Llamada silenciosa al servidor
 				const respuesta = await fetch(`/clientes/api/buscar?q=${encodeURIComponent(palabra)}`);
 				const clientes = await respuesta.json();
-
-				tbody.innerHTML = ''; // Limpiamos tabla
-
+				tbody.innerHTML = '';
 				if (clientes.length === 0) {
 					tbody.innerHTML = '<tr><td colspan="3" class="text-danger py-4">No se encontraron resultados.</td></tr>';
 					return;
 				}
-
-				// Dibujamos las filas recibidas
 				clientes.forEach(c => {
 					tbody.innerHTML += `
-								<tr>
-									<td class="fw-semibold text-secondary">${c.documento}</td>
-									<td class="text-start ps-4">${c.nombreCompleto}</td>
-									<td>
-										<button type="button" class="btn btn-success btn-sm fw-bold px-3 shadow-sm"
-											onclick="seleccionarCliente(${c.idCliente}, '${c.documento}', '${c.nombreCompleto.replace(/'/g, "\\'")}')">
-											Asignar
-										</button>
-									</td>
-								</tr>
-							`;
+						<tr>
+							<td class="fw-semibold text-secondary">${c.documento}</td>
+							<td class="text-start ps-4">${c.nombreCompleto}</td>
+							<td>
+								<button type="button" class="btn btn-app-primary btn-sm"
+									onclick="seleccionarCliente(${c.idCliente}, '${c.documento}', '${c.nombreCompleto.replace(/'/g, "\\'")}')">
+									<i class="bi bi-check-lg"></i> Asignar
+								</button>
+							</td>
+						</tr>
+					`;
 				});
 			} catch (error) {
 				console.error("Error al buscar clientes:", error);
 			}
 		}
 
-		// ==========================================
-		// BÚSQUEDA ASÍNCRONA (AJAX) - PRODUCTOS
-		// ==========================================
 		async function buscarProductosBackend(palabra) {
 			const tbody = document.getElementById('tbodyProductosAjax');
-
 			if (palabra.trim() === '') {
 				tbody.innerHTML = '<tr><td colspan="6" class="text-muted py-4">Use la barra superior para buscar un producto...</td></tr>';
 				return;
 			}
-
 			try {
 				const respuesta = await fetch(`/productos/api/buscar?q=${encodeURIComponent(palabra)}`);
 				const productos = await respuesta.json();
-
 				tbody.innerHTML = '';
-
 				if (productos.length === 0) {
 					tbody.innerHTML = '<tr><td colspan="6" class="text-danger py-4">No se encontraron productos.</td></tr>';
 					return;
 				}
-
 				productos.forEach(p => {
 					const sinStock = p.stockActual <= 0;
 					const claseStock = sinStock ? 'text-danger fw-bold' : 'text-success fw-bold';
-					const btnClase = sinStock ? 'btn-secondary disabled' : 'btn-primary';
-					const textoBtn = sinStock ? 'Agotado' : 'Agregar';
-
+					const btnClase = sinStock ? 'btn-secondary disabled' : 'btn-app-primary';
+					const textoBtn = sinStock ? 'Agotado' : '<i class="bi bi-plus-lg"></i> Agregar';
 					tbody.innerHTML += `
-								<tr>
-									<td class="text-muted small">${p.codigo}</td>
-									<td class="small">${p.categoria}</td>
-									<td class="text-start fw-semibold">${p.nombre}</td>
-									<td class="${claseStock}">${p.stockActual}</td>
-									<td class="fw-bold text-primary">S/. ${parseFloat(p.precioVenta).toFixed(2)}</td>
-									<td>
-										<button type="button" class="btn ${btnClase} btn-sm fw-bold px-3 shadow-sm"
-											${sinStock ? 'disabled' : ''}
-											onclick="agregarFilaProducto(${p.idProducto}, '${p.nombre.replace(/'/g, "\\'")}', ${p.precioVenta}, ${p.stockActual})">
-											${textoBtn}
-										</button>
-									</td>
-								</tr>
-							`;
+						<tr>
+							<td class="text-muted small">${p.codigo}</td>
+							<td class="small">${p.categoria}</td>
+							<td class="text-start fw-semibold">${p.nombre}</td>
+							<td class="${claseStock}">${p.stockActual}</td>
+							<td class="fw-bold text-primary">S/. ${parseFloat(p.precioVenta).toFixed(2)}</td>
+							<td>
+								<button type="button" class="btn ${btnClase} btn-sm fw-bold"
+									${sinStock ? 'disabled' : ''}
+									onclick="agregarFilaProducto(${p.idProducto}, '${p.nombre.replace(/'/g, "\\'")}', ${p.precioVenta}, ${p.stockActual})">
+									${textoBtn}
+								</button>
+							</td>
+						</tr>
+					`;
 				});
 			} catch (error) {
 				console.error("Error al buscar productos:", error);
 			}
 		}
 
-		// Asignación de Cliente desde el Modal
 		function seleccionarCliente(id, documento, nombreCompleto) {
 			document.getElementById("idClienteOculto").value = id;
 			document.getElementById("visualCliente").value = documento + " - " + nombreCompleto;
-
 			const modalEl = document.getElementById('modalCliente');
 			const modal = bootstrap.Modal.getInstance(modalEl);
 			modal.hide();
-
 			document.getElementById("inputBuscarCliente").value = "";
 		}
 	</script>
