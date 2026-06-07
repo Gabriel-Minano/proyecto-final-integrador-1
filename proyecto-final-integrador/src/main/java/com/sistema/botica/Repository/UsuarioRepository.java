@@ -11,11 +11,22 @@ import org.springframework.stereotype.Repository;
 import com.sistema.botica.entity.Usuario;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	List<Usuario> findByEstadoTrue();
-	
+
 	Optional<Usuario> findByUsernameAndEstadoTrue(String username);
-	
-	@Query("SELECT u FROM Usuario u WHERE u.estado = true AND (u.nombre LIKE %:palabraClave% OR u.rol LIKE %:palabraClave%)")
+
+	// @Query("SELECT u FROM Usuario u WHERE u.estado = true AND (u.nombre LIKE
+	// %:palabraClave% OR u.rol LIKE %:palabraClave%)")
+	// List<Usuario> buscarPorCoincidencia(@Param("palabraClave") String
+	// palabraClave);
+	@Query("""
+			SELECT u FROM Usuario u
+			WHERE u.estado = true
+			AND (
+				u.nombre LIKE %:palabraClave%
+				OR u.rol.nombre LIKE %:palabraClave%
+			)
+			""")
 	List<Usuario> buscarPorCoincidencia(@Param("palabraClave") String palabraClave);
 }

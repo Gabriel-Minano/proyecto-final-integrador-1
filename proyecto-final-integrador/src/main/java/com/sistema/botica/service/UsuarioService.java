@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sistema.botica.Repository.RolRepository;
 import com.sistema.botica.Repository.UsuarioRepository;
 import com.sistema.botica.DTO.UsuarioDTO;
 import com.sistema.botica.entity.Usuario;
@@ -19,6 +20,9 @@ public class UsuarioService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private RolRepository rolRepository;
+
 	public List<Usuario> listarActivos() {
 		return usuarioRepository.findByEstadoTrue();
 	}
@@ -32,29 +36,56 @@ public class UsuarioService {
 
 	}
 
+	// public void guardar(UsuarioDTO dto) {
+
+	// Usuario usuario;
+
+	// // EDITAR
+	// if (dto.getIdUsuario() != null) {
+
+	// usuario = usuarioRepository.findById(dto.getIdUsuario()).orElse(new
+	// Usuario());
+
+	// } else {
+
+	// // NUEVO
+	// usuario = new Usuario();
+	// }
+
+	// // usuario.setNombre(dto.getNombre());
+	// // usuario.setUsername(dto.getUsername());
+	// // usuario.setRol(dto.getRol());
+	// // usuario.setEstado(dto.getEstado());
+
+	// // SOLO actualizar contraseña si escribieron una nueva
+	// if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+
+	// usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+	// }
+
+	// usuarioRepository.save(usuario);
+	// }
+
 	public void guardar(UsuarioDTO dto) {
 
 		Usuario usuario;
 
-		// EDITAR
 		if (dto.getIdUsuario() != null) {
-
-			usuario = usuarioRepository.findById(dto.getIdUsuario()).orElse(new Usuario());
-
+			usuario = usuarioRepository.findById(dto.getIdUsuario())
+					.orElse(new Usuario());
 		} else {
-
-			// NUEVO
 			usuario = new Usuario();
 		}
 
 		usuario.setNombre(dto.getNombre());
 		usuario.setUsername(dto.getUsername());
-		usuario.setRol(dto.getRol());
 		usuario.setEstado(dto.getEstado());
 
-		// SOLO actualizar contraseña si escribieron una nueva
-		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+		usuario.setRol(
+				rolRepository.findById(dto.getIdRol())
+						.orElseThrow(() -> new RuntimeException("Rol no encontrado")));
 
+		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
 			usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
 

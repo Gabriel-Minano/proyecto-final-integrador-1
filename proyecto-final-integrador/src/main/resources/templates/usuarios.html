@@ -87,8 +87,9 @@
 
 								<td>
 									<span
-										th:classappend="${usu.rol == 'ADMINISTRADOR'} ? 'bg-primary' : 'bg-info text-dark'"
-										class="badge rounded-pill px-3 py-2 fw-bold shadow-sm" th:text="${usu.rol}">
+										th:classappend="${usu.rol.nombre == 'ADMINISTRADOR'} ? 'bg-primary' : 'bg-info text-dark'"
+										class="badge rounded-pill px-3 py-2 fw-bold shadow-sm"
+										th:text="${usu.rol.nombre}">
 									</span>
 								</td>
 

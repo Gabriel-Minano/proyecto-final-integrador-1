@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sistema.botica.DTO.UsuarioDTO;
 import com.sistema.botica.entity.Usuario;
+import com.sistema.botica.service.RolService;
 import com.sistema.botica.service.UsuarioService;
 
 @Controller
@@ -23,6 +24,8 @@ import com.sistema.botica.service.UsuarioService;
 public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
+	@Autowired
+	private RolService rolService;
 
 	@GetMapping
 	public String listar(@RequestParam(required = false) String palabraClave, Model modelo) {
@@ -35,6 +38,7 @@ public class UsuarioController {
 	@GetMapping("/nuevo")
 	public String nuevo(Model modelo) {
 		modelo.addAttribute("usuario", new UsuarioDTO());
+		modelo.addAttribute("listaRoles", rolService.listarActivos());
 		return "usuarios_formulario";
 	}
 
@@ -57,10 +61,11 @@ public class UsuarioController {
 		// caso entre una cadena vacia
 		dto.setPassword("");
 
-		dto.setRol(usuario.getRol());
+		dto.setIdRol(usuario.getRol().getIdRol());
 		dto.setEstado(usuario.getEstado());
 
 		modelo.addAttribute("usuario", dto);
+		modelo.addAttribute("listaRoles", rolService.listarActivos());
 
 		return "usuarios_formulario";
 	}
@@ -68,9 +73,14 @@ public class UsuarioController {
 	@PostMapping("/guardar")
 	public String guardar(
 			@Validated @ModelAttribute("usuario") UsuarioDTO usuarioDTO,
-			BindingResult result) {
+			BindingResult result, Model modelo) {
+
+		// if (result.hasErrors()) {
+		// return "usuarios_formulario";
+		// }
 
 		if (result.hasErrors()) {
+			modelo.addAttribute("listaRoles", rolService.listarActivos());
 			return "usuarios_formulario";
 		}
 

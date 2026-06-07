@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -38,10 +40,14 @@ public class Usuario {
 	@Column(name = "password", length = 255)
 	private String password;
 
-	@NotBlank(message = "Debes asignar un rol")
-	@Size(max = 50)
-	@Column(name = "rol", length = 50)
-	private String rol;
+	// @NotBlank(message = "Debes asignar un rol")
+	// @Size(max = 50)
+	// @Column(name = "rol", length = 50)
+	// private String rol;
+
+	@ManyToOne
+	@JoinColumn(name = "id_rol")
+	private Rol rol;
 
 	@Column(name = "estado", columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean estado = true;
@@ -83,13 +89,21 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public String getRol() {
+	public Rol getRol() {
 		return rol;
 	}
 
-	public void setRol(String rol) {
+	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
+
+	// public String getRol() {
+	// return rol;
+	// }
+
+	// public void setRol(String rol) {
+	// this.rol = rol;
+	// }
 
 	public List<Venta> getListaVentas() {
 		return listaVentas;

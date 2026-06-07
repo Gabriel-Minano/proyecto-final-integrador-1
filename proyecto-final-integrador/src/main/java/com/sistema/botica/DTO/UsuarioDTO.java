@@ -20,7 +20,7 @@ public class UsuarioDTO {
     private String password;
 
     @NotBlank(message = "El rol es obligatorio")
-    private String rol;
+    private Integer idRol;
 
     private Boolean estado = true;
 
@@ -56,12 +56,12 @@ public class UsuarioDTO {
         this.password = password;
     }
 
-    public String getRol() {
-        return rol;
+    public Integer getIdRol() {
+        return idRol;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
     }
 
     public Boolean getEstado() {

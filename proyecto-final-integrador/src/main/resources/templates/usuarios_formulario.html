@@ -27,11 +27,13 @@
 		</div>
 		<div>
 			<label>Rol</label>
-			<select th:field="*{rol}">
-				<option value="ADMINISTRADOR">Administrador</option>
-				<option value="CAJERO">Cajero</option>
+			<select th:field="*{idRol}">
+				<option th:each="rol : ${listaRoles}"
+						th:value="${rol.idRol}"
+						th:text="${rol.nombre}">
+				</option>
 			</select>
-			<span th:if="${#fields.hasErrors('rol')}" th:errors="*{rol}" style="color:red"></span>
+			<span th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}" style="color:red"></span>
 		</div>
 
 		<button type="submit">Guardar</button>
