@@ -1,310 +1,180 @@
-<!doctype html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
-  <head>
-    <meta charset="UTF-8" />
-    <title>Dashboard - Botica</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" th:href="@{navbar.css}" />
-    <style>
-      /* =========================================
-           ESTILOS DEL CONTENIDO PRINCIPAL
-           ========================================= */
-      .main-content {
-        flex: 1;
-        padding: 30px;
-        background-color: #ffffff;
-        overflow-y: auto;
-      }
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-      .top-header {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 30px;
-      }
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dashboard - Conquistadores Farma</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
 
-      .user-profile {
-        font-size: 1.3em;
-        color: #333;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+<body>
 
-      .filtro-container {
-        margin-bottom: 30px;
-      }
+	<div class="app-body">
+		<!--Menú lateral-->
+		<div th:replace="~{componentes/sidebar :: menuLateral('dashboard')}"></div>
 
-      .cards-container {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 40px;
-      }
+		<div class="app-main">
+			<!--Barra superior azul-->
+			<div th:replace="~{componentes/header :: topHeader}"></div>
 
-      .card {
-        flex: 1;
-        padding: 25px 20px;
-        border-radius: 8px;
-        color: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: left;
-      }
+			<div class="app-content">
+				<h1 class="app-page-title"><i class="bi bi-grid-1x2-fill me-2 text-primary"></i>Dashboard</h1>
+				<p class="app-page-subtitle">Resumen del rendimiento de la botica en el periodo seleccionado.</p>
 
-      .card h3 {
-        margin: 0;
-        font-size: 1.5em;
-        font-weight: normal;
-      }
+				<!-- Filtro de periodo -->
+				<div class="app-card mb-4">
+					<div class="app-card-header">
+						<i class="bi bi-funnel-fill"></i> Filtro de Periodo
+					</div>
+					<div class="app-card-body">
+						<form th:action="@{/dashboard}" method="get" class="row g-3 align-items-end">
+							<div class="col-md-4">
+								<label class="form-label fw-bold small text-secondary">Mes</label>
+								<select name="mes" class="form-select">
+									<option value="1" th:selected="${mesSeleccionado == 1}">Enero</option>
+									<option value="2" th:selected="${mesSeleccionado == 2}">Febrero</option>
+									<option value="3" th:selected="${mesSeleccionado == 3}">Marzo</option>
+									<option value="4" th:selected="${mesSeleccionado == 4}">Abril</option>
+									<option value="5" th:selected="${mesSeleccionado == 5}">Mayo</option>
+									<option value="6" th:selected="${mesSeleccionado == 6}">Junio</option>
+									<option value="7" th:selected="${mesSeleccionado == 7}">Julio</option>
+									<option value="8" th:selected="${mesSeleccionado == 8}">Agosto</option>
+									<option value="9" th:selected="${mesSeleccionado == 9}">Septiembre</option>
+									<option value="10" th:selected="${mesSeleccionado == 10}">Octubre</option>
+									<option value="11" th:selected="${mesSeleccionado == 11}">Noviembre</option>
+									<option value="12" th:selected="${mesSeleccionado == 12}">Diciembre</option>
+								</select>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label fw-bold small text-secondary">Año</label>
+								<select name="anio" class="form-select">
+                  <option
+                    th:each="anio : ${anios}"
+                    th:value="${anio}"
+                    th:text="${anio}"
+                    th:selected="${anioSeleccionado == anio}">
+                  </option>
+								</select>
+							</div>
+							<div class="col-md-4 d-flex justify-content-end">
+								<button type="submit" class="btn btn-app-primary">
+									<i class="bi bi-search"></i> Filtrar
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
 
-      .card .valor {
-        font-size: 2.2em;
-        font-weight: bold;
-        margin-top: 15px;
-      }
+				<!-- Indicadores principales -->
+				<div class="row g-3 mb-4">
+					<div class="col-md-3">
+						<div class="dash-card bg-ingresos">
+							<i class="bi bi-cash-coin dash-icon"></i>
+							<div class="dash-label">Ingresos del Mes</div>
+							<p class="dash-value">S/. <span th:text="${#numbers.formatDecimal(indicadores.ingresosMes, 1, 2)}">0.00</span></p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="dash-card bg-ventas">
+							<i class="bi bi-receipt dash-icon"></i>
+							<div class="dash-label">Ventas Realizadas</div>
+							<p class="dash-value" th:text="${indicadores.ventasMes}">0</p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="dash-card bg-clientes">
+							<i class="bi bi-people dash-icon"></i>
+							<div class="dash-label">Clientes Atendidos</div>
+							<p class="dash-value" th:text="${indicadores.clientesMes}">0</p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="dash-card bg-critico">
+							<i class="bi bi-exclamation-triangle dash-icon"></i>
+							<div class="dash-label">Stock Crítico</div>
+							<p class="dash-value" th:text="${indicadores.cantCriticos}">0</p>
+						</div>
+					</div>
+				</div>
 
-      .bg-ingresos {
-        background-color: #22c55e;
-      }
+				<!-- Gráfico y Alertas -->
+				<div class="row g-3">
+					<div class="col-lg-8">
+						<div class="chart-container">
+							<div class="chart-title">
+								<i class="bi bi-bar-chart-fill"></i> Ventas por Día
+							</div>
+							<div class="chart-body">
+								<canvas id="ventasChart"></canvas>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="alertas-panel">
+							<div class="panel-title">
+								<i class="bi bi-bell-fill"></i> Alertas
+							</div>
+							<div class="panel-body">
+								<div th:each="prod : ${indicadores.alertasAgotados}" class="alerta-item">
+									<i class="bi bi-x-circle-fill me-1"></i> Sin stock: <span th:text="${prod.nombre}"></span>
+								</div>
+								<div th:each="prod : ${indicadores.alertasVencidos}" class="alerta-item">
+									<i class="bi bi-clock-fill me-1"></i> Vencido: <span th:text="${prod.nombre}"></span>
+								</div>
+								<div th:if="${indicadores.alertasAgotados.isEmpty() and indicadores.alertasVencidos.isEmpty()}"
+									class="text-center text-success fw-bold py-4">
+									<i class="bi bi-check-circle-fill fs-3 d-block mb-2"></i>
+									No hay alertas activas.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-      .bg-ventas {
-        background-color: #3b82f6;
-      }
+			</div>
+		</div>
+	</div>
 
-      .bg-clientes {
-        background-color: #8b5cf6;
-      }
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-      .bg-critico {
-        background-color: #ef4444;
-      }
+	<script th:inline="javascript">
+		let ventasPorDia = /*[[${ventasPorDia}]]*/[];
+		let labels = [];
+		let data = [];
+		ventasPorDia.forEach(v => {
+			labels.push("Día " + v.dia);
+			data.push(v.total);
+		});
+		const ctx = document.getElementById('ventasChart').getContext('2d');
+		new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Ventas por día',
+					data: data,
+					backgroundColor: 'rgba(13, 110, 253, 0.7)',
+					borderColor: '#0d6efd',
+					borderWidth: 1,
+					borderRadius: 4
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: { legend: { display: false } },
+				scales: {
+					y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+					x: { grid: { display: false } }
+				}
+			}
+		});
+	</script>
 
-      .bottom-layout {
-        display: flex;
-        gap: 20px;
-      }
+</body>
 
-      .chart-placeholder {
-        flex: 2;
-        background: #e5e5e5;
-        padding: 20px;
-        border-radius: 8px;
-        height: 350px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #666;
-        font-style: italic;
-        font-size: 1.2em;
-      }
-
-      .alertas-panel {
-        flex: 1;
-        background: #e5e5e5;
-        padding: 20px;
-        border-radius: 8px;
-      }
-
-      .alertas-panel h3 {
-        text-align: center;
-        margin-top: 0;
-        margin-bottom: 20px;
-      }
-
-      .alerta-item {
-        background-color: #e5989b;
-        padding: 15px;
-        margin-bottom: 12px;
-        border-radius: 5px;
-        border: 1px solid #b56576;
-        color: #540b0e;
-        font-size: 1.1em;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="layout-wrapper">
-      <!--Menú desplegable, se encuentra en templates/componentes/sidebar.html-->
-      <div
-        th:replace="~{componentes/sidebar :: menuLateral('dashboard')}"
-      ></div>
-      <div class="main-content">
-        <!--Cabecera con el ROL y USERNAME-->
-        <div th:replace="~{componentes/header :: topHeader}"></div>
-
-        <div class="filtro-container">
-          <form th:action="@{/dashboard}" method="get">
-            <label style="font-size: 1.1em; margin-right: 5px">Mes:</label>
-            <select
-              name="mes"
-              style="font-size: 1.1em; padding: 5px; margin-right: 15px"
-            >
-              <option value="1" th:selected="${mesSeleccionado == 1}">
-                Enero
-              </option>
-              <option value="2" th:selected="${mesSeleccionado == 2}">
-                Febrero
-              </option>
-              <option value="3" th:selected="${mesSeleccionado == 3}">
-                Marzo
-              </option>
-              <option value="4" th:selected="${mesSeleccionado == 4}">
-                Abril
-              </option>
-              <option value="5" th:selected="${mesSeleccionado == 5}">
-                Mayo
-              </option>
-              <option value="6" th:selected="${mesSeleccionado == 6}">
-                Junio
-              </option>
-              <option value="7" th:selected="${mesSeleccionado == 7}">
-                Julio
-              </option>
-              <option value="8" th:selected="${mesSeleccionado == 8}">
-                Agosto
-              </option>
-              <option value="9" th:selected="${mesSeleccionado == 9}">
-                Septiembre
-              </option>
-              <option value="10" th:selected="${mesSeleccionado == 10}">
-                Octubre
-              </option>
-              <option value="11" th:selected="${mesSeleccionado == 11}">
-                Noviembre
-              </option>
-              <option value="12" th:selected="${mesSeleccionado == 12}">
-                Diciembre
-              </option>
-            </select>
-
-            <label style="font-size: 1.1em; margin-right: 5px">Año:</label>
-            <select
-              name="anio"
-              style="font-size: 1.1em; padding: 5px; margin-right: 15px"
-            >
-              <option
-                th:each="anio : ${anios}"
-                th:value="${anio}"
-                th:text="${anio}"
-                th:selected="${anioSeleccionado == anio}"
-              ></option>
-            </select>
-
-            <button type="submit" style="font-size: 1.1em; padding: 5px 15px">
-              Filtrar
-            </button>
-          </form>
-        </div>
-
-        <div class="cards-container">
-          <div class="card bg-ingresos">
-            <h3>Ingresos</h3>
-            <div class="valor">
-              S/.
-              <span
-                th:text="${#numbers.formatDecimal(indicadores.ingresosMes, 1, 2)}"
-                >0.00</span
-              >
-            </div>
-          </div>
-          <div class="card bg-ventas">
-            <h3>Ventas</h3>
-            <div class="valor" th:text="${indicadores.ventasMes}">0</div>
-          </div>
-          <div class="card bg-clientes">
-            <h3>Clientes</h3>
-            <div class="valor" th:text="${indicadores.clientesMes}">0</div>
-          </div>
-          <div class="card bg-critico">
-            <h3>Stock Critico</h3>
-            <div class="valor" th:text="${indicadores.cantCriticos}">0</div>
-          </div>
-        </div>
-
-        <div class="bottom-layout">
-          <div class="chart-placeholder">
-            <canvas id="ventasChart"></canvas>
-          </div>
-
-          <div class="alertas-panel">
-            <h3>Alertas</h3>
-
-            <div
-              th:each="prod : ${indicadores.alertasAgotados}"
-              class="alerta-item"
-            >
-              Sin stock: <span th:text="${prod.nombre}"></span>
-            </div>
-
-            <div
-              th:each="prod : ${indicadores.alertasVencidos}"
-              class="alerta-item"
-            >
-              Vencido: <span th:text="${prod.nombre}"></span>
-            </div>
-
-            <div
-              th:if="${indicadores.alertasAgotados.isEmpty() and indicadores.alertasVencidos.isEmpty()}"
-              style="
-                text-align: center;
-                color: #2d6a4f;
-                font-weight: bold;
-                font-size: 1.1em;
-                padding: 20px 0;
-              "
-            >
-              No hay alertas activas.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
-  <!--js para manerjar el grafico de ventas por dia con charts js-->
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <script th:inline="javascript">
-    // Datos enviados desde Spring
-    let ventasPorDia = /*[[${ventasPorDia}]]*/ [];
-
-    // Arrays para Chart.js
-    let labels = [];
-    let data = [];
-
-    ventasPorDia.forEach((v) => {
-      labels.push("Día " + v.dia);
-      data.push(v.total);
-    });
-
-    // Crear gráfico
-    const ctx = document.getElementById("ventasChart").getContext("2d");
-
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Ingresos del día",
-            data: data,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-  </script>
 </html>
