@@ -1,6 +1,8 @@
 package com.sistema.botica.DTO;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UsuarioDTO {
@@ -9,17 +11,19 @@ public class UsuarioDTO {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 100)
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "El nombre solo puede contener letras [A-Z]")
     private String nombre;
 
     @NotBlank(message = "El username es obligatorio")
     @Size(max = 50)
+    @Pattern(regexp = "^[a-zA-Z0-9\\_\\-]+$", message = "El username solo puede contener letras, números y guiones (sin espacios)")
     private String username;
 
-    // @NotBlank(message = "La contraseña es obligatoria")
+    @NotBlank(message = "La contraseña es obligatoria")
     @Size(max = 100)
     private String password;
 
-    @NotBlank(message = "El rol es obligatorio")
+    @NotNull(message = "El rol es obligatorio")
     private Integer idRol;
 
     private Boolean estado = true;

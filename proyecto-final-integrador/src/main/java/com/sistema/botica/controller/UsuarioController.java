@@ -27,6 +27,8 @@ public class UsuarioController {
 	@Autowired
 	private RolService rolService;
 
+	private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,20}$";
+
 	@GetMapping
 	public String listar(@RequestParam(required = false) String palabraClave, Model modelo) {
 		List<Usuario> lista = usuarioService.listarProductosClave(palabraClave);
@@ -75,17 +77,20 @@ public class UsuarioController {
 			@Validated @ModelAttribute("usuario") UsuarioDTO usuarioDTO,
 			BindingResult result, Model modelo) {
 
-		// if (result.hasErrors()) {
-		// return "usuarios_formulario";
-		// }
+		boolean esNuevo = usuarioDTO.getIdUsuario() == null;
+		boolean escribioPassword = usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().isBlank();
 
+		if (esNuevo || escribioPassword) {
+			if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().matches(PASSWORD_REGEX)) {
+				result.rejectValue("password", "error.password",
+						"La contraseña debe tener mínimo 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*).");
+			}
+		}
 		if (result.hasErrors()) {
 			modelo.addAttribute("listaRoles", rolService.listarActivos());
 			return "usuarios_formulario";
 		}
-
 		usuarioService.guardar(usuarioDTO);
-
 		return "redirect:/usuarios";
 	}
 

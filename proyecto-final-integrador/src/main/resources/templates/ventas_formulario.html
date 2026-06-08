@@ -31,14 +31,17 @@
 					class="alert alert-danger alert-dismissible fade show py-2 small fw-bold d-flex align-items-center">
 					<i class="bi bi-exclamation-triangle-fill me-2"></i>
 					<span th:text="${error}">¡Ha ocurrido un error!</span>
-					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
+						aria-label="Close"></button>
 				</div>
 
 				<div th:if="${success}"
-					class="alert alert-success alert-dismissible fade show py-2 small fw-bold d-flex align-items-center" role="alert">
+					class="alert alert-success alert-dismissible fade show py-2 small fw-bold d-flex align-items-center"
+					role="alert">
 					<i class="bi bi-check-circle-fill me-2"></i>
 					<span th:text="${success}">¡Operación completada con éxito!</span>
-					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
+						aria-label="Close"></button>
 				</div>
 
 				<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post" id="ventaForm" class="app-form">
@@ -47,10 +50,12 @@
 						<div class="col-md-6">
 							<label class="form-label fw-bold small text-secondary">Cliente:</label>
 							<div class="input-group">
-								<input type="text" id="visualCliente" class="form-control bg-white fw-bold text-secondary"
+								<input type="text" id="visualCliente"
+									class="form-control bg-white fw-bold text-secondary"
 									placeholder="Haga clic en buscar..." readonly required>
 								<input type="hidden" th:field="*{cliente.idCliente}" id="idClienteOculto">
-								<button class="btn btn-app-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalCliente">
+								<button class="btn btn-app-primary" type="button" data-bs-toggle="modal"
+									data-bs-target="#modalCliente">
 									<i class="bi bi-search"></i> Buscar
 								</button>
 							</div>
@@ -58,14 +63,17 @@
 						<div class="col-md-6">
 							<label class="form-label fw-bold small text-secondary">Cajero / Operador:</label>
 							<div class="form-control bg-light text-muted fw-bold">
-								<i class="bi bi-person-fill me-1"></i> <span th:text="${usernameLogueado}">Usuario</span>
+								<i class="bi bi-person-fill me-1"></i> <span
+									th:text="${usernameLogueado}">Usuario</span>
 							</div>
 						</div>
 					</div>
 
 					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h6 class="fw-bold text-secondary mb-0"><i class="bi bi-list-check me-1"></i> Detalle de Medicamentos</h6>
-						<button type="button" class="btn btn-app-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalProducto">
+						<h6 class="fw-bold text-secondary mb-0"><i class="bi bi-list-check me-1"></i> Detalle de
+							Medicamentos</h6>
+						<button type="button" class="btn btn-app-primary btn-sm" data-bs-toggle="modal"
+							data-bs-target="#modalProducto">
 							<i class="bi bi-plus-lg"></i> Agregar Producto
 						</button>
 					</div>
@@ -89,25 +97,30 @@
 					<div class="d-flex justify-content-end align-items-center gap-3 border-top pt-3 mb-4">
 						<span class="fs-5 fw-bold text-dark">TOTAL NETO A COBRAR: S/.</span>
 						<input type="number" step="0.01" th:field="*{total}" id="totalVenta"
-							class="form-control text-end fw-bold text-success fs-4 bg-white border-0" style="width: 180px;"
-							readonly required />
+							class="form-control text-end fw-bold text-success fs-4 bg-white border-0"
+							style="width: 180px;" readonly required />
 					</div>
 
-					<div class="d-flex gap-2">
-						<button type="submit" class="btn btn-app-primary px-5">
-							<i class="bi bi-check-lg"></i> Procesar Venta
+					<div class="form-actions">
+						<a th:href="@{/ventas}" class="btn btn-app-secondary">
+							<i class="bi bi-x-lg"></i>
+							Cancelar
+						</a>
+
+						<button type="submit" class="btn btn-app-primary">
+							<i class="bi bi-check-lg"></i>
+							Guardar
 						</button>
 					</div>
 				</form>
 
-				<form th:action="@{/logout}" method="post">
+				<!-- <form th:action="@{/logout}" method="post">
 					<div class="d-flex gap-2 mt-3">
 						<button type="submit" class="btn btn-danger btn-sm">
 							<i class="bi bi-box-arrow-left"></i> Cerrar Sesión
 						</button>
 					</div>
-				</form>
-
+				</form> -->
 			</div>
 		</div>
 	</div>
@@ -122,8 +135,7 @@
 				</div>
 				<div class="modal-body p-4">
 					<div class="mb-3">
-						<input type="text" id="inputBuscarCliente"
-							class="form-control form-control-lg"
+						<input type="text" id="inputBuscarCliente" class="form-control form-control-lg"
 							placeholder="Escriba DNI o Apellidos para buscar en BD..."
 							oninput="buscarClientesBackend(this.value)">
 					</div>
@@ -138,7 +150,8 @@
 							</thead>
 							<tbody id="tbodyClientesAjax">
 								<tr>
-									<td colspan="3" class="text-muted py-4">Use la barra superior para buscar un cliente...</td>
+									<td colspan="3" class="text-muted py-4">Use la barra superior para buscar un
+										cliente...</td>
 								</tr>
 							</tbody>
 						</table>
@@ -153,13 +166,13 @@
 		<div class="modal-dialog modal-xl modal-dialog-centered">
 			<div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
 				<div class="modal-header" style="background: var(--app-success); color: #fff;">
-					<h5 class="modal-title fw-bold"><i class="bi bi-box-seam-fill me-2"></i>Catálogo de Medicamentos</h5>
+					<h5 class="modal-title fw-bold"><i class="bi bi-box-seam-fill me-2"></i>Catálogo de Medicamentos
+					</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body p-4">
 					<div class="mb-3">
-						<input type="text" id="inputBuscarProducto"
-							class="form-control form-control-lg"
+						<input type="text" id="inputBuscarProducto" class="form-control form-control-lg"
 							placeholder="Escriba Código o Nombre para buscar en BD..."
 							oninput="buscarProductosBackend(this.value)">
 					</div>
@@ -177,7 +190,8 @@
 							</thead>
 							<tbody id="tbodyProductosAjax">
 								<tr>
-									<td colspan="6" class="text-muted py-4">Use la barra superior para buscar un producto...</td>
+									<td colspan="6" class="text-muted py-4">Use la barra superior para buscar un
+										producto...</td>
 								</tr>
 							</tbody>
 						</table>

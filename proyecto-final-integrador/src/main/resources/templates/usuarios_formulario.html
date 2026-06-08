@@ -34,38 +34,27 @@
 
 				<div class="app-card-body">
 
-					<form th:action="@{/usuarios/guardar}"
-						  th:object="${usuario}"
-						  method="post"
-						  class="app-form">
+					<form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="app-form">
 
 						<input type="hidden" th:field="*{idUsuario}">
 						<input type="hidden" th:field="*{estado}">
 
 						<div class="mb-3">
 							<label class="form-label required">Nombre Completo</label>
-							<input type="text"
-								   th:field="*{nombre}"
-								   class="form-control"
-								   placeholder="Nombre del empleado">
+							<input type="text" th:field="*{nombre}" class="form-control"
+								placeholder="Nombre del empleado">
 
-							<span th:if="${#fields.hasErrors('nombre')}"
-								  th:errors="*{nombre}"
-								  class="form-error">
+							<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error">
 							</span>
 						</div>
 
 						<div class="mb-3">
 							<label class="form-label required">Username</label>
 
-							<input type="text"
-								   th:field="*{username}"
-								   class="form-control"
-								   placeholder="Usuario de acceso al sistema">
+							<input type="text" th:field="*{username}" class="form-control"
+								placeholder="Usuario de acceso al sistema">
 
-							<span th:if="${#fields.hasErrors('username')}"
-								  th:errors="*{username}"
-								  class="form-error">
+							<span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="form-error">
 							</span>
 
 							<div class="form-help">
@@ -76,14 +65,9 @@
 						<div class="mb-3">
 							<label class="form-label required">Contraseña</label>
 
-							<input type="password"
-								   th:field="*{password}"
-								   class="form-control"
-								   placeholder="••••••••">
+							<input type="password" th:field="*{password}" class="form-control" placeholder="••••••••">
 
-							<span th:if="${#fields.hasErrors('password')}"
-								  th:errors="*{password}"
-								  class="form-error">
+							<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="form-error">
 							</span>
 						</div>
 
@@ -93,15 +77,11 @@
 							<select th:field="*{idRol}" class="form-select">
 								<option value="">Seleccione un rol</option>
 
-								<option th:each="rol : ${listaRoles}"
-										th:value="${rol.idRol}"
-										th:text="${rol.nombre}">
+								<option th:each="rol : ${listaRoles}" th:value="${rol.idRol}" th:text="${rol.nombre}">
 								</option>
 							</select>
 
-							<span th:if="${#fields.hasErrors('idRol')}"
-								  th:errors="*{idRol}"
-								  class="form-error">
+							<span th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}" class="form-error">
 							</span>
 
 							<div class="form-help">
@@ -110,14 +90,12 @@
 						</div>
 
 						<div class="form-actions">
-							<a th:href="@{/usuarios}"
-							   class="btn btn-app-secondary">
+							<a th:href="@{/usuarios}" class="btn btn-app-secondary">
 								<i class="bi bi-x-lg"></i>
 								Cancelar
 							</a>
 
-							<button type="submit"
-									class="btn btn-app-primary">
+							<button type="submit" class="btn btn-app-primary">
 								<i class="bi bi-check-lg"></i>
 								Guardar
 							</button>

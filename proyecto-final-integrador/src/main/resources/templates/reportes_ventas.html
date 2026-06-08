@@ -63,7 +63,8 @@
 						<div class="kpi-card kpi-blue">
 							<div>
 								<div class="kpi-title">Total de ventas</div>
-								<p class="kpi-value" th:text="'S/ ' + ${#numbers.formatDecimal(reporte.totalVentas, 1, 2)}">
+								<p class="kpi-value"
+									th:text="'S/ ' + ${#numbers.formatDecimal(reporte.totalVentas, 1, 2)}">
 									S/ 0.00</p>
 							</div>
 							<i class="bi bi-cash-stack kpi-icon"></i>
@@ -104,7 +105,8 @@
 					<div class="resultados-header">
 						<span><i class="bi bi-table me-2"></i> Resultados del reporte</span>
 						<span class="resultados-badge"
-							th:text="'Total: ' + ${reporte.paginaVentas.totalElements} + ' registros'">Total: 0 registros</span>
+							th:text="'Total: ' + ${reporte.paginaVentas.totalElements} + ' registros'">Total: 0
+							registros</span>
 					</div>
 
 					<div class="table-responsive">
@@ -128,7 +130,8 @@
 									<td th:text="${v.usuario.nombre}"></td>
 									<td class="text-center fw-semibold text-secondary"
 										th:text="${v.listaDetallesVenta.size()}"></td>
-									<td class="text-center" th:text="${#aggregates.sum(v.listaDetallesVenta.![cantidad])}"></td>
+									<td class="text-center"
+										th:text="${#aggregates.sum(v.listaDetallesVenta.![cantidad])}"></td>
 									<td class="text-end fw-bold text-success"
 										th:text="${#numbers.formatDecimal(v.total, 1, 2)}"></td>
 								</tr>
@@ -171,7 +174,8 @@
 
 					<div class="resultados-footer">
 						<span class="total-label">Total general:</span>
-						<span class="total-monto" th:text="'S/ ' + ${#numbers.formatDecimal(reporte.totalVentas, 1, 2)}">S/ 0.00</span>
+						<span class="total-monto"
+							th:text="'S/ ' + ${#numbers.formatDecimal(reporte.totalVentas, 1, 2)}">S/ 0.00</span>
 
 						<div class="ms-4 d-flex gap-2">
 							<a th:href="@{/reportes/ventas/exportar/pdf(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta})}"

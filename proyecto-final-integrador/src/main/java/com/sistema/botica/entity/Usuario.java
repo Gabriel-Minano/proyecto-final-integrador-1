@@ -34,7 +34,7 @@ public class Usuario {
 	@Column(name = "username", length = 50)
 	private String username;
 
-	@NotBlank(message = "La constraseña es obligatoria")
+	// @NotBlank(message = "La constraseña es obligatoria")
 	@Size(max = 255)
 	@JsonIgnore
 	@Column(name = "password", length = 255)

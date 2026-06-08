@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -8,161 +7,145 @@
     <title>Personal de la Botica - Conquistadores Farma</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 
 <body>
 
-<div class="app-body">
+    <div class="app-body">
 
-    <div th:replace="~{componentes/sidebar :: menuLateral('usuarios')}"></div>
+        <div th:replace="~{componentes/sidebar :: menuLateral('usuarios')}"></div>
 
-    <div class="app-main">
+        <div class="app-main">
 
-        <div th:replace="~{componentes/header :: topHeader}"></div>
+            <div th:replace="~{componentes/header :: topHeader}"></div>
 
-        <div class="app-content">
+            <div class="app-content">
 
-            <h1 class="app-page-title">
-                <i class="bi bi-shield-lock-fill me-2 text-primary"></i>
-                Personal de la Botica
-            </h1>
+                <h1 class="app-page-title">
+                    <i class="bi bi-shield-lock-fill me-2 text-primary"></i>
+                    Personal de la Botica
+                </h1>
 
-            <p class="app-page-subtitle">
-                Gestión de empleados, cajeros y administradores con acceso al sistema.
-            </p>
+                <p class="app-page-subtitle">
+                    Gestión de empleados, cajeros y administradores con acceso al sistema.
+                </p>
 
-            <div th:if="${success}"
-                 th:text="${success}"
-                 class="alert alert-success py-2 small fw-bold mb-4"
-                 role="alert">
-            </div>
-
-            <div th:if="${error}"
-                 th:text="${error}"
-                 class="alert alert-danger py-2 small fw-bold mb-4"
-                 role="alert">
-            </div>
-
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-
-                <form th:action="@{/usuarios}"
-                      method="get"
-                      class="d-flex"
-                      style="max-width: 500px; flex:1;">
-
-                    <div class="input-group">
-
-                        <input type="text"
-                               name="palabraClave"
-                               th:value="${palabraClave}"
-                               class="form-control"
-                               placeholder="Buscar por rol o nombre..."
-                               autocomplete="off">
-
-                        <button type="submit" class="btn btn-app-primary">
-                            <i class="bi bi-search"></i>
-                            Buscar
-                        </button>
-
-                        <a th:href="@{/usuarios}"
-                           class="btn btn-app-secondary">
-                            Limpiar
-                        </a>
-
-                    </div>
-
-                </form>
-
-                <a th:href="@{/usuarios/nuevo}"
-                   class="btn btn-app-primary">
-                    <i class="bi bi-plus-lg"></i>
-                    Registrar Empleado
-                </a>
-
-            </div>
-
-            <div class="app-card">
-
-                <div class="app-card-header">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    Listado de Usuarios
+                <div th:if="${success}" th:text="${success}" class="alert alert-success py-2 small fw-bold mb-4"
+                    role="alert">
                 </div>
 
-                <div class="table-responsive">
+                <div th:if="${error}" th:text="${error}" class="alert alert-danger py-2 small fw-bold mb-4"
+                    role="alert">
+                </div>
 
-                    <table class="app-table table table-hover align-middle text-center mb-0">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
 
-                        <thead>
-                        <tr>
-                            <th class="text-start ps-4">Nombre Completo</th>
-                            <th>Username (Usuario)</th>
-                            <th>Rol en el Sistema</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
+                    <form th:action="@{/usuarios}" method="get" class="d-flex" style="max-width: 500px; flex:1;">
 
-                        <tbody>
+                        <div class="input-group">
 
-                        <tr th:each="usu : ${lista}">
+                            <input type="text" name="palabraClave" th:value="${palabraClave}" class="form-control"
+                                placeholder="Buscar por rol o nombre..." autocomplete="off">
 
-                            <td class="text-start ps-4 fw-semibold"
-                                th:text="${usu.nombre}">
-                            </td>
+                            <button type="submit" class="btn btn-app-primary">
+                                <i class="bi bi-search"></i>
+                                Buscar
+                            </button>
 
-                            <td class="text-secondary fw-bold"
-                                th:text="${usu.username}">
-                            </td>
+                            <a th:href="@{/usuarios}" class="btn btn-app-secondary">
+                                Limpiar
+                            </a>
 
-                            <td>
-                                <span
-                                    th:classappend="${usu.rol.nombre == 'ADMINISTRADOR'} ? 'bg-primary' : 'bg-info text-dark'"
-                                    class="badge rounded-pill px-3 py-2 fw-bold"
-                                    th:text="${usu.rol.nombre}">
-                                </span>
-                            </td>
+                        </div>
 
-                            <td>
+                    </form>
 
-                                <div class="d-flex justify-content-center gap-2">
+                    <a th:href="@{/usuarios/nuevo}" class="btn btn-app-primary">
+                        <i class="bi bi-plus-lg"></i>
+                        Registrar Empleado
+                    </a>
 
-                                    <a th:href="@{/usuarios/editar/{id}(id=${usu.idUsuario})}"
-                                       class="btn btn-warning btn-sm fw-bold">
-                                        <i class="bi bi-pencil-fill"></i>
-                                        Editar
-                                    </a>
+                </div>
 
-                                    <a th:href="@{/usuarios/eliminar/{id}(id=${usu.idUsuario})}"
-                                       class="btn btn-danger btn-sm fw-bold"
-                                       onclick="return confirm('¿Estás seguro de que deseas retirar a este usuario del sistema?');">
-                                        <i class="bi bi-trash-fill"></i>
-                                        Eliminar
-                                    </a>
+                <div class="app-card">
 
-                                </div>
+                    <div class="app-card-header">
+                        <i class="bi bi-shield-lock-fill"></i>
+                        Listado de Usuarios
+                    </div>
 
-                            </td>
+                    <div class="table-responsive">
 
-                        </tr>
+                        <table class="app-table table table-hover align-middle text-center mb-0">
 
-                        <tr th:if="${#lists.isEmpty(lista)}">
+                            <thead>
+                                <tr>
+                                    <th class="text-start ps-4">Nombre Completo</th>
+                                    <th>Username (Usuario)</th>
+                                    <th>Rol en el Sistema</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
 
-                            <td colspan="4"
-                                class="text-center text-muted py-5 fst-italic">
+                            <tbody>
 
-                                <i class="bi bi-inbox d-block fs-1 mb-2 opacity-50"></i>
+                                <tr th:each="usu : ${lista}">
 
-                                No se encontró personal registrado en el sistema.
+                                    <td class="text-start ps-4 fw-semibold" th:text="${usu.nombre}">
+                                    </td>
 
-                            </td>
+                                    <td class="text-secondary fw-bold" th:text="${usu.username}">
+                                    </td>
 
-                        </tr>
+                                    <td>
+                                        <span
+                                            th:classappend="${usu.rol.nombre == 'ADMINISTRADOR'} ? 'bg-primary' : 'bg-info text-dark'"
+                                            class="badge rounded-pill px-3 py-2 fw-bold" th:text="${usu.rol.nombre}">
+                                        </span>
+                                    </td>
 
-                        </tbody>
+                                    <td>
 
-                    </table>
+                                        <div class="d-flex justify-content-center gap-2">
+
+                                            <a th:href="@{/usuarios/editar/{id}(id=${usu.idUsuario})}"
+                                                class="btn btn-warning btn-sm fw-bold">
+                                                <i class="bi bi-pencil-fill"></i>
+                                                Editar
+                                            </a>
+
+                                            <a th:href="@{/usuarios/eliminar/{id}(id=${usu.idUsuario})}"
+                                                class="btn btn-danger btn-sm fw-bold"
+                                                onclick="return confirm('¿Estás seguro de que deseas retirar a este usuario del sistema?');">
+                                                <i class="bi bi-trash-fill"></i>
+                                                Eliminar
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(lista)}">
+
+                                    <td colspan="4" class="text-center text-muted py-5 fst-italic">
+
+                                        <i class="bi bi-inbox d-block fs-1 mb-2 opacity-50"></i>
+
+                                        No se encontró personal registrado en el sistema.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 
@@ -172,9 +155,8 @@
 
     </div>
 
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>
