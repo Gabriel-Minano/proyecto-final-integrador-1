@@ -22,8 +22,8 @@ public class CategoriaService {
 	public List<Categoria> listarActivas() {
 		return categoriaRepository.findByEstadoTrue();
 	}
-	
-	//Listar categorias por palabra clave
+
+	// Listar categorias por palabra clave
 	public List<Categoria> listarProductosClave(String palabraClave) {
 		if (palabraClave != null && !palabraClave.isEmpty()) {
 			return categoriaRepository.buscarPorCoincidencia(palabraClave);
@@ -44,6 +44,7 @@ public class CategoriaService {
 	public void eliminar(Integer id) {
 		categoriaRepository.deleteById(id);
 	}
+
 	// Eliminación por lógica, solo oculta el producto, evita errores de punteros
 	public void eliminarLogico(Integer id) {
 		Categoria categoria = categoriaRepository.findById(id).orElse(null);
@@ -51,5 +52,9 @@ public class CategoriaService {
 			categoria.setEstado(false);
 			categoriaRepository.save(categoria);
 		}
+	}
+
+	public void editar(Categoria c) {
+		categoriaRepository.save(c);
 	}
 }

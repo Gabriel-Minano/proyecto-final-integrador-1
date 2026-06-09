@@ -83,6 +83,15 @@ public class ClienteController {
 		return "redirect:/clientes";
 	}
 
+	@PostMapping("/editarCliente")
+	public String editar(@Validated @ModelAttribute("cliente") Cliente cliente, BindingResult result) {
+		if (result.hasErrors()) {
+			return "clientes_formulario";
+		}
+		clienteService.editar(cliente);
+		return "redirect:/clientes";
+	}
+	
 	@GetMapping("/eliminar-fisico/{id}")
 	public String eliminarFisico(@PathVariable("id") Integer id) {
 		Cliente cliente = clienteService.buscarPorId(id);

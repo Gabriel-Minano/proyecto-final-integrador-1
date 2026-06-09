@@ -78,6 +78,10 @@ public class UsuarioService {
 		}
 	}
 
+	public void editar(Usuario u){
+		usuarioRepository.save(u);
+	}
+
 	public Usuario buscarPorUsername(String username) {
 		return usuarioRepository.findByUsernameAndEstadoTrue(username)
 				.orElseThrow(() -> new RuntimeException("Usuario logueado no válido"));

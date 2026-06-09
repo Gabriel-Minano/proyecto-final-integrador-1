@@ -128,6 +128,22 @@ public class ProductoController {
 		return "redirect:/productos";
 	}
 
+	@PostMapping("/editarProducto")
+	public String editar(@Validated @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
+		if (producto.getCategoria() != null && producto.getCategoria().getIdCategoria() == null) {
+			result.rejectValue("categoria", "error.categoria", "Debe seleccionar una categoría válida");
+		}
+		if (producto.getProveedor() != null && producto.getProveedor().getIdProveedor() == null) {
+			result.rejectValue("proveedor", "error.proveedor", "Debe seleccionar un proveedor válido");
+		}
+		if (result.hasErrors()) {
+			cargarListasParaFormulario(model);
+			return "productos_formulario";
+		}
+		productoService.editar(producto);
+		return "redirect:/productos";
+	}
+
 	@GetMapping("/eliminar-fisico/{id}")
 	public String eliminarFisico(@PathVariable("id") Integer id) {
 		Producto producto = productoService.buscarPorId(id);

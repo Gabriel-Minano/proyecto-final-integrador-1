@@ -99,4 +99,8 @@ public class ProductoService {
 
 		return productoRepository.buscarPaginadosYFiltrados(palabraClave, filtro, hoy, fechaLimite, pageable);
 	}
+
+	public void editar(Producto p){
+		productoRepository.save(p);
+	}
 }

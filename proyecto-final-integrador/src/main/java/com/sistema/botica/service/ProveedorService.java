@@ -52,4 +52,8 @@ public class ProveedorService {
 		}
 	}
 
+	public void editar(Proveedor p){
+		proveedorRepository.save(p);
+	}
+
 }
