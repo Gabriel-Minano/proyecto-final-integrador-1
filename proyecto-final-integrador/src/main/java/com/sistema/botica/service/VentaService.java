@@ -66,6 +66,9 @@ public class VentaService {
 		return ventaRepository.findById(id).orElse(null);
 	}
 
+	public void editar(Venta v){
+		ventaRepository.save(v);
+	}
 	// Este es diferente al de arriba, puesto que añade busqueda por clave si es
 	// necesario, si alguien va a cambiar esto, dirijase al repository
 	// Y modifique o agregue la consulta que necesite, ya sea por DNI, nombre de

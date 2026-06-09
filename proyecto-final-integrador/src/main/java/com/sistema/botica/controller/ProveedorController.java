@@ -76,4 +76,14 @@ public class ProveedorController {
 		proveedorService.guardar(proveedor);
 		return "redirect:/proveedores";
 	}
+
+	@PostMapping("/editarProveedor")
+	public String editar(@Validated @ModelAttribute("proveedor") Proveedor proveedor, BindingResult result,
+			Model modelo) {
+		if (result.hasErrors()) {
+			return "proveedores_formulario";
+		}
+		proveedorService.editar(proveedor);
+		return "redirect:/proveedores";
+	}
 }

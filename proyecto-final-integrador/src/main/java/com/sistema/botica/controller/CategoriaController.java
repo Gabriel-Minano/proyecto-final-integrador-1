@@ -83,4 +83,15 @@ public class CategoriaController {
 		categoriaService.guardar(categoria);
 		return "redirect:/categorias";
 	}
+
+	@PostMapping("/editarCategoria")
+	public String editar(@Validated @ModelAttribute("categoria") Categoria categoria, BindingResult result,
+			Model modelo) {
+		if (result.hasErrors()) {
+			return "categorias_formulario";
+		}
+		categoriaService.editar(categoria);
+		return "redirect:/categorias";
+	}
+
 }

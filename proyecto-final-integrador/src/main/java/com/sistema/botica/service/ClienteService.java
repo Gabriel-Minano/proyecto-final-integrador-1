@@ -51,4 +51,7 @@ public class ClienteService {
 	public Page<Cliente> listarPaginadosYFiltrados(String palabraClave, Boolean estado, Pageable pageable) {
 		return clienteRepository.buscarPaginadosYFiltrados(palabraClave, estado, pageable);
 	}
+	public void editar(Cliente c){
+		clienteRepository.save(c);
+	}
 }

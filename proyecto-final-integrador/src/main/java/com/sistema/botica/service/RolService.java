@@ -21,5 +21,14 @@ public class RolService {
     public void eliminar(Integer id) {
         rolRepository.deleteById(id);
     }
-
+    public void eliminarLogico(Integer id){
+        Rol rol = rolRepository.findById(id).orElse(null);
+        if(rol != null){
+            rol.setEstado(false);
+            rolRepository.save(rol);
+        }
+    }
+    public void editar(Rol r){
+        rolRepository.save(r);
+    }
 }
