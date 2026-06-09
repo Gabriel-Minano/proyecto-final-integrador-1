@@ -42,7 +42,7 @@
 						<div class="mb-3">
 							<label class="form-label required">Nombre Completo</label>
 							<input type="text" th:field="*{nombre}" class="form-control"
-								placeholder="Nombre del empleado">
+								placeholder="Nombre del empleado" required>
 
 							<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error">
 							</span>
@@ -52,7 +52,7 @@
 							<label class="form-label required">Username</label>
 
 							<input type="text" th:field="*{username}" class="form-control"
-								placeholder="Usuario de acceso al sistema">
+								placeholder="Usuario de acceso al sistema" required>
 
 							<span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="form-error">
 							</span>
@@ -65,7 +65,7 @@
 						<div class="mb-3">
 							<label class="form-label required">Contraseña</label>
 
-							<input type="password" th:field="*{password}" class="form-control" placeholder="••••••••">
+							<input type="password" minlength="8" th:field="*{password}" class="form-control" placeholder="••••••••" required>
 
 							<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="form-error">
 							</span>

@@ -36,36 +36,6 @@ public class UsuarioService {
 
 	}
 
-	// public void guardar(UsuarioDTO dto) {
-
-	// Usuario usuario;
-
-	// // EDITAR
-	// if (dto.getIdUsuario() != null) {
-
-	// usuario = usuarioRepository.findById(dto.getIdUsuario()).orElse(new
-	// Usuario());
-
-	// } else {
-
-	// // NUEVO
-	// usuario = new Usuario();
-	// }
-
-	// // usuario.setNombre(dto.getNombre());
-	// // usuario.setUsername(dto.getUsername());
-	// // usuario.setRol(dto.getRol());
-	// // usuario.setEstado(dto.getEstado());
-
-	// // SOLO actualizar contraseña si escribieron una nueva
-	// if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-
-	// usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
-	// }
-
-	// usuarioRepository.save(usuario);
-	// }
-
 	public void guardar(UsuarioDTO dto) {
 
 		Usuario usuario;
@@ -95,6 +65,7 @@ public class UsuarioService {
 	public Usuario buscarPorId(Integer id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
+
 	public void eliminar(Integer id) {
 		usuarioRepository.deleteById(id);
 	}

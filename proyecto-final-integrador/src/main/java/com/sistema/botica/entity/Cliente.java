@@ -43,12 +43,12 @@ public class Cliente {
 	private String apellido;
 
 	@NotBlank(message = "El documento es obligatorio")
-	@Size(max = 11, message = "El documento no puede exceder 11 caracteres")
+	@Size(max = 11, min = 8, message = "El documento debe tener entre 8 y 11 dígitos")
 	@Pattern(regexp = "^[0-9]+$", message = "El campo debe contener únicamente números enteros positivos")
 	@Column(name = "documento", length = 20)
 	private String documento;
 
-	@Size(max = 9, message = "El tamaño debe ser entre 0 y 20")
+	@Size(max = 9, message = "El tamaño debe ser maximo 9 dígitos")
 	@Pattern(regexp = "^[0-9]{6,9}", message = "El campo debe contener únicamente números enteros positivos, por lo menos 6 números")
 	@Column(name = "telefono", length = 9)
 	private String telefono;

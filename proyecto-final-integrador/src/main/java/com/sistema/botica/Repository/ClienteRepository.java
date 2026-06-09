@@ -15,11 +15,6 @@ import com.sistema.botica.entity.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	List<Cliente> findByEstadoTrue();
 
-	/*
-	 * @Query("SELECT c FROM Cliente c WHERE c.estado = true AND c.documento LIKE %:palabraClave%"
-	 * ) List<Cliente> buscarPorCoincidencia(@Param("palabraClave") String
-	 * palabraClave);
-	 */
 	@Query("SELECT c FROM Cliente c WHERE c.estado = true AND ("
 			+ "LOWER(c.documento) LIKE LOWER(CONCAT('%', :palabraClave, '%')) OR "
 			+ "LOWER(c.nombre) LIKE LOWER(CONCAT('%', :palabraClave, '%')) OR "

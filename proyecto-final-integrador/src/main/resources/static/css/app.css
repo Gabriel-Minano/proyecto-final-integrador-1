@@ -892,3 +892,11 @@ body, html {
         font-size: 22px;
     }
 }
+
+/* ______________________ */
+/* Solo Chrome y Brave */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

@@ -33,7 +33,7 @@
 
 						<div class="mb-3">
 							<label class="form-label required">Nombre de la categoría</label>
-							<input type="text" th:field="*{nombre}" class="form-control"
+							<input type="text" autocomplete="off" th:field="*{nombre}" class="form-control"
 								placeholder="Ej. Analgésicos, Antibióticos, Cuidado personal" />
 							<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
 							<div class="form-help">Ingrese un nombre descriptivo para clasificar los productos.</div>

@@ -54,6 +54,7 @@
                                 </label>
 
                                 <input type="text"
+                                       autocomplete="off"
                                        th:field="*{nombre}"
                                        class="form-control"
                                        placeholder="Ingrese la razón social del proveedor">
@@ -74,11 +75,11 @@
                                     RUC
                                 </label>
 
-                                <input type="text"
+                                <input type="number"
                                        th:field="*{ruc}"
                                        class="form-control"
                                        placeholder="20123456789"
-                                       maxlength="11">
+                                       maxlength="11" required>
 
                                 <span th:if="${#fields.hasErrors('ruc')}"
                                       th:errors="*{ruc}"
@@ -96,11 +97,12 @@
                                     Teléfono
                                 </label>
 
-                                <input type="text"
+                                <input type="number"
+                                       autocomplete="off"
                                        th:field="*{telefono}"
                                        class="form-control"
                                        placeholder="987654321"
-                                       maxlength="9">
+                                       maxlength="9" required>
 
                                 <span th:if="${#fields.hasErrors('telefono')}"
                                       th:errors="*{telefono}"
@@ -117,7 +119,7 @@
                                 <input type="text"
                                        th:field="*{direccion}"
                                        class="form-control"
-                                       placeholder="Ingrese la dirección del proveedor">
+                                       placeholder="Ingrese la dirección del proveedor" required>
 
                                 <span th:if="${#fields.hasErrors('direccion')}"
                                       th:errors="*{direccion}"

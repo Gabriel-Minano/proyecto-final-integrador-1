@@ -45,12 +45,12 @@
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Documento (DNI/RUC)</label>
-								<input type="text" th:field="*{documento}" class="form-control" placeholder="Ej. 12345678">
+								<input type="number" th:field="*{documento}" class="form-control" placeholder="Ingrese el DNI o RUC del cliente">
 								<span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label">Teléfono</label>
-								<input type="text" th:field="*{telefono}" class="form-control" placeholder="Ej. 987654321">
+								<input type="number" th:field="*{telefono}" class="form-control" placeholder="Ej. 987654321">
 								<span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">

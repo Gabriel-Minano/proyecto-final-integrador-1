@@ -16,10 +16,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
 	Optional<Usuario> findByUsernameAndEstadoTrue(String username);
 
-	// @Query("SELECT u FROM Usuario u WHERE u.estado = true AND (u.nombre LIKE
-	// %:palabraClave% OR u.rol LIKE %:palabraClave%)")
-	// List<Usuario> buscarPorCoincidencia(@Param("palabraClave") String
-	// palabraClave);
 	@Query("""
 			SELECT u FROM Usuario u
 			WHERE u.estado = true

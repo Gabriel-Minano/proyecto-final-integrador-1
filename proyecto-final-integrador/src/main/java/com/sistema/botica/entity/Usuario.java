@@ -45,11 +45,6 @@ public class Usuario {
 	@Column(name = "password", length = 255)
 	private String password;
 
-	// @NotBlank(message = "Debes asignar un rol")
-	// @Size(max = 50)
-	// @Column(name = "rol", length = 50)
-	// private String rol;
-
 	@ManyToOne
 	@JoinColumn(name = "id_rol")
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -102,14 +97,6 @@ public class Usuario {
 	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
-
-	// public String getRol() {
-	// return rol;
-	// }
-
-	// public void setRol(String rol) {
-	// this.rol = rol;
-	// }
 
 	public List<Venta> getListaVentas() {
 		return listaVentas;

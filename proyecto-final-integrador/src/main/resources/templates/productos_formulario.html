@@ -51,13 +51,13 @@
 						<div class="row g-3">
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Código</label>
-								<input type="text" th:field="*{codigo}" class="form-control" placeholder="Ej. MED-001" />
+								<input type="text" th:field="*{codigo}" class="form-control" placeholder="Ej. MED-001" required />
 								<span th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}" class="form-error"></span>
 								<div class="form-help">Código único del producto.</div>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Nombre</label>
-								<input type="text" th:field="*{nombre}" class="form-control" placeholder="Nombre del producto" />
+								<input type="text" th:field="*{nombre}" class="form-control" placeholder="Nombre del producto" required />
 								<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
