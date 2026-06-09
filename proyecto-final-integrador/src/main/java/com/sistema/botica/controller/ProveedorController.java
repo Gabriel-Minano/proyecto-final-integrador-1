@@ -34,6 +34,7 @@ public class ProveedorController {
 	@GetMapping("/nuevo")
 	public String mostrarFormularioNuevo(Model modelo) {
 		modelo.addAttribute("proveedor", new Proveedor());
+		modelo.addAttribute("modoEdicion", false);
 		return "proveedores_formulario";
 	}
 
@@ -44,13 +45,14 @@ public class ProveedorController {
 			return "redirect:/proveedores";
 		}
 		modelo.addAttribute("proveedor", proveedor);
+		modelo.addAttribute("modoEdicion", true);
 		return "proveedores_formulario";
 	}
 
 	@GetMapping("/eliminar-fisico/{id}")
 	public String eliminarFisico(@PathVariable("id") Integer id) {
 		Proveedor proveedor = proveedorService.buscarPorId(id);
-		if(proveedor == null) {
+		if (proveedor == null) {
 			return "redirect:/productos";
 		}
 		proveedorService.eliminar(id);
@@ -60,7 +62,7 @@ public class ProveedorController {
 	@GetMapping("/eliminar/{id}")
 	public String eliminarLogico(@PathVariable("id") Integer id) {
 		Proveedor proveedor = proveedorService.buscarPorId(id);
-		if(proveedor == null) {
+		if (proveedor == null) {
 			return "redirect:/productos";
 		}
 		proveedorService.eliminarLogico(id);

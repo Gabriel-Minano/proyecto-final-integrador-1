@@ -72,7 +72,7 @@ public class ProductoController {
 	 * 
 	 * return "productos"; }
 	 */
-	
+
 	@GetMapping
 	public String listar(
 			@RequestParam(name = "palabraClave", required = false) String palabraClave,
@@ -82,7 +82,7 @@ public class ProductoController {
 
 		// Paginación de 10 en 10, ordenando por ID descendente
 		PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("idProducto").descending());
-		
+
 		Page<Producto> paginaProductos = productoService.listarPaginadosYFiltrados(palabraClave, filtro, pageRequest);
 
 		modelo.addAttribute("paginaProductos", paginaProductos);
@@ -95,6 +95,9 @@ public class ProductoController {
 	@GetMapping("/nuevo")
 	public String mostrarFormularioNuevo(Model modelo) {
 		modelo.addAttribute("producto", new Producto());
+		// atributo para activar los campos al momento de editar
+		modelo.addAttribute("modoEdicion", false);
+
 		cargarListasParaFormulario(modelo);
 		return "productos_formulario";
 	}
@@ -105,7 +108,10 @@ public class ProductoController {
 		if (producto == null) {
 			return "redirect:/productos";
 		}
-	    System.out.println(producto.getFechaVencimiento());
+		// atributo para desactivar los campos al momento de editar
+		modelo.addAttribute("modoEdicion", true);
+
+		System.out.println(producto.getFechaVencimiento());
 		modelo.addAttribute("producto", producto);
 		cargarListasParaFormulario(modelo);
 		return "productos_formulario";
@@ -113,7 +119,8 @@ public class ProductoController {
 
 	@PostMapping("/guardar")
 	public String guardar(@Validated @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
-		//Spring instancia los objetos, por eso usé !=null, porque el objeto existe en memoria, pero no tiene nada, todo es nulo dentro de este
+		// Spring instancia los objetos, por eso usé !=null, porque el objeto existe en
+		// memoria, pero no tiene nada, todo es nulo dentro de este
 		if (producto.getCategoria() != null && producto.getCategoria().getIdCategoria() == null) {
 			result.rejectValue("categoria", "error.categoria", "Debe seleccionar una categoría válida");
 		}
@@ -169,13 +176,13 @@ public class ProductoController {
 		modelo.addAttribute("listaCategorias", categoriaService.listarTodas());
 		modelo.addAttribute("listaProveedores", proveedorService.listarTodos());
 	}
-	
+
 	@GetMapping("/api/buscar")
 	@ResponseBody
 	public List<Map<String, Object>> buscarProductosAjax(@RequestParam("q") String palabraClave) {
-		
+
 		List<Producto> productos = productoService.listarProductosClave(palabraClave);
-		
+
 		return productos.stream().limit(20).map(p -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put("idProducto", p.getIdProducto());

@@ -55,6 +55,7 @@
 
                                 <input type="text"
                                        autocomplete="off"
+                                       th:disabled="${modoEdicion}"
                                        th:field="*{nombre}"
                                        class="form-control"
                                        placeholder="Ingrese la razón social del proveedor">
@@ -76,6 +77,7 @@
                                 </label>
 
                                 <input type="number"
+                                       th:disabled="${modoEdicion}"
                                        th:field="*{ruc}"
                                        class="form-control"
                                        placeholder="20123456789"

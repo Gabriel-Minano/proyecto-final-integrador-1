@@ -51,18 +51,18 @@
 						<div class="row g-3">
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Código</label>
-								<input type="text" th:field="*{codigo}" class="form-control" placeholder="Ej. MED-001" required />
+								<input type="text" th:disabled="${modoEdicion}" th:field="*{codigo}" class="form-control" placeholder="Ej. MED-001" required />
 								<span th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}" class="form-error"></span>
 								<div class="form-help">Código único del producto.</div>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Nombre</label>
-								<input type="text" th:field="*{nombre}" class="form-control" placeholder="Nombre del producto" required />
+								<input type="text" th:disabled="${modoEdicion}" th:field="*{nombre}" class="form-control" placeholder="Nombre del producto" required />
 								<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Categoría</label>
-								<select th:field="*{categoria.idCategoria}" class="select-buscador form-select" required>
+								<select th:field="*{categoria.idCategoria}" th:disabled="${modoEdicion}" class="select-buscador form-select" required>
 									<option value="">-- Seleccionar Categoría --</option>
 									<option th:each="cat : ${listaCategorias}" th:value="${cat.idCategoria}" th:text="${cat.nombre}"></option>
 								</select>
@@ -70,7 +70,7 @@
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Proveedor</label>
-								<select th:field="*{proveedor.idProveedor}" class="select-buscador form-select" required>
+								<select th:field="*{proveedor.idProveedor}" th:disabled="${modoEdicion}" class="select-buscador form-select" required>
 									<option value="">-- Seleccionar Proveedor --</option>
 									<option th:each="prov : ${listaProveedores}" th:value="${prov.idProveedor}" th:text="${prov.nombre}"></option>
 								</select>
@@ -78,7 +78,7 @@
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Precio Compra (S/.)</label>
-								<input type="number" step="0.01" th:field="*{precioCompra}" class="form-control" placeholder="0.00" />
+								<input type="number" step="0.01" th:disabled="${modoEdicion}" th:field="*{precioCompra}" class="form-control" placeholder="0.00" />
 								<span th:if="${#fields.hasErrors('precioCompra')}" th:errors="*{precioCompra}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
@@ -103,7 +103,7 @@
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Fecha Vencimiento</label>
-								<input type="date" th:field="*{fechaVencimiento}" class="form-control" />
+								<input type="date" th:disabled="${modoEdicion}" th:field="*{fechaVencimiento}" class="form-control" />
 								<span th:if="${#fields.hasErrors('fechaVencimiento')}" th:errors="*{fechaVencimiento}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3" th:if="${producto.idProducto != null}">

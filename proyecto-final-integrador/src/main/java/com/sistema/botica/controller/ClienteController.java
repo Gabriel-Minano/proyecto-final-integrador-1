@@ -61,7 +61,9 @@ public class ClienteController {
 	@GetMapping("/nuevo")
 	public String nuevo(Model modelo) {
 		modelo.addAttribute("cliente", new Cliente());
+		modelo.addAttribute("modoEdicion", false);
 		return "clientes_formulario";
+
 	}
 
 	@GetMapping("/editar/{id}")
@@ -70,6 +72,7 @@ public class ClienteController {
 		if (cliente == null) {
 			return "redirect:/clientes";
 		}
+		modelo.addAttribute("modoEdicion", true);
 		modelo.addAttribute("cliente", cliente);
 		return "clientes_formulario";
 	}
@@ -91,7 +94,7 @@ public class ClienteController {
 		clienteService.editar(cliente);
 		return "redirect:/clientes";
 	}
-	
+
 	@GetMapping("/eliminar-fisico/{id}")
 	public String eliminarFisico(@PathVariable("id") Integer id) {
 		Cliente cliente = clienteService.buscarPorId(id);
@@ -101,7 +104,7 @@ public class ClienteController {
 		clienteService.eliminar(id);
 		return "redirect:/clientes";
 	}
-	
+
 	@GetMapping("/eliminar/{id}")
 	public String eliminarLogico(@PathVariable("id") Integer id) {
 		Cliente cliente = clienteService.buscarPorId(id);
@@ -111,14 +114,15 @@ public class ClienteController {
 		clienteService.eliminarLogico(id);
 		return "redirect:/clientes";
 	}
-	
+
 	@GetMapping("/api/buscar")
 	@ResponseBody
 	public List<Map<String, Object>> buscarClientesAjax(@RequestParam("q") String palabraClave) {
 		// Buscamos las coincidencias
 		List<Cliente> clientes = clienteService.listarProductosClave(palabraClave);
-		
-		// Donde dice 20 se le puede cambiar para que busque más digamos 50 0 70 resultados
+
+		// Donde dice 20 se le puede cambiar para que busque más digamos 50 0 70
+		// resultados
 		return clientes.stream().limit(20).map(c -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put("idCliente", c.getIdCliente());

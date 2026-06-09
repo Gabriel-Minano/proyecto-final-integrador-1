@@ -35,17 +35,17 @@
 						<div class="row g-3">
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Nombre</label>
-								<input type="text" th:field="*{nombre}" class="form-control" placeholder="Nombre del cliente">
+								<input type="text" th:disabled="${modoEdicion}" th:field="*{nombre}" class="form-control" placeholder="Nombre del cliente">
 								<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Apellido</label>
-								<input type="text" th:field="*{apellido}" class="form-control" placeholder="Apellido del cliente">
+								<input type="text" th:disabled="${modoEdicion}" th:field="*{apellido}" class="form-control" placeholder="Apellido del cliente">
 								<span th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Documento (DNI/RUC)</label>
-								<input type="number" th:field="*{documento}" class="form-control" placeholder="Ingrese el DNI o RUC del cliente">
+								<input type="number" th:disabled="${modoEdicion}" th:field="*{documento}" class="form-control" placeholder="Ingrese el DNI o RUC del cliente">
 								<span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">

@@ -41,6 +41,7 @@ public class UsuarioController {
 	public String nuevo(Model modelo) {
 		modelo.addAttribute("usuario", new UsuarioDTO());
 		modelo.addAttribute("listaRoles", rolService.listarActivos());
+		modelo.addAttribute("modoEdicion", false);
 		return "usuarios_formulario";
 	}
 
@@ -68,6 +69,7 @@ public class UsuarioController {
 
 		modelo.addAttribute("usuario", dto);
 		modelo.addAttribute("listaRoles", rolService.listarActivos());
+		modelo.addAttribute("modoEdicion", true);
 
 		return "usuarios_formulario";
 	}
