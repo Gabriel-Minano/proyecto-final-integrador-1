@@ -2,8 +2,12 @@ package com.sistema.botica.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +38,8 @@ public class Usuario {
 	@Column(name = "username", length = 50)
 	private String username;
 
-	// @NotBlank(message = "La constraseña es obligatoria")
+	// @NotBlank(message = "La constraseña es obligatoria"), james no lo actives
+	// Lanza error porque no entiende el hash
 	@Size(max = 255)
 	@JsonIgnore
 	@Column(name = "password", length = 255)
@@ -47,6 +52,7 @@ public class Usuario {
 
 	@ManyToOne
 	@JoinColumn(name = "id_rol")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Rol rol;
 
 	@Column(name = "estado", columnDefinition = "BOOLEAN DEFAULT TRUE")
@@ -54,7 +60,7 @@ public class Usuario {
 
 	// Un usuario (empleado) puede realizar muchas ventas
 	@JsonIgnore
-	@OneToMany(mappedBy = "usuario")
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Venta> listaVentas;
 
 	public Integer getIdUsuario() {

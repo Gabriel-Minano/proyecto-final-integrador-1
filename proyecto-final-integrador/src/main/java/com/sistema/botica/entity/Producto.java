@@ -4,8 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -75,12 +80,14 @@ public class Producto {
 	@NotNull(message = "Debe seleccionar una categoría")
 	@ManyToOne
 	@JoinColumn(name = "id_categoria")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Categoria categoria;
 
 	// Muchos productos son distribuidos por un proveedor
 	@NotNull(message = "Debe seleccionar un proveedor")
 	@ManyToOne
 	@JoinColumn(name = "id_proveedor")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Proveedor proveedor;
 
 	// Eliminación lógica, osea desactiva el producto
@@ -88,7 +95,8 @@ public class Producto {
 	private Boolean estado = true;
 
 	// Un producto puede estar en muchos detalles de venta
-	@OneToMany(mappedBy = "producto")
+	@JsonIgnore
+	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<DetalleVenta> listaDetallesVenta;
 
 	public Integer getIdProducto() {

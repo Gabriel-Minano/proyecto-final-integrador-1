@@ -24,11 +24,11 @@ public class CategoriaController {
 	@Autowired
 	private CategoriaService categoriaService;
 
-//	@GetMapping
-//	public String listar(Model modelo) {
-//		modelo.addAttribute("lista", categoriaService.listarActivas());
-//		return "categorias";
-//	}
+	// @GetMapping
+	// public String listar(Model modelo) {
+	// modelo.addAttribute("lista", categoriaService.listarActivas());
+	// return "categorias";
+	// }
 
 	@GetMapping
 	public String listar(@RequestParam(name = "palabraClave", required = false) String palabraClave, Model modelo) {
@@ -54,8 +54,18 @@ public class CategoriaController {
 		return "categorias_formulario";
 	}
 
+	@GetMapping("/eliminar-fisico/{id}")
+	public String eliminaFisico(@PathVariable("id") Integer id) {
+		Categoria categoria = categoriaService.buscarPorId(id);
+		if (categoria == null) {
+			return "redirect:/categorias";
+		}
+		categoriaService.eliminar(id);
+		return "redirect:/categorias";
+	}
+
 	@GetMapping("/eliminar/{id}")
-	public String eliminar(@PathVariable("id") Integer id) {
+	public String eliminarLogico(@PathVariable("id") Integer id) {
 		Categoria categoria = categoriaService.buscarPorId(id);
 		if (categoria == null) {
 			return "redirect:/categorias";

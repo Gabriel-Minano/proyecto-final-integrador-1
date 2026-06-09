@@ -83,8 +83,18 @@ public class ClienteController {
 		return "redirect:/clientes";
 	}
 
+	@GetMapping("/eliminar-fisico/{id}")
+	public String eliminarFisico(@PathVariable("id") Integer id) {
+		Cliente cliente = clienteService.buscarPorId(id);
+		if (cliente == null) {
+			return "redirect:/clientes";
+		}
+		clienteService.eliminar(id);
+		return "redirect:/clientes";
+	}
+	
 	@GetMapping("/eliminar/{id}")
-	public String eliminar(@PathVariable("id") Integer id) {
+	public String eliminarLogico(@PathVariable("id") Integer id) {
 		Cliente cliente = clienteService.buscarPorId(id);
 		if (cliente == null) {
 			return "redirect:/clientes";

@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -40,12 +43,14 @@ public class Venta {
 	@NotNull(message = "Se debe especificar el usuario que realiza la venta")
     @ManyToOne
     @JoinColumn(name = "id_usuario")
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
     // Muchas ventas pertenecen a un cliente
 	@NotNull(message = "Debe asignar un cliente")
     @ManyToOne
     @JoinColumn(name = "id_cliente")
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Cliente cliente;
 
     // Una venta tiene muchos detalles (Cascade para guardar la venta y sus detalles juntos)

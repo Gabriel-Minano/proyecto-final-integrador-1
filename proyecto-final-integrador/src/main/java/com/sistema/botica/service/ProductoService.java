@@ -76,6 +76,10 @@ public class ProductoService {
 		return productoRepository.findById(id).orElse(null);
 	}
 
+	public void eliminar(Integer id) {
+		productoRepository.deleteById(id);
+	}
+
 	// Eliminación lógica, desactiva el producto
 	public void eliminarLogico(Integer id) {
 		Producto producto = productoRepository.findById(id).orElse(null);
@@ -84,11 +88,11 @@ public class ProductoService {
 			productoRepository.save(producto);
 		}
 	}
-	
+
 	public Page<Producto> listarPaginadosYFiltrados(String palabraClave, String filtro, Pageable pageable) {
 		LocalDate hoy = LocalDate.now();
 		LocalDate fechaLimite = hoy.plusDays(30);
-		
+
 		if (filtro == null || filtro.isEmpty()) {
 			filtro = "activos";
 		}

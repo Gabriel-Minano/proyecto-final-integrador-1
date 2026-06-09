@@ -2,6 +2,9 @@ package com.sistema.botica.entity;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -42,12 +45,14 @@ public class DetalleVenta {
 	@JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_venta")
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Venta venta;
 
     // Muchos detalles corresponden a un producto
 	@NotNull(message = "El producto es obligatorio")
     @ManyToOne
     @JoinColumn(name = "id_producto")
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Producto producto;
 
 	public Integer getIdDetalle() {

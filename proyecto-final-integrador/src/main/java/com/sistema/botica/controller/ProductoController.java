@@ -128,8 +128,18 @@ public class ProductoController {
 		return "redirect:/productos";
 	}
 
+	@GetMapping("/eliminar-fisico/{id}")
+	public String eliminarFisico(@PathVariable("id") Integer id) {
+		Producto producto = productoService.buscarPorId(id);
+		if (producto == null) {
+			return "redirect:/productos";
+		}
+		productoService.eliminar(id);
+		return "redirect:/productos";
+	}
+
 	@GetMapping("/eliminar/{id}")
-	public String eliminar(@PathVariable("id") Integer id) {
+	public String eliminarLogico(@PathVariable("id") Integer id) {
 		Producto producto = productoService.buscarPorId(id);
 		if (producto == null) {
 			return "redirect:/productos";

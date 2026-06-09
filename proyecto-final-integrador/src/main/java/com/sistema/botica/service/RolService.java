@@ -17,4 +17,9 @@ public class RolService {
     public List<Rol> listarActivos() {
         return rolRepository.findByEstadoTrue();
     }
+
+    public void eliminar(Integer id) {
+        rolRepository.deleteById(id);
+    }
+
 }

@@ -1,5 +1,9 @@
 package com.sistema.botica.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +20,10 @@ public class Rol {
 
     @Column(name = "estado")
     private Boolean estado = true;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Usuario> listaUsuarios;
 
     public Integer getIdRol() {
         return idRol;

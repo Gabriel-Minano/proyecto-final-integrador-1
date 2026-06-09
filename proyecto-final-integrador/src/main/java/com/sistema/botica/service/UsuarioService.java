@@ -95,6 +95,9 @@ public class UsuarioService {
 	public Usuario buscarPorId(Integer id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
+	public void eliminar(Integer id) {
+		usuarioRepository.deleteById(id);
+	}
 
 	public void eliminarLogico(Integer id) {
 		Usuario usuario = usuarioRepository.findById(id).orElse(null);

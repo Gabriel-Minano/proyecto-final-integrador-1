@@ -94,6 +94,16 @@ public class UsuarioController {
 		return "redirect:/usuarios";
 	}
 
+	@GetMapping("/eliminar-fisico/{id}")
+	public String eliminarFisico(@PathVariable("id") Integer id) {
+		Usuario usuario = usuarioService.buscarPorId(id);
+		if (usuario == null) {
+			return "redirect:/usuarios";
+		}
+		usuarioService.eliminar(id);
+		return "redirect:/usuarios";
+	}
+
 	@GetMapping("/eliminar/{id}")
 	public String eliminar(@PathVariable("id") Integer id) {
 		Usuario usuario = usuarioService.buscarPorId(id);
@@ -102,6 +112,5 @@ public class UsuarioController {
 		}
 		usuarioService.eliminarLogico(id);
 		return "redirect:/usuarios";
-
 	}
 }

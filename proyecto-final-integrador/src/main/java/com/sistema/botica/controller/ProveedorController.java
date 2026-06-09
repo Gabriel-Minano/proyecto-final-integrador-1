@@ -47,8 +47,18 @@ public class ProveedorController {
 		return "proveedores_formulario";
 	}
 
+	@GetMapping("/eliminar-fisico/{id}")
+	public String eliminarFisico(@PathVariable("id") Integer id) {
+		Proveedor proveedor = proveedorService.buscarPorId(id);
+		if(proveedor == null) {
+			return "redirect:/productos";
+		}
+		proveedorService.eliminar(id);
+		return "redirect:/proveedores";
+	}
+
 	@GetMapping("/eliminar/{id}")
-	public String eliminar(@PathVariable("id") Integer id) {
+	public String eliminarLogico(@PathVariable("id") Integer id) {
 		Proveedor proveedor = proveedorService.buscarPorId(id);
 		if(proveedor == null) {
 			return "redirect:/productos";
