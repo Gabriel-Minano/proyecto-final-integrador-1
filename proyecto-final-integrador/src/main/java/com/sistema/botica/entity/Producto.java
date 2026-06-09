@@ -25,6 +25,7 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -37,11 +38,13 @@ public class Producto {
 
 	@NotBlank(message = "El nombre del producto es obligatorio")
 	@Size(max = 100, message = "El nombre no debe exceder los 100 caracteres")
+	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.+\\-%]+$", message = "El nombre del producto solo puede contener letras, números y caracteres válidos (. + - %)")
 	@Column(name = "nombre", length = 100)
 	private String nombre;
 
 	@NotBlank(message = "El código es obligatorio")
 	@Size(max = 50)
+	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\-]+$", message = "Solo se permiten letras, números y guiones")
 	@Column(name = "codigo", length = 50)
 	private String codigo;
 

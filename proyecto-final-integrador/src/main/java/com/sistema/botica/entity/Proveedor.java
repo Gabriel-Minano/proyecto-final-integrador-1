@@ -34,7 +34,8 @@ public class Proveedor {
 	@Column(name = "ruc", length = 20)
 	private String ruc;
 
-	@Size(max = 20, message = "El teléfono no puede exceder los 20 caracteres")
+	@Size(max = 9, message = "El teléfono no puede exceder los 9 caracteres")
+	@Pattern(regexp = "^[0-9]{6,9}$", message = "El telefono debe contener por lo menos 6 dígitos numéricos")
 	@Column(name = "telefono", length = 20)
 	private String telefono;
 

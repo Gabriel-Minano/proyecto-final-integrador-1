@@ -23,7 +23,7 @@ public class SecurityConfig {
 				// 2. PERMISOS COMPARTIDOS (ADMINISTRADOR y CAJERO)
 				// Facturación y búsqueda AJAX (El núcleo del cajero)
 				.requestMatchers("/ventas/nuevo", "/ventas/guardar").hasAnyRole("ADMINISTRADOR", "CAJERO")
-				.requestMatchers("/clientes/api/buscar", "/productos/api/buscar", "/clientes/nuevo").hasAnyRole("ADMINISTRADOR", "CAJERO")
+				.requestMatchers("/clientes/api/buscar", "/productos/api/buscar", "/clientes/nuevo", "/clientes/guardar").hasAnyRole("ADMINISTRADOR", "CAJERO")
 
 				// Permitir ver los listados principales (Lectura)
 				.requestMatchers("/ventas", "/productos", "/clientes", "/categorias", "/proveedores")

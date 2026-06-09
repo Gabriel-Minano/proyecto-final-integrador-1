@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -24,8 +25,9 @@ public class Categoria {
 	private Integer idCategoria;
 
 	@NotBlank(message = "El nombre de la categoría es obligatorio")
-	@Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
-	@Column(name = "nombre", length = 100)
+	@Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
+	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\-]+$", message = "Solo se permiten letras, números y guiones")
+	@Column(name = "nombre", length = 50)
 	private String nombre;
 
 	// Eliminación lógica, osea desactiva el producto

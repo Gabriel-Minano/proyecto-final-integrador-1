@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -30,30 +31,36 @@ public class Cliente {
 	private Integer idCliente;
 
 	@NotBlank(message = "El nombre es obligatorio")
-	@Size(max = 100)
-	@Column(name = "nombre", length = 100)
+	@Size(max = 50, message = "El nombre no puede exceder 20 caracteres")
+	@Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "Solo se permiten letras y espacios")
+	@Column(name = "nombre", length = 50)
 	private String nombre;
 
 	@NotBlank(message = "El apellido es obligatorio")
-	@Size(max = 100)
-	@Column(name = "apellido", length = 100)
+	@Size(max = 50, message = "El apellido no puede exceder 50 caracteres")
+	@Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "Solo se permiten letras y espacios")
+	@Column(name = "apellido", length = 50)
 	private String apellido;
 
 	@NotBlank(message = "El documento es obligatorio")
-	@Size(max = 20, message = "El documento no puede exceder 20 caracteres")
+	@Size(max = 11, message = "El documento no puede exceder 11 caracteres")
+	@Pattern(regexp = "^[0-9]+$", message = "El campo debe contener únicamente números enteros positivos")
 	@Column(name = "documento", length = 20)
 	private String documento;
 
-	@Size(max = 20, message = "El tamaño debe ser entre 0 y 20")
-	@Column(name = "telefono", length = 20)
+	@Size(max = 9, message = "El tamaño debe ser entre 0 y 20")
+	@Pattern(regexp = "^[0-9]{6,9}", message = "El campo debe contener únicamente números enteros positivos, por lo menos 6 números")
+	@Column(name = "telefono", length = 9)
 	private String telefono;
 
 	@Email(message = "El correo debe ser uno válido")
-	@Size(max = 100)
-	@Column(name = "correo", length = 100)
+	@Size(max = 50)
+	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El correo contiene caracteres no permitidos (no uses tildes, espacios ni la ñ)")
+	@Column(name = "correo", length = 50)
 	private String correo;
 
 	@Size(max = 255)
+	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.,#\\-/]+$", message = "La dirección solo puede contener letras, números y caracteres válidos (., # - /)")
 	@Column(name = "direccion", length = 255)
 	private String direccion;
 
