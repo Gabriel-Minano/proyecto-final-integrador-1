@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,17 +34,20 @@ import org.springframework.transaction.TransactionSystemException;
 @RequestMapping("/ventas")
 public class VentaController {
 
-	@Autowired
-	private VentaService ventaService;
+	private final VentaService ventaService;
 
-	@Autowired
-	private ClienteService clienteService;
+	private final ClienteService clienteService;
 
-	@Autowired
-	private UsuarioService usuarioService;
+	private final UsuarioService usuarioService;
 
-	@Autowired
-	private ProductoService productoService;
+	private final ProductoService productoService;
+
+	VentaController(VentaService ventaService, ClienteService clienteService, UsuarioService usuarioService, ProductoService productoService) {
+		this.ventaService = ventaService;
+		this.clienteService = clienteService;
+		this.usuarioService = usuarioService;
+		this.productoService = productoService;
+	}
 
 	@GetMapping
 	public String listar(

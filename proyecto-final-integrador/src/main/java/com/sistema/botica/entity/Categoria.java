@@ -25,7 +25,7 @@ public class Categoria {
 	private Integer idCategoria;
 
 	@NotBlank(message = "El nombre de la categoría es obligatorio")
-	@Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
+	@Size(max = 50, min = 3, message = "Mínimo 3 caracteres, máximo 50")
 	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\-]+$", message = "Solo se permiten letras, números y guiones")
 	@Column(name = "nombre", length = 50)
 	private String nombre;

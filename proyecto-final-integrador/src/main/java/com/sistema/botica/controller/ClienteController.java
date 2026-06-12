@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,8 +26,11 @@ import com.sistema.botica.service.ClienteService;
 @Controller
 @RequestMapping("/clientes")
 public class ClienteController {
-	@Autowired
-	private ClienteService clienteService;
+	private final ClienteService clienteService;
+
+	ClienteController(ClienteService clienteService) {
+		this.clienteService = clienteService;
+	}
 
 	/*
 	 * @GetMapping public String listar(Model modelo) { modelo.addAttribute("lista",

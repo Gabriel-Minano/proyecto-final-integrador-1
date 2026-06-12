@@ -25,21 +25,21 @@ public class Proveedor {
 	private Integer idProveedor;
 
 	@NotBlank(message = "El nombre del proveedor es obligatorio")
-	@Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
+	@Size(max = 100, min = 10, message = "El nombre no puede exceder los 100 caracteres")
 	@Column(name = "nombre", length = 100)
 	private String nombre;
 
 	@NotBlank(message = "El RUC es obligatorio")
 	@Pattern(regexp = "^[0-9]{11}$", message = "El RUC debe contener exactamente 11 dígitos numéricos")
-	@Column(name = "ruc", length = 20)
+	@Column(name = "ruc", length = 11)
 	private String ruc;
 
-	@Size(max = 9, message = "El teléfono no puede exceder los 9 caracteres")
-	@Pattern(regexp = "^[0-9]{6,9}$", message = "El telefono debe contener por lo menos 6 dígitos numéricos")
-	@Column(name = "telefono", length = 20)
+	@Size(max = 9, min = 9, message = "Ingrese 9 números")
+	@Pattern(regexp = "^[0-9]+$", message = "Solo se permiten números positivos")
+	@Column(name = "telefono", length = 9)
 	private String telefono;
 
-	@Size(max = 255, message = "La dirección no puede exceder los 255 caracteres")
+	@Size(max = 255, min = 15, message = "La dirección no puede exceder los 255 caracteres")
 	@Column(name = "direccion", length = 255)
 	private String direccion;
 

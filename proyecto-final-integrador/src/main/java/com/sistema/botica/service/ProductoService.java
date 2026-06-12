@@ -3,7 +3,6 @@ package com.sistema.botica.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,11 @@ import com.sistema.botica.entity.Producto;
 
 @Service
 public class ProductoService {
-	@Autowired
-	private ProductoRepository productoRepository;
+	private final ProductoRepository productoRepository;
+
+	ProductoService(ProductoRepository productoRepository) {
+		this.productoRepository = productoRepository;
+	}
 
 	// Lo deje por si alguno quiere poner un filtro para ver todos
 	// Los productos, incluso los desactivados

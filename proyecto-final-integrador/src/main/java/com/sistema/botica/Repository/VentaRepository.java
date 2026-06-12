@@ -9,12 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.sistema.botica.DTO.VentaPorDiaDTO;
 import com.sistema.botica.entity.Venta;
 
-@Repository
 public interface VentaRepository extends JpaRepository<Venta, Integer> {
 	@Query("SELECT COUNT(v) FROM Venta v WHERE v.fecha >= :inicio AND v.fecha <= :fin")
 	long contarVentasPorPeriodo(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);

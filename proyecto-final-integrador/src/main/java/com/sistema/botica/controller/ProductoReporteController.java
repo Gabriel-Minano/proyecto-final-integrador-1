@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,10 +26,13 @@ import com.sistema.botica.service.ProductoReporteService;
 @Controller
 @RequestMapping("/reportes/productos")
 public class ProductoReporteController {
-	@Autowired
-	private ProductoReporteService productoReporteService;
-	@Autowired
-	private ProductoReporteExportService exportService; // NUEVO SERVICIO
+	private final ProductoReporteService productoReporteService;
+	private final ProductoReporteExportService exportService;
+
+	ProductoReporteController(ProductoReporteService productoReporteService, ProductoReporteExportService exportService) {
+		this.productoReporteService = productoReporteService;
+		this.exportService = exportService;
+	} // NUEVO SERVICIO
 
 	@GetMapping
 	public String verReporteProductos(

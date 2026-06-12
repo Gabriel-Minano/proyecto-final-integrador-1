@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,11 @@ import com.sistema.botica.entity.Venta;
 
 @Service
 public class VentaReporteService {
-	@Autowired
-	private VentaRepository ventaRepository;
+	private final VentaRepository ventaRepository;
+
+	VentaReporteService(VentaRepository ventaRepository) {
+		this.ventaRepository = ventaRepository;
+	}
 
 	@Transactional(readOnly = true) // Evitar error de lazy
 	public ReporteVentasDTO generarReporteVentas(LocalDateTime inicio, LocalDateTime fin, Pageable pageable) {
@@ -79,7 +81,7 @@ public class VentaReporteService {
 
 		String topMes = ventasPorMes.entrySet().stream().max(Map.Entry.comparingByValue()).map(e -> {
 			// Obtener el mes junto al año que tuvo más ventas
-			String nombreMes = e.getKey().getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
+			String nombreMes = e.getKey().getMonth().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es-ES"));
 			int anio = e.getKey().getYear();
 			return nombreMes + " " + anio; // ejemplo marzo 2026
 		}).orElse("-");

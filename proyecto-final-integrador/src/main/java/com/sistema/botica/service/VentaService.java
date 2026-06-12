@@ -3,7 +3,6 @@ package com.sistema.botica.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,14 @@ import com.sistema.botica.entity.Venta;
 @Service
 public class VentaService {
 
-	@Autowired
-	private VentaRepository ventaRepository;
+	private final VentaRepository ventaRepository;
 
-	@Autowired
-	private ProductoRepository productoRepository;
+	private final ProductoRepository productoRepository;
+
+	VentaService(VentaRepository ventaRepository, ProductoRepository productoRepository) {
+		this.ventaRepository = ventaRepository;
+		this.productoRepository = productoRepository;
+	}
 
 	public List<Venta> listarTodas() {
 		return ventaRepository.findAll();

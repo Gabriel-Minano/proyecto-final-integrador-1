@@ -2,7 +2,6 @@ package com.sistema.botica.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sistema.botica.Repository.CategoriaRepository;
@@ -10,8 +9,11 @@ import com.sistema.botica.entity.Categoria;
 
 @Service
 public class CategoriaService {
-	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private final CategoriaRepository categoriaRepository;
+
+	CategoriaService(CategoriaRepository categoriaRepository) {
+		this.categoriaRepository = categoriaRepository;
+	}
 
 	// Lo deje por si alguno quiere poner un filtro para ver todas
 	// las categorias, incluso las desactivadas

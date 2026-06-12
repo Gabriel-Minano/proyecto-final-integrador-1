@@ -2,7 +2,6 @@ package com.sistema.botica.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,12 +21,15 @@ import com.sistema.botica.service.UsuarioService;
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioController {
-	@Autowired
-	private UsuarioService usuarioService;
-	@Autowired
-	private RolService rolService;
+	private final UsuarioService usuarioService;
+	private final RolService rolService;
 
 	private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,20}$";
+
+	UsuarioController(UsuarioService usuarioService, RolService rolService) {
+		this.usuarioService = usuarioService;
+		this.rolService = rolService;
+	}
 
 	@GetMapping
 	public String listar(@RequestParam(required = false) String palabraClave, Model modelo) {

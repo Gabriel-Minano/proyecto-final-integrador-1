@@ -2,7 +2,6 @@ package com.sistema.botica.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sistema.botica.Repository.RolRepository;
@@ -14,14 +13,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Service
 public class UsuarioService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private RolRepository rolRepository;
+	private final RolRepository rolRepository;
+
+	UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, RolRepository rolRepository) {
+		this.usuarioRepository = usuarioRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.rolRepository = rolRepository;
+	}
 
 	public List<Usuario> listarActivos() {
 		return usuarioRepository.findByEstadoTrue();

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sistema.botica.DTO.VentaPorDiaDTO;
@@ -19,10 +18,13 @@ import com.sistema.botica.entity.Producto;
 
 @Service
 public class DashboardService {
-    @Autowired
-    private ProductoRepository productoRepo;
-    @Autowired
-    private VentaRepository ventaRepo;
+    private final ProductoRepository productoRepo;
+    private final VentaRepository ventaRepo;
+
+    DashboardService(ProductoRepository productoRepo, VentaRepository ventaRepo) {
+        this.productoRepo = productoRepo;
+        this.ventaRepo = ventaRepo;
+    }
 
     public Map<String, Object> calcularIndicadores(Integer mes, Integer anio) {
         Map<String, Object> indicadores = new HashMap<>();

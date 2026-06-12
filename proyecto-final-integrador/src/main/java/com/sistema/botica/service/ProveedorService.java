@@ -2,7 +2,6 @@ package com.sistema.botica.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sistema.botica.Repository.ProveedorRepository;
@@ -10,8 +9,11 @@ import com.sistema.botica.entity.Proveedor;
 
 @Service
 public class ProveedorService {
-	@Autowired
-	private ProveedorRepository proveedorRepository;
+	private final ProveedorRepository proveedorRepository;
+
+	ProveedorService(ProveedorRepository proveedorRepository) {
+		this.proveedorRepository = proveedorRepository;
+	}
 
 	public List<Proveedor> listarTodos() {
 		return proveedorRepository.findAll();

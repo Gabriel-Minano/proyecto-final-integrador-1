@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,12 +29,15 @@ import com.sistema.botica.service.ProveedorService;
 @Controller
 @RequestMapping("/productos")
 public class ProductoController {
-	@Autowired
-	private ProductoService productoService;
-	@Autowired
-	private CategoriaService categoriaService;
-	@Autowired
-	private ProveedorService proveedorService;
+	private final ProductoService productoService;
+	private final CategoriaService categoriaService;
+	private final ProveedorService proveedorService;
+
+	ProductoController(ProductoService productoService, CategoriaService categoriaService, ProveedorService proveedorService) {
+		this.productoService = productoService;
+		this.categoriaService = categoriaService;
+		this.proveedorService = proveedorService;
+	}
 
 	@GetMapping
 	public String listar(

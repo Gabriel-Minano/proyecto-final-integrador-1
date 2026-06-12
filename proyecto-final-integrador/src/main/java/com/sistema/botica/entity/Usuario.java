@@ -29,13 +29,13 @@ public class Usuario {
 	private Integer idUsuario;
 
 	@NotBlank(message = "El nombre es obligatorio")
-	@Size(max = 100)
-	@Column(name = "nombre", length = 100)
+	@Size(max = 50, min = 3)
+	@Column(name = "nombre", length = 50)
 	private String nombre;
 
 	@NotBlank(message = "El username es obligatorio")
-	@Size(max = 50)
-	@Column(name = "username", length = 50)
+	@Size(max = 15, min = 7)
+	@Column(name = "username", length = 15)
 	private String username;
 
 	// @NotBlank(message = "La constraseña es obligatoria"), james no lo actives

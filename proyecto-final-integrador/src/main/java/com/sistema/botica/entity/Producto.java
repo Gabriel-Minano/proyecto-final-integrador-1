@@ -20,7 +20,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
 //import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -37,44 +40,49 @@ public class Producto {
 	private Integer idProducto;
 
 	@NotBlank(message = "El nombre del producto es obligatorio")
-	@Size(max = 100, message = "El nombre no debe exceder los 100 caracteres")
+	@Size(max = 100, min = 5, message = "El nombre no debe exceder los 100 caracteres")
 	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.+\\-%]+$", message = "El nombre del producto solo puede contener letras, números y caracteres válidos (. + - %)")
 	@Column(name = "nombre", length = 100)
 	private String nombre;
 
 	@NotBlank(message = "El código es obligatorio")
-	@Size(max = 50)
+	@Size(max = 15, min = 5)
 	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\-]+$", message = "Solo se permiten letras, números y guiones")
-	@Column(name = "codigo", length = 50)
+	@Column(name = "codigo", length = 15)
 	private String codigo;
 
 	@NotNull(message = "El precio de compra es obligatorio")
 	@DecimalMin(value = "0.01", message = "El precio de compra debe ser mayor a 0")
+	@DecimalMax(value = "250")
 	@Column(name = "precio_compra", precision = 10, scale = 2)
 	private BigDecimal precioCompra;
 
 	@NotNull(message = "El precio de venta es obligatorio")
 	@DecimalMin(value = "0.01", message = "El precio de venta debe ser mayor a 0")
+	@DecimalMax(value = "250")
 	@Column(name = "precio_venta", precision = 10, scale = 2)
 	private BigDecimal precioVenta;
 
 	@NotNull(message = "El stock actual es obligatorio")
 	@Min(value = 0, message = "El stock no puede ser negativo")
+	@Max(value = 300)
 	@Column(name = "stock_actual")
 	private Integer stockActual;
 
 	@NotNull(message = "El stock mínimo es obligatorio")
 	@Min(value = 0, message = "El stock mínimo no puede ser negativo")
+	@Max(value = 300)
 	@Column(name = "stock_minimo")
 	private Integer stockMinimo;
 
 	@NotNull(message = "El stock máximo es obligatorio")
 	@Min(value = 1, message = "El stock máximo debe ser mayor a cero")
+	@Max(value = 300)
 	@Column(name = "stock_maximo")
 	private Integer stockMaximo;
 
 	@NotNull(message = "La fecha de vencimiento es obligatoria")
-	// @Future(message = "La fecha de vencimiento debe ser en el futuro")
+	@Future(message = "La fecha de vencimiento debe ser en el futuro")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_vencimiento")
 	private LocalDate fechaVencimiento;

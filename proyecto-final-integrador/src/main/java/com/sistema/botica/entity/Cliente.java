@@ -31,35 +31,35 @@ public class Cliente {
 	private Integer idCliente;
 
 	@NotBlank(message = "El nombre es obligatorio")
-	@Size(max = 50, message = "El nombre no puede exceder 20 caracteres")
+	@Size(max = 50, min = 3, message = "El nombre no puede exceder 20 caracteres")
 	@Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "Solo se permiten letras y espacios")
 	@Column(name = "nombre", length = 50)
 	private String nombre;
 
 	@NotBlank(message = "El apellido es obligatorio")
-	@Size(max = 50, message = "El apellido no puede exceder 50 caracteres")
+	@Size(max = 50, min = 3, message = "El apellido no puede exceder 50 caracteres")
 	@Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "Solo se permiten letras y espacios")
 	@Column(name = "apellido", length = 50)
 	private String apellido;
 
 	@NotBlank(message = "El documento es obligatorio")
-	@Size(max = 11, min = 8, message = "El documento debe tener entre 8 y 11 dígitos")
+	@Size(max = 9, min = 9, message = "El documento debe tener entre 9 digitos")
 	@Pattern(regexp = "^[0-9]+$", message = "El campo debe contener únicamente números enteros positivos")
-	@Column(name = "documento", length = 20)
+	@Column(name = "documento", length = 9)
 	private String documento;
 
-	@Size(max = 9, message = "El tamaño debe ser maximo 9 dígitos")
-	@Pattern(regexp = "^[0-9]{6,9}", message = "El campo debe contener únicamente números enteros positivos, por lo menos 6 números")
+	@Size(max = 9, min = 9, message = "El tamaño debe ser de 9 dígitos")
+	@Pattern(regexp = "^[0-9]+$", message = "El campo debe contener únicamente números enteros positivos")
 	@Column(name = "telefono", length = 9)
 	private String telefono;
 
 	@Email(message = "El correo debe ser uno válido")
-	@Size(max = 50)
+	@Size(max = 30, min = 10)
 	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El correo contiene caracteres no permitidos (no uses tildes, espacios ni la ñ)")
-	@Column(name = "correo", length = 50)
+	@Column(name = "correo", length = 30)
 	private String correo;
 
-	@Size(max = 255)
+	@Size(max = 255, min = 20)
 	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.,#\\-/]+$", message = "La dirección solo puede contener letras, números y caracteres válidos (., # - /)")
 	@Column(name = "direccion", length = 255)
 	private String direccion;

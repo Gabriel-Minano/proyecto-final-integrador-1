@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,10 +19,13 @@ import com.sistema.botica.entity.DetalleVenta;
 
 @Service
 public class ProductoReporteService {
-	@Autowired
-	private ProductoRepository productoRepository;
-	@Autowired
-	private DetalleVentaRepository detalleVentaRepository;
+	private final ProductoRepository productoRepository;
+	private final DetalleVentaRepository detalleVentaRepository;
+
+	ProductoReporteService(ProductoRepository productoRepository, DetalleVentaRepository detalleVentaRepository) {
+		this.productoRepository = productoRepository;
+		this.detalleVentaRepository = detalleVentaRepository;
+	}
 
 	@Transactional(readOnly = true)
 	public ReporteProductosDTO generarReporteProductos(LocalDateTime inicio, LocalDateTime fin, Pageable pageable) {
