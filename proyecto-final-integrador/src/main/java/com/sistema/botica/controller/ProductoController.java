@@ -1,5 +1,6 @@
 package com.sistema.botica.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,43 +36,6 @@ public class ProductoController {
 	private CategoriaService categoriaService;
 	@Autowired
 	private ProveedorService proveedorService;
-
-	// @GetMapping
-	// public String listar(@RequestParam(name = "palabraClave", required = false)
-	// String palabraClave, Model modelo) {
-	// List<Producto> lista = productoService.listarProductosClave(palabraClave);
-	// modelo.addAttribute("lista", lista);
-	// modelo.addAttribute("palabraClave", palabraClave);
-	// return "productos";
-	// }
-	/*
-	 * @GetMapping public String listar(
-	 * 
-	 * @RequestParam(name = "palabraClave", required = false) String palabraClave,
-	 * 
-	 * @RequestParam(name = "filtro", required = false) String filtro,
-	 * 
-	 * Model modelo) {
-	 * 
-	 * List<Producto> lista;
-	 * 
-	 * // Aplicar filtros if (filtro != null && !filtro.isEmpty()) {
-	 * 
-	 * lista = productoService.filtrarProductos(filtro);
-	 * 
-	 * } else {
-	 * 
-	 * // Búsqueda normal lista =
-	 * productoService.listarProductosClave(palabraClave); }
-	 * 
-	 * modelo.addAttribute("lista", lista);
-	 * 
-	 * modelo.addAttribute("palabraClave", palabraClave);
-	 * 
-	 * modelo.addAttribute("filtro", filtro);
-	 * 
-	 * return "productos"; }
-	 */
 
 	@GetMapping
 	public String listar(
@@ -127,6 +91,16 @@ public class ProductoController {
 		if (producto.getProveedor() != null && producto.getProveedor().getIdProveedor() == null) {
 			result.rejectValue("proveedor", "error.proveedor", "Debe seleccionar un proveedor válido");
 		}
+
+		// Validación adicional para la fecha de vencimiento (si se proporciona)
+		if (producto.getFechaVencimiento() != null
+				&& producto.getFechaVencimiento().isBefore(LocalDate.now())) {
+
+			result.rejectValue(
+					"fechaVencimiento",
+					"error.fechaVencimiento",
+					"La fecha de vencimiento debe ser posterior a la fecha actual");
+		}
 		if (result.hasErrors()) {
 			cargarListasParaFormulario(model);
 			return "productos_formulario";
@@ -145,6 +119,7 @@ public class ProductoController {
 		}
 		if (result.hasErrors()) {
 			cargarListasParaFormulario(model);
+			model.addAttribute("modoEdicion", true);
 			return "productos_formulario";
 		}
 		productoService.editar(producto);

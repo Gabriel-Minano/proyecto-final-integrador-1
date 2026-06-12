@@ -70,7 +70,9 @@ public class ClienteController {
 	public String editar(@PathVariable("id") Integer id, Model modelo) {
 		Cliente cliente = clienteService.buscarPorId(id);
 		if (cliente == null) {
+
 			return "redirect:/clientes";
+
 		}
 		modelo.addAttribute("modoEdicion", true);
 		modelo.addAttribute("cliente", cliente);
@@ -87,8 +89,10 @@ public class ClienteController {
 	}
 
 	@PostMapping("/editarCliente")
-	public String editar(@Validated @ModelAttribute("cliente") Cliente cliente, BindingResult result) {
+	public String editar(@Validated @ModelAttribute("cliente") Cliente cliente,
+			BindingResult result, Model modelo) {
 		if (result.hasErrors()) {
+			modelo.addAttribute("modoEdicion", true);
 			return "clientes_formulario";
 		}
 		clienteService.editar(cliente);

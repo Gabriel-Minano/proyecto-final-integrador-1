@@ -83,6 +83,7 @@ public class ProveedorController {
 	public String editar(@Validated @ModelAttribute("proveedor") Proveedor proveedor, BindingResult result,
 			Model modelo) {
 		if (result.hasErrors()) {
+			modelo.addAttribute("modoEdicion", true);
 			return "proveedores_formulario";
 		}
 		proveedorService.editar(proveedor);

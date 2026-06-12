@@ -45,40 +45,42 @@
 					<span th:text="${producto.idProducto != null} ? 'Editar Producto' : 'Nuevo Producto'">Nuevo Producto</span>
 				</div>
 				<div class="app-card-body">
-					<form th:action="@{/productos/guardar}" th:object="${producto}" method="post" class="app-form">
+					<form th:action="${producto.idProducto == null} ? @{/productos/guardar} : @{/productos/editarProducto}" th:object="${producto}" method="post" class="app-form">
 						<input type="hidden" th:field="*{idProducto}" />
 
 						<div class="row g-3">
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Código</label>
-								<input type="text" th:disabled="${modoEdicion}" th:field="*{codigo}" class="form-control" placeholder="Ej. MED-001" required />
+								<input type="text" th:readonly="${modoEdicion}" th:field="*{codigo}" class="form-control campo-bloqueado" placeholder="Ej. MED-001" required />
 								<span th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}" class="form-error"></span>
 								<div class="form-help">Código único del producto.</div>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Nombre</label>
-								<input type="text" th:disabled="${modoEdicion}" th:field="*{nombre}" class="form-control" placeholder="Nombre del producto" required />
+								<input type="text" th:readonly="${modoEdicion}" th:field="*{nombre}" class="form-control campo-bloqueado" placeholder="Nombre del producto" required />
 								<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Categoría</label>
-								<select th:field="*{categoria.idCategoria}" th:disabled="${modoEdicion}" class="select-buscador form-select" required>
+								<select th:field="*{categoria.idCategoria}" th:disabled="${modoEdicion}" class="select-buscador form-select campo-bloqueado" required>
 									<option value="">-- Seleccionar Categoría --</option>
 									<option th:each="cat : ${listaCategorias}" th:value="${cat.idCategoria}" th:text="${cat.nombre}"></option>
 								</select>
+								<input type="hidden" th:field="*{categoria.idCategoria}">
 								<span th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Proveedor</label>
-								<select th:field="*{proveedor.idProveedor}" th:disabled="${modoEdicion}" class="select-buscador form-select" required>
+								<select th:field="*{proveedor.idProveedor}" th:disabled="${modoEdicion}" class="select-buscador form-select campo-bloqueado" required>
 									<option value="">-- Seleccionar Proveedor --</option>
 									<option th:each="prov : ${listaProveedores}" th:value="${prov.idProveedor}" th:text="${prov.nombre}"></option>
 								</select>
+								<input type="hidden" th:field="*{proveedor.idProveedor}">
 								<span th:if="${#fields.hasErrors('proveedor')}" th:errors="*{proveedor}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Precio Compra (S/.)</label>
-								<input type="number" step="0.01" th:disabled="${modoEdicion}" th:field="*{precioCompra}" class="form-control" placeholder="0.00" />
+								<input type="number" step="0.01" th:readonly="${modoEdicion}" th:field="*{precioCompra}" class="form-control campo-bloqueado" placeholder="0.00" />
 								<span th:if="${#fields.hasErrors('precioCompra')}" th:errors="*{precioCompra}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
@@ -88,7 +90,7 @@
 							</div>
 							<div class="col-md-4 mb-3">
 								<label class="form-label required">Stock Actual</label>
-								<input type="number" th:field="*{stockActual}" class="form-control" placeholder="0" />
+								<input type="number" th:readonly="${modoEdicion}" th:field="*{stockActual}" class="form-control campo-bloqueado" placeholder="0" />
 								<span th:if="${#fields.hasErrors('stockActual')}" th:errors="*{stockActual}" class="form-error"></span>
 							</div>
 							<div class="col-md-4 mb-3">
@@ -103,7 +105,7 @@
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Fecha Vencimiento</label>
-								<input type="date" th:disabled="${modoEdicion}" th:field="*{fechaVencimiento}" class="form-control" />
+								<input type="date" th:readonly="${modoEdicion}" th:field="*{fechaVencimiento}" class="form-control campo-bloqueado" />
 								<span th:if="${#fields.hasErrors('fechaVencimiento')}" th:errors="*{fechaVencimiento}" class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3" th:if="${producto.idProducto != null}">

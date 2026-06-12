@@ -25,43 +25,58 @@
 			<div class="app-card">
 				<div class="app-card-header">
 					<i class="bi bi-people-fill"></i>
-					<span th:text="${cliente.idCliente != null} ? 'Editar Cliente' : 'Registrar Cliente'">Registrar Cliente</span>
+					<span th:text="${cliente.idCliente != null} ? 'Editar Cliente' : 'Registrar Cliente'">Registrar
+						Cliente</span>
 				</div>
 				<div class="app-card-body">
-					<form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post" class="app-form">
+					<form th:action="${cliente.idCliente != null} ?
+					                 @{/clientes/editarCliente} :
+					                 @{/clientes/guardar}" th:object="${cliente}" method="post" class="app-form">
 						<input type="hidden" th:field="*{idCliente}">
 						<input th:if="${cliente.idCliente == null}" type="hidden" th:field="*{estado}" th:value="true">
 
 						<div class="row g-3">
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Nombre</label>
-								<input type="text" th:disabled="${modoEdicion}" th:field="*{nombre}" class="form-control" placeholder="Nombre del cliente">
-								<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error"></span>
+								<input type="text" th:readonly="${modoEdicion}" th:field="*{nombre}"
+									class="form-control campo-bloqueado" placeholder="Nombre del cliente">
+								<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
+									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Apellido</label>
-								<input type="text" th:disabled="${modoEdicion}" th:field="*{apellido}" class="form-control" placeholder="Apellido del cliente">
-								<span th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}" class="form-error"></span>
+								<input type="text" th:readonly="${modoEdicion}" th:field="*{apellido}"
+									class="form-control campo-bloqueado" placeholder="Apellido del cliente">
+								<span th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"
+									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Documento (DNI/RUC)</label>
-								<input type="number" th:disabled="${modoEdicion}" th:field="*{documento}" class="form-control" placeholder="Ingrese el DNI o RUC del cliente">
-								<span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}" class="form-error"></span>
+								<input type="number" th:readonly="${modoEdicion}" th:field="*{documento}"
+									class="form-control campo-bloqueado" placeholder="Ingrese el DNI o RUC del cliente">
+								<span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"
+									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label">Teléfono</label>
-								<input type="number" th:field="*{telefono}" class="form-control" placeholder="Ej. 987654321">
-								<span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="form-error"></span>
+								<input type="number" th:field="*{telefono}" class="form-control"
+									placeholder="Ej. 987654321">
+								<span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"
+									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label">Correo Electrónico</label>
-								<input type="email" th:field="*{correo}" class="form-control" placeholder="correo@ejemplo.com">
-								<span th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" class="form-error"></span>
+								<input type="email" th:field="*{correo}" class="form-control"
+									placeholder="correo@ejemplo.com">
+								<span th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"
+									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label">Dirección</label>
-								<input type="text" th:field="*{direccion}" class="form-control" placeholder="Dirección del cliente">
-								<span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="form-error"></span>
+								<input type="text" th:field="*{direccion}" class="form-control"
+									placeholder="Dirección del cliente">
+								<span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"
+									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3" th:if="${cliente.idCliente != null}">
 								<label class="form-label">Estado en el Sistema</label>

@@ -861,6 +861,13 @@ body, html {
     padding: 24px;
 }
 
+.campo-bloqueado[readonly] {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: bold;
+    cursor: not-allowed;
+}
+
 /* =============================================
    RESPONSIVE
    ============================================= */

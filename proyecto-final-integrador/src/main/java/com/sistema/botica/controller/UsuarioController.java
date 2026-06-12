@@ -99,27 +99,29 @@ public class UsuarioController {
 	@PostMapping("/editarUsuario")
 	public String editar(
 			@Validated @ModelAttribute("usuario") UsuarioDTO usuarioDTO,
-			BindingResult result, Model modelo) {
+			BindingResult result,
+			Model modelo) {
 
-		boolean esNuevo = usuarioDTO.getIdUsuario() == null;
-		boolean escribioPassword = usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().isBlank();
+		boolean escribioPassword = usuarioDTO.getPassword() != null &&
+				!usuarioDTO.getPassword().isBlank();
 
-		if (esNuevo || escribioPassword) {
-			if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().matches(PASSWORD_REGEX)) {
-				result.rejectValue("password", "error.password",
-						"La contraseña debe tener mínimo 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*).");
-			}
+		if (escribioPassword &&
+				!usuarioDTO.getPassword().matches(PASSWORD_REGEX)) {
+
+			result.rejectValue(
+					"password",
+					"error.password",
+					"La contraseña debe tener mínimo 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*).");
 		}
+
 		if (result.hasErrors()) {
+			modelo.addAttribute("modoEdicion", true);
 			modelo.addAttribute("listaRoles", rolService.listarActivos());
 			return "usuarios_formulario";
 		}
-		Usuario u = new Usuario();
-		u.setIdUsuario(usuarioDTO.getIdUsuario());
-		u.setNombre(usuarioDTO.getNombre());
-		u.setEstado(usuarioDTO.getEstado());
-		u.setUsername(usuarioDTO.getUsername());
-		usuarioService.editar(u);
+
+		usuarioService.guardar(usuarioDTO);
+
 		return "redirect:/usuarios";
 	}
 

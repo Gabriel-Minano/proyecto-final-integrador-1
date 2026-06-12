@@ -34,15 +34,18 @@
 
 				<div class="app-card-body">
 
-					<form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="app-form">
+					<form th:action="${modoEdicion}
+										? @{/usuarios/editarUsuario}
+										: @{/usuarios/guardar}" 
+				 		    th:object="${usuario}" method="post" class="app-form">
 
 						<input type="hidden" th:field="*{idUsuario}">
 						<input type="hidden" th:field="*{estado}">
 
 						<div class="mb-3">
 							<label class="form-label required">Nombre Completo</label>
-							<input type="text" th:field="*{nombre}" th:disabled="${modoEdicion}" class="form-control"
-								placeholder="Nombre del empleado" required>
+							<input type="text" th:field="*{nombre}" th:readonly="${modoEdicion}"
+								class="form-control campo-bloqueado" placeholder="Nombre del usuario" required>
 
 							<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error">
 							</span>
@@ -65,7 +68,8 @@
 						<div class="mb-3">
 							<label class="form-label required">Contraseña</label>
 
-							<input type="password" minlength="8" th:field="*{password}" class="form-control" placeholder="••••••••" required>
+							<input type="password" minlength="8" th:field="*{password}" class="form-control"
+								placeholder="••••••••" required>
 
 							<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="form-error">
 							</span>

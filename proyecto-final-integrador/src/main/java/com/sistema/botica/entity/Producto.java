@@ -21,7 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Future;
+//import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -74,7 +74,7 @@ public class Producto {
 	private Integer stockMaximo;
 
 	@NotNull(message = "La fecha de vencimiento es obligatoria")
-	@Future(message = "La fecha de vencimiento debe ser en el futuro")
+	// @Future(message = "La fecha de vencimiento debe ser en el futuro")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_vencimiento")
 	private LocalDate fechaVencimiento;

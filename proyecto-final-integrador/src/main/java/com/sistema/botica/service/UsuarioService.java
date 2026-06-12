@@ -78,8 +78,28 @@ public class UsuarioService {
 		}
 	}
 
-	public void editar(Usuario u){
-		usuarioRepository.save(u);
+	// public void editar(Usuario u){
+	// usuarioRepository.save(u);
+	// }
+
+	public void editar(UsuarioDTO dto) {
+
+		Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
+				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+		usuario.setNombre(dto.getNombre());
+		usuario.setUsername(dto.getUsername());
+		usuario.setEstado(dto.getEstado());
+
+		usuario.setRol(
+				rolRepository.findById(dto.getIdRol())
+						.orElseThrow(() -> new RuntimeException("Rol no encontrado")));
+
+		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+			usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+		}
+
+		usuarioRepository.save(usuario);
 	}
 
 	public Usuario buscarPorUsername(String username) {

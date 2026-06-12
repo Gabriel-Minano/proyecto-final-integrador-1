@@ -37,10 +37,9 @@
 
                 <div class="app-card-body">
 
-                    <form th:action="@{/proveedores/guardar}"
-                          th:object="${proveedor}"
-                          method="post"
-                          class="app-form">
+                    <form th:action="${proveedor.idProveedor != null} 
+                    ? @{/proveedores/editarProveedor} 
+                    : @{/proveedores/guardar}" th:object="${proveedor}" method="post" class="app-form">
 
                         <input type="hidden" th:field="*{idProveedor}">
                         <input type="hidden" th:field="*{estado}">
@@ -53,16 +52,11 @@
                                     Nombre / Razón Social
                                 </label>
 
-                                <input type="text"
-                                       autocomplete="off"
-                                       th:disabled="${modoEdicion}"
-                                       th:field="*{nombre}"
-                                       class="form-control"
-                                       placeholder="Ingrese la razón social del proveedor">
+                                <input type="text" autocomplete="off" th:readonly="${modoEdicion}" th:field="*{nombre}"
+                                    class="form-control campo-bloqueado"
+                                    placeholder="Ingrese la razón social del proveedor">
 
-                                <span th:if="${#fields.hasErrors('nombre')}"
-                                      th:errors="*{nombre}"
-                                      class="form-error">
+                                <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="form-error">
                                 </span>
 
                                 <div class="form-help">
@@ -76,16 +70,11 @@
                                     RUC
                                 </label>
 
-                                <input type="number"
-                                       th:disabled="${modoEdicion}"
-                                       th:field="*{ruc}"
-                                       class="form-control"
-                                       placeholder="20123456789"
-                                       maxlength="11" required>
+                                <input type="number" th:readonly="${modoEdicion}" th:field="*{ruc}"
+                                    class="form-control campo-bloqueado" placeholder="20123456789" maxlength="11"
+                                    required>
 
-                                <span th:if="${#fields.hasErrors('ruc')}"
-                                      th:errors="*{ruc}"
-                                      class="form-error">
+                                <span th:if="${#fields.hasErrors('ruc')}" th:errors="*{ruc}" class="form-error">
                                 </span>
 
                                 <div class="form-help">
@@ -99,16 +88,11 @@
                                     Teléfono
                                 </label>
 
-                                <input type="number"
-                                       autocomplete="off"
-                                       th:field="*{telefono}"
-                                       class="form-control"
-                                       placeholder="987654321"
-                                       maxlength="9" required>
+                                <input type="number" autocomplete="off" th:field="*{telefono}" class="form-control"
+                                    placeholder="987654321" maxlength="9" required>
 
-                                <span th:if="${#fields.hasErrors('telefono')}"
-                                      th:errors="*{telefono}"
-                                      class="form-error">
+                                <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"
+                                    class="form-error">
                                 </span>
                             </div>
 
@@ -118,14 +102,11 @@
                                     Dirección
                                 </label>
 
-                                <input type="text"
-                                       th:field="*{direccion}"
-                                       class="form-control"
-                                       placeholder="Ingrese la dirección del proveedor" required>
+                                <input type="text" th:field="*{direccion}" class="form-control"
+                                    placeholder="Ingrese la dirección del proveedor" required>
 
-                                <span th:if="${#fields.hasErrors('direccion')}"
-                                      th:errors="*{direccion}"
-                                      class="form-error">
+                                <span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"
+                                    class="form-error">
                                 </span>
                             </div>
 
@@ -134,14 +115,12 @@
                         <!-- Botones -->
                         <div class="form-actions mt-4">
 
-                            <a th:href="@{/proveedores}"
-                               class="btn btn-app-secondary">
+                            <a th:href="@{/proveedores}" class="btn btn-app-secondary">
                                 <i class="bi bi-arrow-left"></i>
                                 Cancelar
                             </a>
 
-                            <button type="submit"
-                                    class="btn btn-app-primary">
+                            <button type="submit" class="btn btn-app-primary">
                                 <i class="bi bi-floppy-fill"></i>
                                 Guardar Proveedor
                             </button>
