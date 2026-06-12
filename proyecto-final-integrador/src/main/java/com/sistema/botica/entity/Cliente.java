@@ -43,9 +43,9 @@ public class Cliente {
 	private String apellido;
 
 	@NotBlank(message = "El documento es obligatorio")
-	@Size(max = 9, min = 9, message = "El documento debe tener entre 9 digitos")
+	@Size(max = 11, min = 8, message = "El documento debe tener entre 8 y 11 dígitos")
 	@Pattern(regexp = "^[0-9]+$", message = "El campo debe contener únicamente números enteros positivos")
-	@Column(name = "documento", length = 9)
+	@Column(name = "documento", length = 11)
 	private String documento;
 
 	@Size(max = 9, min = 9, message = "El tamaño debe ser de 9 dígitos")

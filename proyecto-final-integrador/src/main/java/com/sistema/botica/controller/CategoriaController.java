@@ -2,6 +2,7 @@ package com.sistema.botica.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,17 +21,8 @@ import com.sistema.botica.service.CategoriaService;
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-	private final CategoriaService categoriaService;
-
-	CategoriaController(CategoriaService categoriaService) {
-		this.categoriaService = categoriaService;
-	}
-
-	// @GetMapping
-	// public String listar(Model modelo) {
-	// modelo.addAttribute("lista", categoriaService.listarActivas());
-	// return "categorias";
-	// }
+	@Autowired
+	private CategoriaService categoriaService;
 
 	@GetMapping
 	public String listar(@RequestParam(name = "palabraClave", required = false) String palabraClave, Model modelo) {
