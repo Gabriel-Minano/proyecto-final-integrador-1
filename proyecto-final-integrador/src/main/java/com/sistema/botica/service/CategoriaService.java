@@ -37,6 +37,9 @@ public class CategoriaService {
 	public void guardar(Categoria cat) {
 		categoriaRepository.save(cat);
 	}
+	public Categoria guardar2(Categoria cat) {
+		return categoriaRepository.save(cat);
+	}
 
 	public Categoria buscarPorId(Integer id) {
 		return categoriaRepository.findById(id).orElse(null);

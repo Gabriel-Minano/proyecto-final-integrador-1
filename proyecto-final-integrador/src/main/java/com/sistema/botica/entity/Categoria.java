@@ -39,6 +39,17 @@ public class Categoria {
 	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Producto> listaProductos;
 
+	public Categoria() {
+	}
+
+	public Categoria(Integer idCategoria, String nombre,
+			Boolean estado, List<Producto> listaProductos) {
+		this.idCategoria = idCategoria;
+		this.nombre = nombre;
+		this.estado = estado;
+		this.listaProductos = listaProductos;
+	}
+
 	public Integer getIdCategoria() {
 		return idCategoria;
 	}

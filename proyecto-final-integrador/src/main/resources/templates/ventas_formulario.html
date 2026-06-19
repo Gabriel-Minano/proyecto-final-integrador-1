@@ -36,9 +36,8 @@
 				</div>
 
 				<div th:if="${success}"
-					class="alert alert-success alert-dismissible fade show py-2 small fw-bold d-flex align-items-center"
+					class="alert alert-success alert-dismissible fade show py-3 medium fw-bold d-flex align-items-center shadow-sm"
 					role="alert">
-					<i class="bi bi-check-circle-fill me-2"></i>
 					<span th:text="${success}">¡Operación completada con éxito!</span>
 					<button type="button" class="btn-close" data-bs-submit="alert" data-bs-dismiss="alert"
 						aria-label="Close"></button>
@@ -46,7 +45,7 @@
 
 				<form th:action="@{/ventas/guardar}" th:object="${venta}" method="post" id="ventaForm" class="app-form">
 
-					<div class="row g-3 mb-4 p-3 rounded border" style="background: var(--app-bg);">
+					<div class="row g-3 mb-4 mt-4 p-3 rounded border" style="background: var(--app-bg);">
 						<div class="col-md-6">
 							<label class="form-label fw-bold small text-secondary">Cliente:</label>
 							<div class="input-group">
@@ -217,10 +216,14 @@
                     <br><small class="text-muted ps-2">Max disponible: ${stockDisponible}</small>
                 </td>
                 <td>
-                    <input type="number" name="listaDetallesVenta[${contadorFilas}].precioUnitario" id="precio-${contadorFilas}" class="form-control form-control-sm text-end bg-light border-0 fw-bold" readonly step="0.01" value="${parseFloat(precio).toFixed(2)}" />
+                    <input type="number" name="listaDetallesVenta[${contadorFilas}].precioUnitario" id="precio-${contadorFilas}" class="form-control text-end bg-light border-0 fw-bold" readonly step="0.01" value="${parseFloat(precio).toFixed(2)}" />
                 </td>
                 <td>
-                    <input type="number" name="listaDetallesVenta[${contadorFilas}].cantidad" id="cant-${contadorFilas}" class="form-control form-control-sm text-center" min="1" max="${stockDisponible}" value="1" required oninput="calcularFilaSubtotal(${contadorFilas}, ${stockDisponible})" />
+					<div class="input-group input-group-sm mx-auto" style="max-width: 110px;">
+        				<button class="btn btn-outline-secondary" type="button" onclick="alterarCantidad(${contadorFilas}, -1, ${stockDisponible})">-</button>
+        				<input type="number" name="listaDetallesVenta[${contadorFilas}].cantidad" id="cant-${contadorFilas}" class="form-control text-center fw-bold" min="1" max="${stockDisponible}" value="1" required oninput="calcularFilaSubtotal(${contadorFilas}, ${stockDisponible})" />
+        				<button class="btn btn-outline-secondary" type="button" onclick="alterarCantidad(${contadorFilas}, 1, ${stockDisponible})">+</button>
+    				</div>
                 </td>
                 <td>
                     <input type="number" name="listaDetallesVenta[${contadorFilas}].subtotal" id="sub-${contadorFilas}" class="form-control form-control-sm text-end bg-light border-0 subtotal-item text-primary fw-bold" readonly step="0.01" value="${parseFloat(precio).toFixed(2)}" />
@@ -350,6 +353,19 @@
 			const modal = bootstrap.Modal.getInstance(modalEl);
 			modal.hide();
 			document.getElementById("inputBuscarCliente").value = "";
+		}
+
+		function alterarCantidad(index, cambio, stockDisponible) {
+			const inputCantidad = document.getElementById('cant-' + index);
+			let valorActual = parseInt(inputCantidad.value) || 1;
+			let nuevoValor = valorActual + cambio;
+
+			// Validar límites
+			if (nuevoValor < 1) nuevoValor = 1;
+			if (nuevoValor > stockDisponible) nuevoValor = stockDisponible;
+
+			inputCantidad.value = nuevoValor;
+			calcularFilaSubtotal(index, stockDisponible);
 		}
 	</script>
 </body>

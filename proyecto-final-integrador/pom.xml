@@ -31,6 +31,7 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -47,7 +48,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -94,14 +94,14 @@
 			<version>5.5.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<!-- Source:
-		https://mvnrepository.com/artifact/com.github.librepdf/openpdf -->
+		<!-- Source: https://mvnrepository.com/artifact/com.github.librepdf/openpdf -->
 		<dependency>
 			<groupId>com.github.librepdf</groupId>
 			<artifactId>openpdf</artifactId>
 			<version>3.0.5</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 	</dependencies>
 
 	<build>
@@ -113,4 +113,13 @@
 		</plugins>
 	</build>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.20.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
