@@ -21,8 +21,11 @@ import com.sistema.botica.service.CategoriaService;
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-	@Autowired
-	private CategoriaService categoriaService;
+	private final CategoriaService categoriaService;
+
+	CategoriaController(CategoriaService categoriaService) {
+		this.categoriaService = categoriaService;
+	}
 
 	@GetMapping
 	public String listar(@RequestParam(name = "palabraClave", required = false) String palabraClave, Model modelo) {

@@ -53,14 +53,14 @@
 							<div class="col-md-6 mb-3">
 								<label class="form-label required">Documento (DNI/RUC)</label>
 								<input type="number" th:readonly="${modoEdicion}" th:field="*{documento}"
-									class="form-control campo-bloqueado" placeholder="Ingrese el DNI o RUC del cliente">
+									class="form-control campo-bloqueado" placeholder="Ingrese el DNI o RUC del cliente" oninput="if(this.value.length > 11) this.value = this.value.slice(0, 11);">
 								<span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"
 									class="form-error"></span>
 							</div>
 							<div class="col-md-6 mb-3">
 								<label class="form-label">Teléfono</label>
 								<input type="number" th:field="*{telefono}" class="form-control"
-									placeholder="Ej. 987654321">
+									placeholder="Ej. 987654321" oninput="if(this.value.length > 9) this.value = this.value.slice(0, 9);">
 								<span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"
 									class="form-error"></span>
 							</div>

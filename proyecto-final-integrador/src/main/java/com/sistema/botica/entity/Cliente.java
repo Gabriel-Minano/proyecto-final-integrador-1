@@ -54,12 +54,12 @@ public class Cliente {
 	private String telefono;
 
 	@Email(message = "El correo debe ser uno válido")
-	@Size(max = 30, min = 10)
+	@Size(max = 50, min = 10)
 	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El correo contiene caracteres no permitidos (no uses tildes, espacios ni la ñ)")
-	@Column(name = "correo", length = 30)
+	@Column(name = "correo", length = 50)
 	private String correo;
 
-	@Size(max = 255, min = 20)
+	@Size(max = 255, min = 10)
 	@Pattern(regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.,#\\-/]+$", message = "La dirección solo puede contener letras, números y caracteres válidos (., # - /)")
 	@Column(name = "direccion", length = 255)
 	private String direccion;
