@@ -17,10 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sistema.botica.DTO.BoletaVentaDTO;
 import com.sistema.botica.DTO.ReporteVentasDTO;
+import com.sistema.botica.service.BoletaReporteExportService;
+import com.sistema.botica.service.BoletaReporteService;
 import com.sistema.botica.service.VentaReporteExportService;
 import com.sistema.botica.service.VentaReporteService;
 
@@ -30,10 +34,15 @@ public class VentaReporteController {
 
 	private final VentaReporteService reporteService;
 	private final VentaReporteExportService exportService;
+	private final BoletaReporteExportService boletaReporteExportService;
+	private final BoletaReporteService boletaReporteService;
 
-	VentaReporteController(VentaReporteService reporteService, VentaReporteExportService exportService) {
+	public VentaReporteController(VentaReporteService reporteService, VentaReporteExportService exportService,
+			BoletaReporteExportService boletaReporteExportService, BoletaReporteService boletaReporteService) {
 		this.reporteService = reporteService;
 		this.exportService = exportService;
+		this.boletaReporteExportService = boletaReporteExportService;
+		this.boletaReporteService = boletaReporteService;
 	}
 
 	@GetMapping("/ventas")
@@ -70,9 +79,9 @@ public class VentaReporteController {
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) throws IOException {
 		LocalDateTime inicio = fechaDesde.atStartOfDay();
-        LocalDateTime fin = fechaHasta.atTime(LocalTime.MAX);
+		LocalDateTime fin = fechaHasta.atTime(LocalTime.MAX);
 		// 1. Generar la matemática del reporte para esas fechas
-		
+
 		Pageable exportPageable = PageRequest.of(0, Integer.MAX_VALUE, Sort.by("fecha").descending());
 
 		ReporteVentasDTO reporte = reporteService.generarReporteVentas(fechaDesde.atStartOfDay(),
@@ -106,5 +115,22 @@ public class VentaReporteController {
 		headers.setContentDispositionFormData("attachment", "Reporte_Ventas_ConquistadoresFarma.xlsx");
 
 		return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/boleta/{idVenta}/exportar/pdf")
+	public ResponseEntity<byte[]> exportarBoletaPdf(@PathVariable Integer idVenta) throws IOException {
+		BoletaVentaDTO boleta = boletaReporteService.obtenerBoletaVenta(idVenta);
+
+		if (boleta == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		byte[] pdfContent = boletaReporteExportService.generarPdf(boleta);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		headers.setContentDispositionFormData("attachment", "Boleta_" + idVenta + ".pdf");
+
+		return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 	}
 }
