@@ -108,6 +108,7 @@ public class ProductosEliminadosReporteExportService {
             // Tabla con 9 columnas
             PdfPTable table = new PdfPTable(9);
             table.setWidthPercentage(100);
+            table.setSpacingBefore(15f);
             // Proporciones de ancho para cada columna
             table.setWidths(new float[] { 0.8f, 1.2f, 2.2f, 1.5f, 1.2f, 1.2f, 1f, 1.5f, 1.5f });
 
