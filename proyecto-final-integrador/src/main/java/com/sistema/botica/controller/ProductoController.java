@@ -33,7 +33,8 @@ public class ProductoController {
 	private final CategoriaService categoriaService;
 	private final ProveedorService proveedorService;
 
-	ProductoController(ProductoService productoService, CategoriaService categoriaService, ProveedorService proveedorService) {
+	ProductoController(ProductoService productoService, CategoriaService categoriaService,
+			ProveedorService proveedorService) {
 		this.productoService = productoService;
 		this.categoriaService = categoriaService;
 		this.proveedorService = proveedorService;
@@ -102,6 +103,49 @@ public class ProductoController {
 					"fechaVencimiento",
 					"error.fechaVencimiento",
 					"La fecha de vencimiento debe ser posterior a la fecha actual");
+		}
+		// stock maximo no puede ser mayor q actual
+		if (producto.getStockMaximo() != null &&
+				producto.getStockActual() != null &&
+				producto.getStockMaximo() > producto.getStockActual()) {
+
+			result.rejectValue(
+					"stockMaximo",
+					"error.stockMaximo",
+					"El stock máximo no puede ser mayor al stock actual");
+		}
+
+		// Stock Actual no puede ser mayor que Stock Máximo
+		if (producto.getStockActual() != null &&
+				producto.getStockMaximo() != null &&
+				producto.getStockActual() > producto.getStockMaximo()) {
+
+			result.rejectValue(
+					"stockActual",
+					"error.stockActual",
+					"El stock actual no puede ser mayor al stock máximo");
+		}
+
+		// Stock Mínimo debe ser menor que Stock Actual
+		if (producto.getStockMinimo() != null &&
+				producto.getStockActual() != null &&
+				producto.getStockMinimo() >= producto.getStockActual()) {
+
+			result.rejectValue(
+					"stockMinimo",
+					"error.stockMinimo",
+					"El stock mínimo debe ser menor que el stock actual");
+		}
+
+		// Stock Mínimo debe ser menor que Stock Máximo
+		if (producto.getStockMinimo() != null &&
+				producto.getStockMaximo() != null &&
+				producto.getStockMinimo() >= producto.getStockMaximo()) {
+
+			result.rejectValue(
+					"stockMinimo",
+					"error.stockMinimo",
+					"El stock mínimo debe ser menor que el stock máximo");
 		}
 		if (result.hasErrors()) {
 			cargarListasParaFormulario(model);
