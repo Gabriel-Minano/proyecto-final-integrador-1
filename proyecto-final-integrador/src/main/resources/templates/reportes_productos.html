@@ -25,7 +25,16 @@
 					<h2 class="mb-0 fw-bold">Reporte de Inventario</h2>
 				</div>
 				<p class="reporte-subtitle">Analice la salud del almacén y la rotación de artículos por periodo.</p>
-
+				<!-- Reportes adicionales -->
+				<div class="mb-3 d-flex gap-2">
+					<a href="/reportes/indicadores" class="btn btn-outline-info" title="Ver indicadores del sistema">
+						<i class="bi bi-speedometer2"></i> Indicadores
+					</a>
+					<a href="/reportes/productos-eliminados" class="btn btn-outline-danger"
+						title="Ver productos dados de baja">
+						<i class="bi bi-trash-fill"></i> Productos Eliminados
+					</a>
+				</div>
 				<!-- Filtros -->
 				<div class="filtro-card mb-4">
 					<div class="filtro-header">
@@ -58,7 +67,8 @@
 				</div>
 
 				<!-- KPI Salud del Inventario -->
-				<h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-heart-pulse-fill me-2"></i>Salud Actual del Inventario</h5>
+				<h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-heart-pulse-fill me-2"></i>Salud Actual del
+					Inventario</h5>
 
 				<div class="row g-3 mb-4">
 					<div class="col-md-3">
@@ -66,7 +76,8 @@
 							<div>
 								<div class="kpi-title">Productos Disponibles</div>
 								<p class="kpi-value"
-									th:text="${#numbers.formatDecimal(reporte.porcentajeDisponibles, 1, 1)} + '%'">0.0%</p>
+									th:text="${#numbers.formatDecimal(reporte.porcentajeDisponibles, 1, 1)} + '%'">0.0%
+								</p>
 								<small class="text-muted"
 									th:text="'Base: ' + ${reporte.totalProductosActivos} + ' activos'"></small>
 							</div>
@@ -78,7 +89,8 @@
 							<div>
 								<div class="kpi-title">Stock Crítico</div>
 								<p class="kpi-value"
-									th:text="${#numbers.formatDecimal(reporte.porcentajeStockCritico, 1, 1)} + '%'">0.0%</p>
+									th:text="${#numbers.formatDecimal(reporte.porcentajeStockCritico, 1, 1)} + '%'">0.0%
+								</p>
 								<small class="text-muted">Requieren reposición</small>
 							</div>
 							<i class="bi bi-exclamation-triangle-fill kpi-icon"></i>
@@ -100,7 +112,8 @@
 							<div>
 								<div class="kpi-title">Sobrestock</div>
 								<p class="kpi-value"
-									th:text="${#numbers.formatDecimal(reporte.porcentajeSobrestock, 1, 1)} + '%'">0.0%</p>
+									th:text="${#numbers.formatDecimal(reporte.porcentajeSobrestock, 1, 1)} + '%'">0.0%
+								</p>
 								<small class="text-muted">Capital inmovilizado</small>
 							</div>
 							<i class="bi bi-boxes kpi-icon"></i>
@@ -109,7 +122,8 @@
 				</div>
 
 				<!-- KPI Dinámica del Periodo -->
-				<h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-graph-up-arrow me-2"></i>Dinámica del Periodo Seleccionado</h5>
+				<h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-graph-up-arrow me-2"></i>Dinámica del
+					Periodo Seleccionado</h5>
 
 				<div class="row g-3 mb-4">
 					<div class="col-md-4 d-flex flex-column gap-3">
@@ -124,7 +138,8 @@
 							<div>
 								<div class="kpi-title">Valorización de Rotación</div>
 								<p class="kpi-value fs-4 mt-1"
-									th:text="'S/ ' + ${#numbers.formatDecimal(reporte.valorizacionTotal, 1, 2)}">S/ 0.00</p>
+									th:text="'S/ ' + ${#numbers.formatDecimal(reporte.valorizacionTotal, 1, 2)}">S/ 0.00
+								</p>
 							</div>
 							<i class="bi bi-cash-coin kpi-icon"></i>
 						</div>
@@ -140,7 +155,8 @@
 										<tr th:each="item : ${reporte.top10MasVendidos}">
 											<td class="text-truncate text-secondary" style="max-width: 150px;"
 												th:text="${item.key}" th:title="${item.key}"></td>
-											<td class="text-end fw-bold text-dark" th:text="${item.value} + ' unds'"></td>
+											<td class="text-end fw-bold text-dark" th:text="${item.value} + ' unds'">
+											</td>
 										</tr>
 										<tr th:if="${#lists.isEmpty(reporte.top10MasVendidos)}">
 											<td colspan="2" class="text-center text-muted py-3">Sin movimientos</td>
@@ -161,7 +177,8 @@
 										<tr th:each="item : ${reporte.top10MenosVendidos}">
 											<td class="text-truncate text-secondary" style="max-width: 150px;"
 												th:text="${item.key}" th:title="${item.key}"></td>
-											<td class="text-end fw-bold text-dark" th:text="${item.value} + ' unds'"></td>
+											<td class="text-end fw-bold text-dark" th:text="${item.value} + ' unds'">
+											</td>
 										</tr>
 										<tr th:if="${#lists.isEmpty(reporte.top10MenosVendidos)}">
 											<td colspan="2" class="text-center text-muted py-3">Sin movimientos</td>
@@ -178,7 +195,8 @@
 					<div class="resultados-header">
 						<span><i class="bi bi-table me-2"></i> Resultados del reporte</span>
 						<span class="resultados-badge"
-							th:text="'Total: ' + ${reporte.paginaMovimientos.totalElements} + ' registros'">Total: 0 registros</span>
+							th:text="'Total: ' + ${reporte.paginaMovimientos.totalElements} + ' registros'">Total: 0
+							registros</span>
 					</div>
 
 					<div class="table-responsive">
@@ -224,7 +242,8 @@
 						th:if="${reporte.paginaMovimientos.totalPages > 1}">
 						<nav>
 							<ul class="pagination pagination-sm mb-0">
-								<li class="page-item" th:classappend="${reporte.paginaMovimientos.first ? 'disabled' : ''}">
+								<li class="page-item"
+									th:classappend="${reporte.paginaMovimientos.first ? 'disabled' : ''}">
 									<a class="page-link"
 										th:href="@{/reportes/productos(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${reporte.paginaMovimientos.number - 1})}">
 										&laquo; Anterior
@@ -237,7 +256,8 @@
 										th:href="@{/reportes/productos(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${i})}"
 										th:text="${i + 1}">1</a>
 								</li>
-								<li class="page-item" th:classappend="${reporte.paginaMovimientos.last ? 'disabled' : ''}">
+								<li class="page-item"
+									th:classappend="${reporte.paginaMovimientos.last ? 'disabled' : ''}">
 									<a class="page-link"
 										th:href="@{/reportes/productos(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta}, page=${reporte.paginaMovimientos.number + 1})}">
 										Siguiente &raquo;

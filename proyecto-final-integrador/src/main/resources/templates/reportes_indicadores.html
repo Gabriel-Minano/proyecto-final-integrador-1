@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de Indicadores - Conquistadores Farma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/reportesProductos.css}">
+</head>
+
+<body>
+
+    <div class="app-body">
+        <div th:replace="~{componentes/sidebar :: menuLateral('productos')}"></div>
+
+        <div class="app-main">
+            <div th:replace="~{componentes/header :: topHeader}"></div>
+
+            <div class="app-content">
+
+                <div class="reporte-header">
+                    <i class="bi bi-speedometer2"></i>
+                    <h2 class="mb-0 fw-bold">Reporte de Indicadores</h2>
+                </div>
+                <p class="reporte-subtitle">Analice los indicadores clave de inventario y ventas en un período
+                    personalizado.</p>
+
+                <!-- Botón para volver -->
+                <div class="mb-3">
+                    <a href="/reportes/productos" class="btn btn-outline-primary"
+                        title="Volver a Reporte de Inventario">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filtro-card mb-4">
+                    <div class="filtro-header">
+                        <i class="bi bi-funnel-fill"></i> Filtros del reporte
+                    </div>
+                    <div class="filtro-body">
+                        <form th:action="@{/reportes/indicadores}" method="get" id="formFiltro">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small text-secondary">Fecha desde</label>
+                                    <input type="date" class="form-control" name="fechaDesde" id="fechaDesde"
+                                        th:value="${fechaDesde}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small text-secondary">Fecha hasta</label>
+                                    <input type="date" class="form-control" name="fechaHasta" id="fechaHasta"
+                                        th:value="${fechaHasta}" required>
+                                </div>
+                                <div class="col-md-4 d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-app-secondary" onclick="limpiarFiltros()">
+                                        <i class="bi bi-arrow-counterclockwise"></i> Limpiar
+                                    </button>
+                                    <button type="submit" class="btn btn-app-primary" id="btnBuscar">
+                                        <i class="bi bi-search"></i> Generar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Vista Previa de Indicadores -->
+                <h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-lightning-fill me-2"></i>Indicadores de
+                    Inventario</h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-blue">
+                            <div>
+                                <div class="kpi-title">Total de Productos Activos</div>
+                                <p class="kpi-value" th:text="${reporte.totalProductosActivos}">0</p>
+                                <small class="text-muted">Registrados en el sistema</small>
+                            </div>
+                            <i class="bi bi-box-seam kpi-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-green">
+                            <div>
+                                <div class="kpi-title">Productos Disponibles</div>
+                                <p class="kpi-value"
+                                    th:text="${#numbers.formatDecimal(reporte.porcentajeDisponibles, 1, 1)} + '%'">0.0%
+                                </p>
+                                <small class="text-muted">Con stock mayor a 0</small>
+                            </div>
+                            <i class="bi bi-check-circle-fill kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-red">
+                            <div>
+                                <div class="kpi-title">Productos Agotados</div>
+                                <p class="kpi-value"
+                                    th:text="${#numbers.formatDecimal(reporte.porcentajeAgotados, 1, 1)} + '%'">0.0%</p>
+                                <small class="text-muted">Stock igual a 0</small>
+                            </div>
+                            <i class="bi bi-x-circle-fill kpi-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-yellow">
+                            <div>
+                                <div class="kpi-title">Stock Crítico</div>
+                                <p class="kpi-value"
+                                    th:text="${#numbers.formatDecimal(reporte.porcentajeStockCritico, 1, 1)} + '%'">0.0%
+                                </p>
+                                <small class="text-muted">Stock &le; Mínimo</small>
+                            </div>
+                            <i class="bi bi-exclamation-triangle-fill kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-cyan">
+                            <div>
+                                <div class="kpi-title">Productos con Sobrestock</div>
+                                <p class="kpi-value" th:text="${reporte.totalSobrestock}">0</p>
+                                <small class="text-muted">Stock &gt; Máximo</small>
+                            </div>
+                            <i class="bi bi-boxes kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis de Ventas -->
+                <h5 class="fw-bold text-secondary mb-3 mt-5"><i class="bi bi-graph-up-arrow me-2"></i>Análisis de Ventas
+                    en el Período</h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-dark">
+                            <div>
+                                <div class="kpi-title">Mes con Mayor Movimiento</div>
+                                <p class="kpi-value fs-5 mt-2" th:text="${reporte.mesMasVentas}">Sin datos</p>
+                            </div>
+                            <i class="bi bi-calendar-event kpi-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-blue">
+                            <div>
+                                <div class="kpi-title">Producto Más Vendido en Ese Mes</div>
+                                <p class="kpi-value fs-5 mt-2" th:text="${reporte.productoMasVendido}">Sin datos</p>
+                                <small class="text-muted" th:if="${reporte.ventasProductoMasVendido > 0}"
+                                    th:text="${reporte.ventasProductoMasVendido} + ' unidades'"></small>
+                            </div>
+                            <i class="bi bi-star-fill kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Exportación -->
+                <div class="resultados-footer mt-5">
+                    <span class="total-label">Exportar reporte:</span>
+
+                    <div class="ms-4 d-flex gap-2">
+                        <a th:href="@{/reportes/indicadores/exportar/pdf(fechaDesde=${fechaDesde}, fechaHasta=${fechaHasta})}"
+                            class="btn btn-outline-danger fw-bold" title="Descargar como PDF">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const formFiltro = document.getElementById('formFiltro');
+            const inputDesde = document.getElementById('fechaDesde');
+            const inputHasta = document.getElementById('fechaHasta');
+            const btnBuscar = document.getElementById('btnBuscar');
+
+            formFiltro.addEventListener('submit', function (event) {
+                const fechaDesde = new Date(inputDesde.value);
+                const fechaHasta = new Date(inputHasta.value);
+
+                if (fechaDesde > fechaHasta) {
+                    event.preventDefault();
+                    alert("Error: La 'Fecha Desde' no puede ser posterior a la 'Fecha Hasta'.");
+                    return;
+                }
+
+                const originalText = btnBuscar.innerHTML;
+                btnBuscar.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Procesando...';
+                btnBuscar.classList.add('disabled');
+
+                setTimeout(() => {
+                    btnBuscar.innerHTML = originalText;
+                    btnBuscar.classList.remove('disabled');
+                }, 3000);
+            });
+        });
+
+        function limpiarFiltros() {
+            const hoy = new Date();
+
+            const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+            const primerDiaStr = primerDia.toISOString().split('T')[0];
+
+            const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+            const ultimoDiaStr = ultimoDia.toISOString().split('T')[0];
+
+            document.getElementById('fechaDesde').value = primerDiaStr;
+            document.getElementById('fechaHasta').value = ultimoDiaStr;
+        }
+    </script>
+</body>
+
+</html>

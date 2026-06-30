@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de Productos Eliminados - Conquistadores Farma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/reportesProductos.css}">
+</head>
+
+<body>
+
+    <div class="app-body">
+        <div th:replace="~{componentes/sidebar :: menuLateral('productos')}"></div>
+
+        <div class="app-main">
+            <div th:replace="~{componentes/header :: topHeader}"></div>
+
+            <div class="app-content">
+
+                <div class="reporte-header">
+                    <i class="bi bi-trash-fill"></i>
+                    <h2 class="mb-0 fw-bold">Reporte de Productos Eliminados</h2>
+                </div>
+                <p class="reporte-subtitle">Consulta los productos que han sido dados de baja lógicamente del sistema.
+                </p>
+
+                <!-- Botón para volver a reportes de inventario -->
+                <div class="mb-3">
+                    <a href="/reportes/productos" class="btn btn-outline-primary"
+                        title="Volver a Reporte de Inventario">
+                        <i class="bi bi-arrow-left"></i> Volver a Inventario
+                    </a>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="kpi-card kpi-red">
+                            <div>
+                                <div class="kpi-title">Total de Productos Eliminados</div>
+                                <p class="kpi-value" th:text="${reporte.totalProductosEliminados}">0</p>
+                                <small class="text-muted">Productos dados de baja</small>
+                            </div>
+                            <i class="bi bi-trash-fill kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de resultados -->
+                <div class="resultados-card mb-5">
+                    <div class="resultados-header">
+                        <span><i class="bi bi-table me-2"></i> Listado de productos eliminados</span>
+                        <span class="resultados-badge"
+                            th:text="'Total: ' + ${reporte.productosEliminados.totalElements} + ' registros'">Total: 0
+                            registros</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover tabla-reporte">
+                            <thead>
+                                <tr>
+                                    <th class="ps-3">ID</th>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th class="text-end">P. Compra (S/.)</th>
+                                    <th class="text-end">P. Venta (S/.)</th>
+                                    <th class="text-center">Stock</th>
+                                    <th>Fecha Vencimiento</th>
+                                    <th class="text-end pe-3">Proveedor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="producto : ${reporte.productosEliminados.content}">
+                                    <td class="fw-bold text-secondary ps-3" th:text="${producto.idProducto}"></td>
+                                    <td class="fw-bold text-muted" th:text="${producto.codigo}"></td>
+                                    <td th:text="${producto.nombre}"></td>
+                                    <td th:text="${producto.categoria.nombre}"></td>
+                                    <td class="text-end text-muted"
+                                        th:text="${#numbers.formatDecimal(producto.precioCompra, 1, 2)}"></td>
+                                    <td class="text-end text-muted"
+                                        th:text="${#numbers.formatDecimal(producto.precioVenta, 1, 2)}"></td>
+                                    <td class="text-center" th:text="${producto.stockActual}"></td>
+                                    <td th:text="${#temporals.format(producto.fechaVencimiento, 'dd/MM/yyyy')}"></td>
+                                    <td class="text-end pe-3" th:text="${producto.proveedor.nombre}"></td>
+                                </tr>
+                                <tr th:if="${reporte.productosEliminados.empty}">
+                                    <td colspan="9" class="text-center text-muted py-5">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                                        No hay productos eliminados en el sistema.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center bg-white py-3 border-top"
+                        th:if="${reporte.productosEliminados.totalPages > 1}">
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item"
+                                    th:classappend="${reporte.productosEliminados.first ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                        th:href="@{/reportes/productos-eliminados(page=${reporte.productosEliminados.number - 1})}">
+                                        &laquo; Anterior
+                                    </a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, reporte.productosEliminados.totalPages - 1)}"
+                                    th:classappend="${i == reporte.productosEliminados.number ? 'active' : ''}">
+                                    <a class="page-link" th:href="@{/reportes/productos-eliminados(page=${i})}"
+                                        th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${reporte.productosEliminados.last ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                        th:href="@{/reportes/productos-eliminados(page=${reporte.productosEliminados.number + 1})}">
+                                        Siguiente &raquo;
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Botones de exportación -->
+                    <div class="resultados-footer">
+                        <span class="total-label">Exportar reporte:</span>
+
+                        <div class="ms-4 d-flex gap-2">
+                            <a th:href="@{/reportes/productos-eliminados/exportar/pdf}"
+                                class="btn btn-outline-danger fw-bold" title="Descargar como PDF">
+                                <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                            </a>
+                            <a th:href="@{/reportes/productos-eliminados/exportar/excel}"
+                                class="btn btn-success fw-bold" title="Descargar como Excel">
+                                <i class="bi bi-file-earmark-excel-fill"></i> Excel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/reportesProductos.js}"></script>
+</body>
+
+</html>
