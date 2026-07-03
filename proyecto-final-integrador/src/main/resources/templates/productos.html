@@ -194,20 +194,27 @@
 
 									<td sec:authorize="hasRole('ADMINISTRADOR')">
 										<div class="d-flex justify-content-center gap-2">
+
 											<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}"
-												class="btn btn-warning btn-sm">
+												class="btn btn-primary btn-sm">
 												<i class="bi bi-pencil-fill"></i>
 												Editar
 											</a>
 
 											<a th:if="${prod.estado}"
 												th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
-												class="btn btn-danger btn-sm" onclick="
-                            return confirm('¿Desea desactivar este producto?');
-                          ">
+												class="btn btn-warning btn-sm" onclick="return confirm('¿Desea desactivar este producto?');">
+												<i class="bi bi-toggle-off"></i>
+												Desactivar
+											</a>
+
+											<a th:if="${prod.estado}"
+												th:href="@{/productos/eliminar-fisico/{id}(id=${prod.idProducto})}"
+												class="btn btn-danger btn-sm" onclick="return confirm('¿Desea eliminar este producto?');">
 												<i class="bi bi-trash-fill"></i>
 												Eliminar
 											</a>
+
 										</div>
 									</td>
 								</tr>

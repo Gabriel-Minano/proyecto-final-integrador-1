@@ -62,12 +62,19 @@
 									<td sec:authorize="hasRole('ADMINISTRADOR')">
 										<div class="d-flex justify-content-center gap-2">
 											<a th:href="@{/categorias/editar/{id}(id=${cat.idCategoria})}"
-												class="btn btn-warning btn-sm fw-bold">
+												class="btn btn-primary btn-sm fw-bold">
 												<i class="bi bi-pencil-fill"></i> Editar
 											</a>
+
 											<a th:href="@{/categorias/eliminar/{id}(id=${cat.idCategoria})}"
-												class="btn btn-danger btn-sm fw-bold"
+												class="btn btn-warning btn-sm fw-bold"
 												onclick="return confirm('¿Estás seguro de que deseas retirar esta categoría del sistema?');">
+												<i class="bi bi-toggle-off"></i> Desactivar
+											</a>
+
+											<a th:href="@{/categorias/eliminar-fisico/{id}(id=${cat.idCategoria})}"
+												class="btn btn-danger btn-sm fw-bold"
+												onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría del sistema?');">
 												<i class="bi bi-trash-fill"></i> Eliminar
 											</a>
 										</div>

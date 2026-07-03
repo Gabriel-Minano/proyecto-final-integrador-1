@@ -111,14 +111,21 @@
                                         <div class="d-flex justify-content-center gap-2">
 
                                             <a th:href="@{/usuarios/editar/{id}(id=${usu.idUsuario})}"
-                                                class="btn btn-warning btn-sm fw-bold">
+                                                class="btn btn-primary btn-sm fw-bold">
                                                 <i class="bi bi-pencil-fill"></i>
                                                 Editar
                                             </a>
 
                                             <a th:href="@{/usuarios/eliminar/{id}(id=${usu.idUsuario})}"
-                                                class="btn btn-danger btn-sm fw-bold"
+                                                class="btn btn-warning btn-sm fw-bold"
                                                 onclick="return confirm('¿Estás seguro de que deseas retirar a este usuario del sistema?');">
+                                                <i class="bi bi-toggle-off"></i>
+                                                Desactivar
+                                            </a>
+
+                                            <a th:href="@{/usuarios/eliminar-fisico/{id}(id=${usu.idUsuario})}"
+                                                class="btn btn-danger btn-sm fw-bold"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar a este usuario del sistema?');">
                                                 <i class="bi bi-trash-fill"></i>
                                                 Eliminar
                                             </a>

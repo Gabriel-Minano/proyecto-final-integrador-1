@@ -80,9 +80,7 @@ public class UsuarioService {
 		}
 	}
 
-	// public void editar(Usuario u){
-	// usuarioRepository.save(u);
-	// }
+
 
 	public void editar(UsuarioDTO dto) {
 

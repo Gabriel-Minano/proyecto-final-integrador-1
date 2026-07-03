@@ -83,13 +83,20 @@
 									<td sec:authorize="hasRole('ADMINISTRADOR')">
 										<div class="d-flex justify-content-center gap-2">
 											<a th:href="@{/clientes/editar/{id}(id=${cli.idCliente})}"
-												class="btn btn-warning btn-sm fw-bold">
+												class="btn btn-primary btn-sm fw-bold">
 												<i class="bi bi-pencil-fill"></i> Editar
 											</a>
 											<a th:if="${cli.estado}"
 												th:href="@{/clientes/eliminar/{id}(id=${cli.idCliente})}"
-												class="btn btn-danger btn-sm fw-bold"
+												class="btn btn-warning btn-sm fw-bold"
 												onclick="return confirm('¿Estás seguro de que deseas retirar a este cliente del sistema?');">
+												<i class="bi bi-toggle-off"></i> Desactivar
+											</a>
+
+											<a th:if="${cli.estado}"
+												th:href="@{/clientes/eliminar-fisico/{id}(id=${cli.idCliente})}"
+												class="btn btn-danger btn-sm fw-bold"
+												onclick="return confirm('¿Estás seguro de que deseas eliminar a este cliente del sistema?');">
 												<i class="bi bi-trash-fill"></i> Eliminar
 											</a>
 										</div>
