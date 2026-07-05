@@ -95,7 +95,119 @@ public class ProductoController {
 			result.rejectValue("proveedor", "error.proveedor", "Debe seleccionar un proveedor válido");
 		}
 
-		// Validación adicional para la fecha de vencimiento (si se proporciona)
+		//Invoacion al metodo privado para validar los productos en el formulario de ingreso de productos
+		validarProducto(producto, result);
+
+		// Si hay errores de validación, recargar las listas y retornar al formulario
+		if (result.hasErrors()) {
+			cargarListasParaFormulario(model);
+			return "productos_formulario";
+		}
+		
+
+		productoService.guardar(producto);
+		return "redirect:/productos";
+	}
+
+	@PostMapping("/editarProducto")
+	public String editar(@Validated @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
+		if (producto.getCategoria() != null && producto.getCategoria().getIdCategoria() == null) {
+			result.rejectValue("categoria", "error.categoria", "Debe seleccionar una categoría válida");
+		}
+		if (producto.getProveedor() != null && producto.getProveedor().getIdProveedor() == null) {
+			result.rejectValue("proveedor", "error.proveedor", "Debe seleccionar un proveedor válido");
+		}
+
+		//Invocacion al metodo privado para validar los productos en el formulario de ingreso de productos
+		validarProducto(producto, result);
+
+		// Si hay errores de validación, recargar las listas y retornar al formulario
+		if (result.hasErrors()) {
+			cargarListasParaFormulario(model);
+			model.addAttribute("modoEdicion", true);
+			return "productos_formulario";
+		}
+		productoService.editar(producto);
+		return "redirect:/productos";
+	}
+
+	@GetMapping("/eliminar-fisico/{id}")
+	public String eliminarFisico(@PathVariable("id") Integer id) {
+		Producto producto = productoService.buscarPorId(id);
+		if (producto == null) {
+			return "redirect:/productos";
+		}
+		productoService.eliminar(id);
+		return "redirect:/productos";
+	}
+
+	@GetMapping("/eliminar/{id}")
+	public String eliminarLogico(@PathVariable("id") Integer id) {
+		Producto producto = productoService.buscarPorId(id);
+		if (producto == null) {
+			return "redirect:/productos";
+		}
+		productoService.eliminarLogico(id);
+		return "redirect:/productos";
+	}
+
+	// Método privado para cargar los modelos de categoria y proveedor (Listas)
+	private void cargarListasParaFormulario(Model modelo) {
+		modelo.addAttribute("listaCategorias", categoriaService.listarTodas());
+		modelo.addAttribute("listaProveedores", proveedorService.listarTodos());
+	}
+
+	//Metodo privado para validar los productos en el formulario de ingreso de productos
+	private void validarProducto(Producto producto, BindingResult result){
+
+		// validacion para q el precio de compra no pueda ser mayor que el precio de venta
+		validarPrecios(producto, result);
+
+		// Validación  para la fecha de vencimiento 
+		validarFechaVencimiento(producto, result);
+
+		// validaciones de stok
+		validarStock(producto, result);
+
+	}
+
+
+
+	@GetMapping("/api/buscar")
+	@ResponseBody
+	public List<Map<String, Object>> buscarProductosAjax(@RequestParam("q") String palabraClave) {
+
+		List<Producto> productos = productoService.listarProductosClave(palabraClave);
+
+		return productos.stream().limit(20).map(p -> {
+			Map<String, Object> map = new HashMap<>();
+			map.put("idProducto", p.getIdProducto());
+			map.put("codigo", p.getCodigo());
+			map.put("categoria", p.getCategoria() != null ? p.getCategoria().getNombre() : "");
+			map.put("nombre", p.getNombre());
+			map.put("stockActual", p.getStockActual());
+			map.put("precioVenta", p.getPrecioVenta());
+			return map;
+		}).collect(Collectors.toList());
+	}
+
+	//metodos privado de validaciones
+	//metodo privado para validar que el precio de compra no sea mayor que el precio de venta
+	private void validarPrecios(Producto producto, BindingResult result) {
+
+		if (producto.getPrecioCompra() != null &&
+			producto.getPrecioVenta() != null &&
+			producto.getPrecioCompra().compareTo(producto.getPrecioVenta()) >= 0) {
+
+			result.rejectValue(
+					"precioCompra",
+					"error.precioCompra",
+					"El precio de compra debe ser menor que el precio de venta");
+		}
+	}
+
+	//metodo privado para validar que la fecha de vencimiento sea posterior a la fecha actual
+	private void validarFechaVencimiento(Producto producto, BindingResult result) {
 		if (producto.getFechaVencimiento() != null
 				&& producto.getFechaVencimiento().isBefore(LocalDate.now())) {
 
@@ -104,6 +216,10 @@ public class ProductoController {
 					"error.fechaVencimiento",
 					"La fecha de vencimiento debe ser posterior a la fecha actual");
 		}
+	}
+
+	//metodo privado para validar que el stock maximo no sea mayor que el stock actual, y que el stock minimo sea menor que el stock actual y el stock maximo
+	private void validarStock(Producto producto, BindingResult result) {
 		// stock maximo no puede ser mayor q actual
 		if (producto.getStockMaximo() != null &&
 				producto.getStockActual() != null &&
@@ -147,72 +263,7 @@ public class ProductoController {
 					"error.stockMinimo",
 					"El stock mínimo debe ser menor que el stock máximo");
 		}
-		if (result.hasErrors()) {
-			cargarListasParaFormulario(model);
-			return "productos_formulario";
-		}
-		productoService.guardar(producto);
-		return "redirect:/productos";
 	}
 
-	@PostMapping("/editarProducto")
-	public String editar(@Validated @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
-		if (producto.getCategoria() != null && producto.getCategoria().getIdCategoria() == null) {
-			result.rejectValue("categoria", "error.categoria", "Debe seleccionar una categoría válida");
-		}
-		if (producto.getProveedor() != null && producto.getProveedor().getIdProveedor() == null) {
-			result.rejectValue("proveedor", "error.proveedor", "Debe seleccionar un proveedor válido");
-		}
-		if (result.hasErrors()) {
-			cargarListasParaFormulario(model);
-			model.addAttribute("modoEdicion", true);
-			return "productos_formulario";
-		}
-		productoService.editar(producto);
-		return "redirect:/productos";
-	}
-
-	@GetMapping("/eliminar-fisico/{id}")
-	public String eliminarFisico(@PathVariable("id") Integer id) {
-		Producto producto = productoService.buscarPorId(id);
-		if (producto == null) {
-			return "redirect:/productos";
-		}
-		productoService.eliminar(id);
-		return "redirect:/productos";
-	}
-
-	@GetMapping("/eliminar/{id}")
-	public String eliminarLogico(@PathVariable("id") Integer id) {
-		Producto producto = productoService.buscarPorId(id);
-		if (producto == null) {
-			return "redirect:/productos";
-		}
-		productoService.eliminarLogico(id);
-		return "redirect:/productos";
-	}
-
-	// Método privado para cargar los modelos de categoria y proveedor (Listas)
-	private void cargarListasParaFormulario(Model modelo) {
-		modelo.addAttribute("listaCategorias", categoriaService.listarTodas());
-		modelo.addAttribute("listaProveedores", proveedorService.listarTodos());
-	}
-
-	@GetMapping("/api/buscar")
-	@ResponseBody
-	public List<Map<String, Object>> buscarProductosAjax(@RequestParam("q") String palabraClave) {
-
-		List<Producto> productos = productoService.listarProductosClave(palabraClave);
-
-		return productos.stream().limit(20).map(p -> {
-			Map<String, Object> map = new HashMap<>();
-			map.put("idProducto", p.getIdProducto());
-			map.put("codigo", p.getCodigo());
-			map.put("categoria", p.getCategoria() != null ? p.getCategoria().getNombre() : "");
-			map.put("nombre", p.getNombre());
-			map.put("stockActual", p.getStockActual());
-			map.put("precioVenta", p.getPrecioVenta());
-			return map;
-		}).collect(Collectors.toList());
-	}
 }
+
