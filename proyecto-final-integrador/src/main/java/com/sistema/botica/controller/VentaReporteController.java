@@ -98,16 +98,24 @@ public class VentaReporteController {
 		return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 	}
 
-	// Ruta para descargar Excel
+
+// Ruta para descargar Excel (MODIFICADO Y CORREGIDO)
 	@GetMapping("/ventas/exportar/excel")
 	public ResponseEntity<byte[]> exportarExcel(
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) throws IOException {
+		
+		// CORRECCIÓN: Convertimos las fechas recibidas a LocalDateTime (Inicio y Fin del día)
+		LocalDateTime inicio = fechaDesde.atStartOfDay();
+		LocalDateTime fin = fechaHasta.atTime(LocalTime.MAX);
+
 		Pageable exportPageable = PageRequest.of(0, Integer.MAX_VALUE, Sort.by("fecha").descending());
 
-		ReporteVentasDTO reporte = reporteService.generarReporteVentas(fechaDesde.atStartOfDay(),
-				fechaHasta.atTime(LocalTime.MAX), exportPageable);
-		byte[] excelContent = exportService.generarExcel(reporte);
+		// Generamos las matemáticas usando los objetos calculados de tiempo
+		ReporteVentasDTO reporte = reporteService.generarReporteVentas(inicio, fin, exportPageable);
+		
+		// CORRECCIÓN: Ahora pasamos el reporte junto con 'inicio' y 'fin' para que coincida con el Service
+		byte[] excelContent = exportService.generarExcel(reporte, inicio, fin);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(
@@ -116,6 +124,8 @@ public class VentaReporteController {
 
 		return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
 	}
+
+
 
 	@GetMapping("/boleta/{idVenta}/exportar/pdf")
 	public ResponseEntity<byte[]> exportarBoletaPdf(@PathVariable Integer idVenta) throws IOException {
