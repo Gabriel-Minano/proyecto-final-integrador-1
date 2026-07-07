@@ -194,7 +194,11 @@
 
 									<td sec:authorize="hasRole('ADMINISTRADOR')">
 										<div class="d-flex justify-content-center gap-2">
-
+											<button type="button" class="btn btn-app-secondary btn-sm"
+												data-bs-toggle="modal" data-bs-target="#modalDetalleProducto"
+												th:data-id-producto="${prod.idProducto}">
+												<i class="bi bi-eye"></i> Ver Detalle
+											</button>
 											<a th:href="@{/productos/editar/{id}(id=${prod.idProducto})}"
 												class="btn btn-primary btn-sm">
 												<i class="bi bi-pencil-fill"></i>
@@ -203,14 +207,16 @@
 
 											<a th:if="${prod.estado}"
 												th:href="@{/productos/eliminar/{id}(id=${prod.idProducto})}"
-												class="btn btn-warning btn-sm" onclick="return confirm('¿Desea desactivar este producto?');">
+												class="btn btn-warning btn-sm"
+												onclick="return confirm('¿Desea desactivar este producto?');">
 												<i class="bi bi-toggle-off"></i>
 												Desactivar
 											</a>
 
 											<a th:if="${prod.estado}"
 												th:href="@{/productos/eliminar-fisico/{id}(id=${prod.idProducto})}"
-												class="btn btn-danger btn-sm" onclick="return confirm('¿Desea eliminar este producto?');">
+												class="btn btn-danger btn-sm"
+												onclick="return confirm('¿Desea eliminar este producto?');">
 												<i class="bi bi-trash-fill"></i>
 												Eliminar
 											</a>
@@ -264,6 +270,57 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal para Ver Detalle del Producto -->
+	<div class="modal fade" id="modalDetalleProducto" tabindex="-1" aria-labelledby="labelDetalleProducto"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="labelDetalleProducto">
+						<i class="bi bi-file-earmark-pdf me-2 text-danger"></i>Descargar Detalle del Producto
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Seleccione el formato en el que desea descargar el detalle del producto:</p>
+					<div class="d-flex gap-3 justify-content-center">
+						<button type="button" class="btn btn-danger btn-lg" id="btnExportarPdfProducto"
+							onclick="descargarDetalleProductoPdf()">
+							<i class="bi bi-file-earmark-pdf me-2"></i>
+							Descargar PDF
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		let idProductoSeleccionado = null;
+
+		// Capturar el ID del producto cuando se abre el modal
+		document.getElementById('modalDetalleProducto').addEventListener('show.bs.modal', function (event) {
+			const button = event.relatedTarget;
+			idProductoSeleccionado = button.getAttribute('data-id-producto');
+		});
+
+		function descargarDetalleProductoPdf() {
+			if (idProductoSeleccionado) {
+				const url = `/reportes/productos/${idProductoSeleccionado}/exportar/pdf`;
+				window.location.href = url;
+				cerrarModalProducto();
+			}
+		}
+
+		function cerrarModalProducto() {
+			const modalElement = document.getElementById('modalDetalleProducto');
+			const modal = bootstrap.Modal.getInstance(modalElement);
+			if (modal) {
+				modal.hide();
+			}
+		}
+	</script>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

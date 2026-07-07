@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte Anual de Ventas - Conquistadores Farma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+
+    <div class="app-body">
+        <div th:replace="~{componentes/sidebar :: menuLateral('ventas')}"></div>
+
+        <div class="app-main">
+            <div th:replace="~{componentes/header :: topHeader}"></div>
+
+            <div class="app-content">
+
+                <div class="reporte-header">
+                    <i class="bi bi-graph-up"></i>
+                    <h2 class="mb-0 fw-bold">Reporte Anual de Ventas</h2>
+                </div>
+                <p class="reporte-subtitle">Análisis de ganancias mensuales, promedios y tendencias del año.</p>
+
+                <!-- Botón para volver -->
+                <div class="mb-3">
+                    <a href="/reportes/ventas" class="btn btn-outline-primary" title="Volver a Reporte de Ventas">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
+
+                <!-- Filtro por año -->
+                <div class="filtro-card mb-4">
+                    <div class="filtro-header">
+                        <i class="bi bi-funnel-fill"></i> Seleccionar Año
+                    </div>
+                    <div class="filtro-body">
+                        <form th:action="@{/reportes/ventas/anual}" method="get">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small text-secondary">Año</label>
+                                    <input type="number" class="form-control" name="anio" id="anio" th:value="${anio}"
+                                        min="2020" th:max="${#dates.year(#dates.createNow())}" required>
+                                </div>
+                                <div class="col-md-8 d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-app-secondary" onclick="resetearAnio()">
+                                        <i class="bi bi-arrow-counterclockwise"></i> Año Actual
+                                    </button>
+                                    <button type="submit" class="btn btn-app-primary">
+                                        <i class="bi bi-search"></i> Generar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Indicadores principales -->
+                <h5 class="fw-bold text-secondary mb-3 mt-4"><i class="bi bi-lightning-fill me-2"></i>Resumen del
+                    Año <span th:text="${anio}">2026</span></h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="kpi-card kpi-blue">
+                            <div>
+                                <div class="kpi-title">Total Anual de Ventas</div>
+                                <p class="kpi-value"
+                                    th:text="'S/ ' + ${#numbers.formatDecimal(reporte.totalAnual, 1, 2)}">
+                                    S/ 0.00</p>
+                                <small class="text-muted">Suma de todos los meses</small>
+                            </div>
+                            <i class="bi bi-cash-stack kpi-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="kpi-card kpi-cyan">
+                            <div>
+                                <div class="kpi-title">Promedio Anual</div>
+                                <p class="kpi-value"
+                                    th:text="'S/ ' + ${#numbers.formatDecimal(reporte.promedioAnual, 1, 2)}">
+                                    S/ 0.00</p>
+                                <small class="text-muted">Promedio de meses con ventas</small>
+                            </div>
+                            <i class="bi bi-graph-up-arrow kpi-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="kpi-card kpi-yellow">
+                            <div>
+                                <div class="kpi-title">Meses Monitoreados</div>
+                                <p class="kpi-value">12</p>
+                                <small class="text-muted">Enero a Diciembre</small>
+                            </div>
+                            <i class="bi bi-calendar-event kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de 12 meses -->
+                <h5 class="fw-bold text-secondary mb-3 mt-5"><i class="bi bi-table me-2"></i>Ingresos Mensuales</h5>
+
+                <div class="app-card">
+                    <div class="table-responsive">
+                        <table class="app-table table table-hover align-middle text-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-start">Mes</th>
+                                    <th>Ingresos Acumulados</th>
+                                    <th>Promedio Mensual</th>
+                                    <th>Variación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="dato, stat : ${reporte.datosMonthly}">
+                                    <td class="text-start fw-semibold" th:text="${dato.mes}"></td>
+
+                                    <td class="fw-bold text-primary"
+                                        th:text="'S/ ' + ${#numbers.formatDecimal(dato.ingresosTotales, 1, 2)}">
+                                        S/ 0.00
+                                    </td>
+
+                                    <td th:text="'S/ ' + ${#numbers.formatDecimal(dato.promedioMensual, 1, 2)}">
+                                        S/ 0.00
+                                    </td>
+
+                                    <td>
+                                        <span th:if="${dato.ingresosTotales > reporte.promedioAnual}"
+                                            class="badge bg-success">↑ Mayor</span>
+                                        <span th:if="${dato.ingresosTotales < reporte.promedioAnual}"
+                                            class="badge bg-warning">↓ Menor</span>
+                                        <span th:if="${dato.ingresosTotales == reporte.promedioAnual}"
+                                            class="badge bg-secondary">= Promedio</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Meses con máximo y mínimo -->
+                <h5 class="fw-bold text-secondary mb-3 mt-5"><i class="bi bi-bar-chart-fill me-2"></i>Extremos del
+                    Año</h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-green">
+                            <div>
+                                <div class="kpi-title">Mes con Máximas Ventas</div>
+                                <p class="kpi-value fs-5 mt-2" th:text="${reporte.mesMaximo}">-</p>
+                                <small class="text-muted"
+                                    th:text="'S/ ' + ${#numbers.formatDecimal(reporte.ventasMaximo, 1, 2)}">
+                                    S/ 0.00
+                                </small>
+                            </div>
+                            <i class="bi bi-arrow-up-circle-fill kpi-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-red">
+                            <div>
+                                <div class="kpi-title">Mes con Mínimas Ventas</div>
+                                <p class="kpi-value fs-5 mt-2" th:text="${reporte.mesMinimo}">-</p>
+                                <small class="text-muted"
+                                    th:text="'S/ ' + ${#numbers.formatDecimal(reporte.ventasMinimo, 1, 2)}">
+                                    S/ 0.00
+                                </small>
+                            </div>
+                            <i class="bi bi-arrow-down-circle-fill kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de Exportación -->
+                <div class="resultados-footer mt-5">
+                    <span class="total-label">Exportar reporte:</span>
+
+                    <div class="ms-4 d-flex gap-2">
+                        <a th:href="@{/reportes/ventas/anual/exportar/pdf(anio=${anio})}"
+                            class="btn btn-outline-danger fw-bold" title="Descargar como PDF">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function resetearAnio() {
+            const anioActual = new Date().getFullYear();
+            document.getElementById('anio').value = anioActual;
+            document.querySelector('form').submit();
+        }
+    </script>
+</body>
+
+</html>

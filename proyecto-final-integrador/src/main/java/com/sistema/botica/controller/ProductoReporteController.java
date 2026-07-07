@@ -11,15 +11,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sistema.botica.DTO.DetalleProductoDTO;
 import com.sistema.botica.DTO.ReporteProductosDTO;
+import com.sistema.botica.service.DetalleProductoReporteExportService;
+import com.sistema.botica.service.DetalleProductoReporteService;
 import com.sistema.botica.service.ProductoReporteExportService;
 import com.sistema.botica.service.ProductoReporteService;
 
@@ -28,11 +33,17 @@ import com.sistema.botica.service.ProductoReporteService;
 public class ProductoReporteController {
 	private final ProductoReporteService productoReporteService;
 	private final ProductoReporteExportService exportService;
+	private final DetalleProductoReporteService detalleProductoReporteService;
+	private final DetalleProductoReporteExportService detalleProductoExportService;
 
-	ProductoReporteController(ProductoReporteService productoReporteService, ProductoReporteExportService exportService) {
+	ProductoReporteController(ProductoReporteService productoReporteService, ProductoReporteExportService exportService,
+			DetalleProductoReporteService detalleProductoReporteService,
+			DetalleProductoReporteExportService detalleProductoExportService) {
 		this.productoReporteService = productoReporteService;
 		this.exportService = exportService;
-	} // NUEVO SERVICIO
+		this.detalleProductoReporteService = detalleProductoReporteService;
+		this.detalleProductoExportService = detalleProductoExportService;
+	}
 
 	@GetMapping
 	public String verReporteProductos(
@@ -108,5 +119,22 @@ public class ProductoReporteController {
 		headers.setContentDispositionFormData("attachment", "Reporte_Movimientos_" + fechaDesde + ".xlsx");
 
 		return ResponseEntity.ok().headers(headers).body(excelContent);
+	}
+
+	@GetMapping("/{idProducto}/exportar/pdf")
+	public ResponseEntity<byte[]> exportarDetallePdf(@PathVariable Integer idProducto) throws IOException {
+		DetalleProductoDTO detalle = detalleProductoReporteService.obtenerDetalleProducto(idProducto);
+
+		if (detalle == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		byte[] pdfContent = detalleProductoExportService.generarPdf(detalle);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		headers.setContentDispositionFormData("attachment", "Detalle_Producto_" + idProducto + ".pdf");
+
+		return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 	}
 }

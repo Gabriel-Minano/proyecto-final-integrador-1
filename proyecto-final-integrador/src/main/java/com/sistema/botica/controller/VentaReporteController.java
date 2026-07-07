@@ -22,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sistema.botica.DTO.BoletaVentaDTO;
+import com.sistema.botica.DTO.ReporteAnualDTO;
 import com.sistema.botica.DTO.ReporteVentasDTO;
 import com.sistema.botica.service.BoletaReporteExportService;
 import com.sistema.botica.service.BoletaReporteService;
+import com.sistema.botica.service.ReporteAnualExportService;
+import com.sistema.botica.service.ReporteAnualService;
 import com.sistema.botica.service.VentaReporteExportService;
 import com.sistema.botica.service.VentaReporteService;
 
@@ -36,13 +39,18 @@ public class VentaReporteController {
 	private final VentaReporteExportService exportService;
 	private final BoletaReporteExportService boletaReporteExportService;
 	private final BoletaReporteService boletaReporteService;
+	private final ReporteAnualService reporteAnualService;
+	private final ReporteAnualExportService reporteAnualExportService;
 
 	public VentaReporteController(VentaReporteService reporteService, VentaReporteExportService exportService,
-			BoletaReporteExportService boletaReporteExportService, BoletaReporteService boletaReporteService) {
+			BoletaReporteExportService boletaReporteExportService, BoletaReporteService boletaReporteService,
+			ReporteAnualService reporteAnualService, ReporteAnualExportService reporteAnualExportService) {
 		this.reporteService = reporteService;
 		this.exportService = exportService;
 		this.boletaReporteExportService = boletaReporteExportService;
 		this.boletaReporteService = boletaReporteService;
+		this.reporteAnualService = reporteAnualService;
+		this.reporteAnualExportService = reporteAnualExportService;
 	}
 
 	@GetMapping("/ventas")
@@ -98,14 +106,14 @@ public class VentaReporteController {
 		return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 	}
 
-
-// Ruta para descargar Excel (MODIFICADO Y CORREGIDO)
+	// Ruta para descargar Excel (MODIFICADO Y CORREGIDO)
 	@GetMapping("/ventas/exportar/excel")
 	public ResponseEntity<byte[]> exportarExcel(
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) throws IOException {
-		
-		// CORRECCIÓN: Convertimos las fechas recibidas a LocalDateTime (Inicio y Fin del día)
+
+		// CORRECCIÓN: Convertimos las fechas recibidas a LocalDateTime (Inicio y Fin
+		// del día)
 		LocalDateTime inicio = fechaDesde.atStartOfDay();
 		LocalDateTime fin = fechaHasta.atTime(LocalTime.MAX);
 
@@ -113,8 +121,9 @@ public class VentaReporteController {
 
 		// Generamos las matemáticas usando los objetos calculados de tiempo
 		ReporteVentasDTO reporte = reporteService.generarReporteVentas(inicio, fin, exportPageable);
-		
-		// CORRECCIÓN: Ahora pasamos el reporte junto con 'inicio' y 'fin' para que coincida con el Service
+
+		// CORRECCIÓN: Ahora pasamos el reporte junto con 'inicio' y 'fin' para que
+		// coincida con el Service
 		byte[] excelContent = exportService.generarExcel(reporte, inicio, fin);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -124,8 +133,6 @@ public class VentaReporteController {
 
 		return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
 	}
-
-
 
 	@GetMapping("/boleta/{idVenta}/exportar/pdf")
 	public ResponseEntity<byte[]> exportarBoletaPdf(@PathVariable Integer idVenta) throws IOException {
@@ -140,6 +147,41 @@ public class VentaReporteController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_PDF);
 		headers.setContentDispositionFormData("attachment", "Boleta_" + idVenta + ".pdf");
+
+		return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/ventas/anual")
+	public String verReporteAnual(
+			@RequestParam(required = false) Integer anio,
+			Model modelo) {
+		// Si no se proporciona año, usar el actual
+		if (anio == null) {
+			anio = java.time.Year.now().getValue();
+		}
+
+		// Generar reporte anual
+		ReporteAnualDTO reporte = reporteAnualService.generarReporteAnual(anio);
+
+		modelo.addAttribute("reporte", reporte);
+		modelo.addAttribute("anio", anio);
+		return "reportes_ventas_anual";
+	}
+
+	@GetMapping("/ventas/anual/exportar/pdf")
+	public ResponseEntity<byte[]> exportarReporteAnualPdf(
+			@RequestParam(required = false) Integer anio) throws IOException {
+		if (anio == null) {
+			anio = java.time.Year.now().getValue();
+		}
+
+		ReporteAnualDTO reporte = reporteAnualService.generarReporteAnual(anio);
+
+		byte[] pdfContent = reporteAnualExportService.generarPdf(reporte);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		headers.setContentDispositionFormData("attachment", "Reporte_Anual_Ventas_" + anio + ".pdf");
 
 		return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 	}
