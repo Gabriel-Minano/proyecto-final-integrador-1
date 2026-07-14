@@ -1,22 +1,25 @@
 package com.sistema.botica.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private FormatoPasswordAuthenticationProvider authenticationProvider;
+    private final FormatoPasswordAuthenticationProvider authenticationProvider;
+
+	SecurityConfig(FormatoPasswordAuthenticationProvider authenticationProvider) {
+		this.authenticationProvider = authenticationProvider;
+	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,7 +31,7 @@ public class SecurityConfig {
 
 				// 2. PERMISOS COMPARTIDOS (ADMINISTRADOR y CAJERO)
 				// Facturación y búsqueda AJAX (El núcleo del cajero)
-				.requestMatchers("/ventas/nuevo", "/ventas/guardar").hasAnyRole("ADMINISTRADOR", "CAJERO")
+				.requestMatchers("/ventas/nuevo", "/ventas/guardar", "/reportes/boleta/**").hasAnyRole("ADMINISTRADOR", "CAJERO")
 				.requestMatchers("/clientes/api/buscar", "/productos/api/buscar", "/clientes/nuevo", "/clientes/guardar").hasAnyRole("ADMINISTRADOR", "CAJERO")
 
 				// Permitir ver los listados principales (Lectura)

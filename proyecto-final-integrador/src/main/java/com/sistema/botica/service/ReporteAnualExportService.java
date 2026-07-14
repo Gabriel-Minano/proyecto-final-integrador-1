@@ -141,7 +141,6 @@ public class ReporteAnualExportService {
             indicCell1.setPadding(10);
 
             Font indicLblFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9f, new Color(15, 23, 42));
-            Font indicValFont = FontFactory.getFont(FontFactory.HELVETICA, 9f, Color.DARK_GRAY);
 
             Paragraph lblPromedioAnual = new Paragraph("PROMEDIO ANUAL DE VENTAS", indicLblFont);
             indicCell1.addElement(lblPromedioAnual);

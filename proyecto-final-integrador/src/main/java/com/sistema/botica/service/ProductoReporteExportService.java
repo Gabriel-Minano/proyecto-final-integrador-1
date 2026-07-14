@@ -30,7 +30,6 @@ public class ProductoReporteExportService {
 
     // Paleta de colores corporativos
     private static final Color AZUL_INTENSO = new Color(0, 0, 255);
-    private static final Color GRIS_FONDO = new Color(245, 247, 250);
     private static final Color GRIS_BORDES = new Color(220, 225, 230);
     private static final Color TEXTO_OSCURO = new Color(40, 44, 52);
     

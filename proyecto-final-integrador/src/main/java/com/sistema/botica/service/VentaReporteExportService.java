@@ -289,7 +289,6 @@ public class VentaReporteExportService {
             metaGen.setAlignment(Element.ALIGN_CENTER);
             document.add(metaGen);
 
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String textoPeriodo = "Periodo del reporte: "
             + inicio.format(formatterFecha)
             + " al "

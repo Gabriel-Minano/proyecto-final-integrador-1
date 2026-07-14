@@ -2,15 +2,15 @@
 
 package com.sistema.botica.config;
 
-import java.util.List;
+// import java.util.List;
 import java.util.regex.Pattern;
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import com.sistema.botica.Repository.UsuarioRepository;
 import com.sistema.botica.entity.Usuario;
 import com.sistema.botica.service.CustomUserDetailsService;
-import com.sistema.botica.service.UsuarioService;
+// import com.sistema.botica.service.UsuarioService;
 
 @Component
 public class FormatoPasswordAuthenticationProvider implements AuthenticationProvider {
@@ -26,17 +26,20 @@ public class FormatoPasswordAuthenticationProvider implements AuthenticationProv
     // @Autowired
     // private UsuarioService usuarioService;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
     private static final Pattern PASSWORD_PATTERN = Pattern
             .compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,20}$");
+
+    FormatoPasswordAuthenticationProvider(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, CustomUserDetailsService userDetailsService) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+    }
                         //(?=.*[a-z]) debe contener al menos una letra minúscula 
                         //(?=.*[A-Z]) debe contener al menos una letra mayúscula
                         //(?=.*\d)	Lookahead: debe contener al menos un dígito (\d = [0-9])
