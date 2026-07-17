@@ -42,4 +42,35 @@ public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Long
 			LIMIT 1
 			""")
 	List<Object[]> obtenerMesConMasVentas(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
+
+	// Total de unidades vendidas en un rango de fechas
+	@Query("""
+			SELECT COALESCE(SUM(dv.cantidad),0)
+			FROM DetalleVenta dv
+			WHERE dv.venta.fecha >= :inicio
+			AND dv.venta.fecha <= :fin
+			""")
+	Long obtenerTotalUnidadesVendidas(
+			@Param("inicio") LocalDateTime inicio,
+			@Param("fin") LocalDateTime fin);
+
+	// Total de unidades vendidas en un año
+	@Query("""
+			SELECT COALESCE(SUM(dv.cantidad),0)
+			FROM DetalleVenta dv
+			WHERE YEAR(dv.venta.fecha)=:anio
+			""")
+	Long obtenerTotalUnidadesVendidasAnio(
+			@Param("anio") Integer anio);
+
+	// Total de unidades vendidas en un mes específico
+	@Query("""
+			SELECT COALESCE(SUM(dv.cantidad),0)
+			FROM DetalleVenta dv
+			WHERE YEAR(dv.venta.fecha)=:anio
+			AND MONTH(dv.venta.fecha)=:mes
+			""")
+	Long obtenerTotalUnidadesVendidasMes(
+			@Param("anio") Integer anio,
+			@Param("mes") Integer mes);
 }

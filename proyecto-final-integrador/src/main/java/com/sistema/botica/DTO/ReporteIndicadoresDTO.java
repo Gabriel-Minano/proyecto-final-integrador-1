@@ -3,16 +3,39 @@ package com.sistema.botica.DTO;
 import java.time.LocalDateTime;
 
 public class ReporteIndicadoresDTO {
+
+    // =============================
+    // INDICADORES DE INVENTARIO
+    // =============================
     private Integer totalProductosActivos;
+
     private Double porcentajeDisponibles;
     private Double porcentajeAgotados;
     private Double porcentajeStockCritico;
-    private Integer totalSobrestock;
+    private Double porcentajeSobrestock;
+
+    // =============================
+    // INDICADORES DE VENTAS
+    // =============================
+    private Double porcentajeVentasMes;
+    private Double porcentajeParticipacionProducto;
+
+    // =============================
+    // INFORMACIÓN COMPLEMENTARIA
+    // =============================
     private String mesMasVentas;
     private String productoMasVendido;
     private Integer ventasProductoMasVendido;
+
+    // =============================
+    // PERÍODO DEL REPORTE
+    // =============================
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
+
+    // =============================
+    // GETTERS Y SETTERS
+    // =============================
 
     public Integer getTotalProductosActivos() {
         return totalProductosActivos;
@@ -46,12 +69,28 @@ public class ReporteIndicadoresDTO {
         this.porcentajeStockCritico = porcentajeStockCritico;
     }
 
-    public Integer getTotalSobrestock() {
-        return totalSobrestock;
+    public Double getPorcentajeSobrestock() {
+        return porcentajeSobrestock;
     }
 
-    public void setTotalSobrestock(Integer totalSobrestock) {
-        this.totalSobrestock = totalSobrestock;
+    public void setPorcentajeSobrestock(Double porcentajeSobrestock) {
+        this.porcentajeSobrestock = porcentajeSobrestock;
+    }
+
+    public Double getPorcentajeVentasMes() {
+        return porcentajeVentasMes;
+    }
+
+    public void setPorcentajeVentasMes(Double porcentajeVentasMes) {
+        this.porcentajeVentasMes = porcentajeVentasMes;
+    }
+
+    public Double getPorcentajeParticipacionProducto() {
+        return porcentajeParticipacionProducto;
+    }
+
+    public void setPorcentajeParticipacionProducto(Double porcentajeParticipacionProducto) {
+        this.porcentajeParticipacionProducto = porcentajeParticipacionProducto;
     }
 
     public String getMesMasVentas() {
@@ -93,5 +132,4 @@ public class ReporteIndicadoresDTO {
     public void setFechaFin(LocalDateTime fechaFin) {
         this.fechaFin = fechaFin;
     }
-
 }

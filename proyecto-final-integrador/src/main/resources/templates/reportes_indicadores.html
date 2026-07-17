@@ -73,17 +73,6 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <div class="kpi-card kpi-blue">
-                            <div>
-                                <div class="kpi-title">Total de Productos Activos</div>
-                                <p class="kpi-value" th:text="${reporte.totalProductosActivos}">0</p>
-                                <small class="text-muted">Registrados en el sistema</small>
-                            </div>
-                            <i class="bi bi-box-seam kpi-icon"></i>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
                         <div class="kpi-card kpi-green">
                             <div>
                                 <div class="kpi-title">Productos Disponibles</div>
@@ -93,6 +82,17 @@
                                 <small class="text-muted">Con stock mayor a 0</small>
                             </div>
                             <i class="bi bi-check-circle-fill kpi-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="kpi-card kpi-cyan">
+                            <div>
+                                <div class="kpi-title">Productos con Sobrestock</div>
+                                <p class="kpi-value"
+                                    th:text="${#numbers.formatDecimal(reporte.porcentajeSobrestock,1,1)} + '%'">0.0%</p>
+                                <small class="text-muted">Stock &gt; Máximo</small>
+                            </div>
+                            <i class="bi bi-boxes kpi-icon"></i>
                         </div>
                     </div>
                 </div>
@@ -124,19 +124,6 @@
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="kpi-card kpi-cyan">
-                            <div>
-                                <div class="kpi-title">Productos con Sobrestock</div>
-                                <p class="kpi-value" th:text="${reporte.totalSobrestock}">0</p>
-                                <small class="text-muted">Stock &gt; Máximo</small>
-                            </div>
-                            <i class="bi bi-boxes kpi-icon"></i>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Análisis de Ventas -->
                 <h5 class="fw-bold text-secondary mb-3 mt-5"><i class="bi bi-graph-up-arrow me-2"></i>Análisis de Ventas
                     en el Período</h5>
@@ -145,21 +132,31 @@
                     <div class="col-md-6">
                         <div class="kpi-card kpi-dark">
                             <div>
-                                <div class="kpi-title">Mes con Mayor Movimiento</div>
-                                <p class="kpi-value fs-5 mt-2" th:text="${reporte.mesMasVentas}">Sin datos</p>
+                                <div class="kpi-title">Ventas del Mes con Mayor Movimiento</div>
+
+                                <p class="kpi-value"
+                                    th:text="${#numbers.formatDecimal(reporte.porcentajeVentasMes,1,1)} + '%'">0.0%</p>
+
+                                <small class="text-muted">
+                                    Participación sobre ventas del período
+                                </small>
                             </div>
+
                             <i class="bi bi-calendar-event kpi-icon"></i>
                         </div>
                     </div>
-
                     <div class="col-md-6">
                         <div class="kpi-card kpi-blue">
                             <div>
-                                <div class="kpi-title">Producto Más Vendido en Ese Mes</div>
-                                <p class="kpi-value fs-5 mt-2" th:text="${reporte.productoMasVendido}">Sin datos</p>
-                                <small class="text-muted" th:if="${reporte.ventasProductoMasVendido > 0}"
-                                    th:text="${reporte.ventasProductoMasVendido} + ' unidades'"></small>
+                                <div class="kpi-title">Participación del Producto Más Vendido</div>
+
+                                <p class="kpi-value"
+                                    th:text="${#numbers.formatDecimal(reporte.porcentajeParticipacionProducto,1,1)} + '%'">
+                                    0.0%</p>
+
+                                <small class="text-muted">Producto con mayor rotación mensual</small>
                             </div>
+
                             <i class="bi bi-star-fill kpi-icon"></i>
                         </div>
                     </div>

@@ -80,37 +80,100 @@ public class IndicadoresReporteExportService {
             // Headers
             Font hFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
             tableInv.addCell(createHeaderCell("INDICADOR", hFont, AZUL_INTENSO, Element.ALIGN_LEFT));
-            tableInv.addCell(createHeaderCell("VALOR", hFont, AZUL_INTENSO, Element.ALIGN_CENTER));
+            tableInv.addCell(createHeaderCell("RESULTADO", hFont, AZUL_INTENSO, Element.ALIGN_CENTER));
 
-            // Data Rows (Intercalando blanco y gris)
-            addDataRow(tableInv, "Total de Productos Activos", String.valueOf(reporte.getTotalProductosActivos()), true);
-            addDataRow(tableInv, "Productos Disponibles", String.format("%.2f%%", reporte.getPorcentajeDisponibles()), false);
-            addDataRow(tableInv, "Productos Agotados", String.format("%.2f%%", reporte.getPorcentajeAgotados()), true);
-            addDataRow(tableInv, "Productos con Stock Crítico", String.format("%.2f%%", reporte.getPorcentajeStockCritico()), false);
-            addDataRow(tableInv, "Productos con Sobrestock", String.valueOf(reporte.getTotalSobrestock()), true);
+            // Indicadores de Inventario
+            addDataRow(tableInv,
+                    "Porcentaje de Productos Disponibles",
+                    String.format("%.2f%%", reporte.getPorcentajeDisponibles()),
+                    true);
+
+            addDataRow(tableInv,
+                    "Porcentaje de Productos en Stock Crítico",
+                    String.format("%.2f%%", reporte.getPorcentajeStockCritico()),
+                    false);
+
+            addDataRow(tableInv,
+                    "Porcentaje de Productos Agotados",
+                    String.format("%.2f%%", reporte.getPorcentajeAgotados()),
+                    true);
+
+            addDataRow(tableInv,
+                    "Porcentaje de Productos con Sobrestock",
+                    String.format("%.2f%%", reporte.getPorcentajeSobrestock()),
+                    false);
             
             tableInv.setSpacingAfter(30);
             document.add(tableInv);
 
-            // === 3. SECCIÓN: RESULTADOS DEL PERÍODO ===
-            addSectionTitle(document, "| RESULTADOS DEL PERÍODO", AZUL_INTENSO);
+            // === 3. SECCIÓN: INDICADORES DE VENTAS ===
+            addSectionTitle(document, "| INDICADORES DE VENTAS", AZUL_INTENSO);
             
             PdfPTable tableVentas = createTable();
             // Headers
-            tableVentas.addCell(createHeaderCell("MÉTRICA", hFont, AZUL_INTENSO, Element.ALIGN_LEFT));
+            tableVentas.addCell(createHeaderCell("INDICADOR", hFont, AZUL_INTENSO, Element.ALIGN_LEFT));
             tableVentas.addCell(createHeaderCell("RESULTADO", hFont, AZUL_INTENSO, Element.ALIGN_CENTER));
 
-            // Data Rows
-            addDataRow(tableVentas, "Mes con Mayor Movimiento", reporte.getMesMasVentas(), true);
-            
-            String productoDisplay = reporte.getProductoMasVendido();
-            if (productoDisplay != null && !productoDisplay.equals("N/A") && reporte.getVentasProductoMasVendido() > 0) {
-                productoDisplay += " (" + reporte.getVentasProductoMasVendido() + " unidades)";
-            }
-            addDataRow(tableVentas, "Producto Más Vendido en Ese Mes", productoDisplay, false);
+            // Indicadores de Ventas
+            addDataRow(tableVentas,
+                    "Porcentaje de Ventas por Mes",
+                    String.format("%.2f%%", reporte.getPorcentajeVentasMes()),
+                    true);
+
+            addDataRow(tableVentas,
+                    "Participación del Producto en las Ventas Mensuales",
+                    String.format("%.2f%%", reporte.getPorcentajeParticipacionProducto()),
+                    false);
             
             tableVentas.setSpacingAfter(40);
             document.add(tableVentas);
+
+            // === 4. RESUMEN DEL PERIODO ===
+            addSectionTitle(document, "| RESUMEN DEL PERIODO", AZUL_INTENSO);
+
+            PdfPTable tableInfo = createTable();
+
+            tableInfo.addCell(createHeaderCell(
+                    "DESCRIPCIÓN",
+                    hFont,
+                    AZUL_INTENSO,
+                    Element.ALIGN_LEFT));
+
+            tableInfo.addCell(createHeaderCell(
+                    "RESULTADO",
+                    hFont,
+                    AZUL_INTENSO,
+                    Element.ALIGN_CENTER));
+
+            addDataRow(tableInfo,
+                    "Total de Productos Activos",
+                    String.valueOf(reporte.getTotalProductosActivos()),
+                    true);
+
+            addDataRow(tableInfo,
+                    "Mes con Mayor Movimiento",
+                    reporte.getMesMasVentas(),
+                    false);
+
+            String productoDisplay = reporte.getProductoMasVendido();
+
+            if (productoDisplay != null
+                    && !productoDisplay.equals("N/A")
+                    && reporte.getVentasProductoMasVendido() > 0) {
+
+                productoDisplay +=
+                        " (" + reporte.getVentasProductoMasVendido()
+                        + " unidades)";
+            }
+
+            addDataRow(tableInfo,
+                    "Producto Más Vendido",
+                    productoDisplay,
+                    true);
+
+            tableInfo.setSpacingAfter(35);
+
+            document.add(tableInfo);
 
             // === 4. PIE DE PÁGINA ===
             Font footerFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 9, GRIS_CLARO_TEXTO);
